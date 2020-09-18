@@ -1,3 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object id="window" class="GtkWindow">
+    <property name="visible">True</property>
+    <property name="title">Grid</property>
+    <property name="border-width">0</property>
+    <child>
+
+      <object class="GtkBox" id="mainbox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+
+        <child>
+          <object class="GtkMenuBar" id="menubar">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkMenuItem" id="fileitem">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">_File</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object id="filenew" class="GtkImageMenuItem">
+                        <property name="label">gtk-new</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+
+        <child>
+          <object id="textview" class="GtkTextView">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+
+
+    </child>
+  </object>
+</interface>
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <object id="window" class="GtkWindow">
     <property name="visible">True</property>
@@ -6,6 +72,7 @@
     <child>
       <object id="grid" class="GtkGrid">
         <property name="visible">True</property>
+        <property name="column_homogeneous">True</property>
         <child>
           <object id="button1" class="GtkButton">
             <property name="visible">True</property>
@@ -22,8 +89,8 @@
             <property name="label">Button 2</property>
           </object>
           <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
@@ -33,13 +100,14 @@
           </object>
           <packing>
             <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-            <property name="width">2</property>
+            <property name="top-attach">2</property>
           </packing>
         </child>
+
       </object>
       <packing>
       </packing>
     </child>
   </object>
 </interface>
+-->
