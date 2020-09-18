@@ -4,6 +4,8 @@
     <property name="visible">True</property>
     <property name="title">Grid</property>
     <property name="border-width">0</property>
+    <property name="default-width">1200</property>
+    <property name="default-height">800</property>
     <child>
 
       <object class="GtkBox" id="mainbox">
@@ -57,9 +59,30 @@
               </object>
             </child>
             <child>
-              <object id="textview2" class="GtkTextView">
-                <property name="visible">True</property>
-              </object>
+
+
+      <object class="GtkNotebook" id="notebook1">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <child>
+          <object class="GtkLabel" id="label4">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Normal</property>
+          </object>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel" id="label1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Unknown</property>
+          </object>
+          <packing>
+            <property name="tab_fill">False</property>
+          </packing>
+        </child>
+      </object>
+
             </child>
           </object>
           <packing>
