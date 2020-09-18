@@ -14,7 +14,9 @@ main (int   argc,
   GtkBuilder *builder;
   GObject *window;
   GObject *button;
+  GObject *widget;
   GError *error = NULL;
+  GtkWidget *event_box;
 
   gtk_init (&argc, &argv);
 
@@ -30,6 +32,12 @@ main (int   argc,
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object (builder, "window");
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+  //event_box = gtk_event_box_new ();
+  widget = gtk_builder_get_object (builder, "tab0");
+  g_signal_connect (widget, "button-press-event",
+                    G_CALLBACK (print_hello), NULL);
+
   /*
   button = gtk_builder_get_object (builder, "button1");
   g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
