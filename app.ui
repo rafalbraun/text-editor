@@ -92,9 +92,22 @@
                   <property name="orientation">horizontal</property>
                   <property name="position">300</property>
                   <child>
-                     <object id="treeview" class="GtkTreeView">
-                        <property name="visible">True</property>
-                     </object>
+
+
+
+                           <object class="GtkScrolledWindow">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="shadow_type">in</property>
+                              <child>
+                                <object id="treeview" class="GtkTreeView">
+                                <property name="visible">True</property>
+                                </object>
+                              </child>
+                            </object>
+
+
+
                   </child>
                   <child>
                      <object class="GtkTextBuffer" id="userText" />
