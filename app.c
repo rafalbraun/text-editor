@@ -1,7 +1,10 @@
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
+#define TREEVIEW 1
+
 #include <gtk/gtk.h>
+#include "treeview.c"
 
 static void
 print_hello (GtkWidget *widget,
@@ -23,17 +26,19 @@ main (int   argc,
   GObject *widget;
   GError *error = NULL;
   GtkWidget *event_box;
+  GtkWidget *view;
+  gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
 
   gtk_init (&argc, &argv);
 
   /* Construct a GtkBuilder instance and load our UI description */
   builder = gtk_builder_new ();
   if (gtk_builder_add_from_file (builder, "app.ui", &error) == 0)
-    {
-      g_printerr ("Error loading file: %s\n", error->message);
-      g_clear_error (&error);
-      return 1;
-    }
+  {
+    g_printerr ("Error loading file: %s\n", error->message);
+    g_clear_error (&error);
+    return 1;
+  }
 
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object (builder, "window");
@@ -45,6 +50,10 @@ main (int   argc,
 
   widget = gtk_builder_get_object (builder, "tab1");
   g_signal_connect (widget, "button-press-event", G_CALLBACK (print_hello), NULL);
+
+
+  widget = gtk_builder_get_object (builder, "treeview");
+  create_view_and_model(filepath, GTK_WIDGET(widget));
 
   /*
   button = gtk_builder_get_object (builder, "button1");

@@ -178,15 +178,14 @@ create_and_fill_model(const char *pathname) {
   return GTK_TREE_MODEL(treestore);
 }
 
-GtkWidget*
-create_view_and_model(gchar* filepath) {
+void
+create_view_and_model(gchar* filepath, GtkWidget *view) {
     
   GtkTreeViewColumn *col;
   GtkCellRenderer *renderer;
-  GtkWidget *view;
   GtkTreeModel *model;
 
-  view = gtk_tree_view_new();
+  //view = gtk_tree_view_new();
 
   col = gtk_tree_view_column_new();
   gtk_tree_view_column_set_title(col, "Programming languages");
@@ -203,8 +202,9 @@ create_view_and_model(gchar* filepath) {
 
   g_signal_connect(view, "button-press-event", (GCallback) on_button_pressed, NULL);
 
-  return view;
 }
+
+#if !TREEVIEW
 
 int main(int argc, char *argv[]) {
     
@@ -223,16 +223,13 @@ int main(int argc, char *argv[]) {
   gtk_window_set_title(GTK_WINDOW(window), "Tree view");
   gtk_widget_set_size_request(window, 400, 900);
 
-  //vbox = gtk_vbox_new(FALSE, 2);
   vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
   gtk_container_add(GTK_CONTAINER(window), vbox);
 
-  view = create_view_and_model(filepath);
-  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
-  
+  view = gtk_tree_view_new();
+  create_view_and_model(filepath, view);
   swindow = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
-                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_container_add (GTK_CONTAINER (swindow), view);
 
   gtk_box_pack_start(GTK_BOX(vbox), swindow, TRUE, TRUE, 1);
@@ -240,15 +237,15 @@ int main(int argc, char *argv[]) {
   statusbar = gtk_statusbar_new();
   gtk_box_pack_start(GTK_BOX(vbox), statusbar, FALSE, TRUE, 1);
 
-  g_signal_connect(selection, "changed", 
-          G_CALLBACK(on_changed), statusbar);
+  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+  g_signal_connect(selection, "changed", G_CALLBACK(on_changed), statusbar);
 
-  g_signal_connect (G_OBJECT (window), "destroy",
-          G_CALLBACK(gtk_main_quit), NULL);
-
+  g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
   gtk_widget_show_all(window);
 
   gtk_main();
 
   return 0;
 }
+
+#endif
