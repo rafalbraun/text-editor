@@ -66,6 +66,14 @@
                               <property name="can_focus">True</property>
                               <property name="justification">center</property>
                               <property name="buffer">userText</property>
+                              <property name="top-margin">0</property>
+                              <property name="left-margin">0</property>
+                              <property name="monospace">TRUE</property>
+                              <property name="wrap-mode">GTK_WRAP_NONE</property>
+                              <property name="justification">GTK_JUSTIFY_LEFT</property>
+                              <property name="editable">TRUE</property>
+                              <property name="cursor-visible">TRUE</property>
+                              <property name="accepts-tab">TRUE</property>
                            </object>
                         </child>
                         <child type="tab">
@@ -110,14 +118,20 @@
                            </packing>
                         </child>
                         <child type="tab">
-                           <object class="GtkLabel" id="tab1">
-                              <property name="visible">True</property>
-                              <property name="can_focus">False</property>
-                              <property name="label" translatable="yes">Tab 1</property>
-                           </object>
-                           <packing>
-                              <property name="tab_fill">False</property>
-                           </packing>
+
+              <object class="GtkEventBox" id="tab1">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">1111</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">center</property>
+                  </object>
+                </child>
+              </object>
+
+                        
                         </child>
                      </object>
                   </child>
