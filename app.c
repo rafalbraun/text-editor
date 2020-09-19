@@ -1,3 +1,6 @@
+#define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
+#define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
+
 #include <gtk/gtk.h>
 
 static void
@@ -31,20 +34,18 @@ main (int   argc,
       g_clear_error (&error);
       return 1;
     }
-  
+
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object (builder, "window");
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-  
+
   //event_box = gtk_event_box_new ();
   widget = gtk_builder_get_object (builder, "tab0");
-  g_signal_connect (widget, "button-press-event",
-                    G_CALLBACK (print_hello), NULL);
-  
+  g_signal_connect (widget, "button-press-event", G_CALLBACK (print_hello), NULL);
+
   widget = gtk_builder_get_object (builder, "tab1");
-  g_signal_connect (widget, "button-press-event",
-                    G_CALLBACK (print_hello), NULL);
-  
+  g_signal_connect (widget, "button-press-event", G_CALLBACK (print_hello), NULL);
+
   /*
   button = gtk_builder_get_object (builder, "button1");
   g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);

@@ -38,6 +38,47 @@
                         </child>
                      </object>
                   </child>
+                  <child>
+                    <object class="GtkMenuItem" id="edititem">
+                      <property name="visible">True</property>
+                      <property name="can_focus">False</property>
+                      <property name="label" translatable="yes">_Edit</property>
+                      <property name="use_underline">True</property>
+                      <child type="submenu">
+                        <object class="GtkMenu">
+                          <property name="visible">True</property>
+                          <property name="can_focus">False</property>
+                          <child>
+                            <object id="editcut" class="GtkImageMenuItem">
+                              <property name="label">gtk-cut</property>
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <property name="use_underline">True</property>
+                              <property name="use_stock">True</property>
+                            </object>
+                          </child>
+                          <child>
+                            <object id="editcopy" class="GtkImageMenuItem">
+                              <property name="label">gtk-copy</property>
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <property name="use_underline">True</property>
+                              <property name="use_stock">True</property>
+                            </object>
+                          </child>
+                          <child>
+                            <object id="editpaste" class="GtkImageMenuItem">
+                              <property name="label">gtk-paste</property>
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <property name="use_underline">True</property>
+                              <property name="use_stock">True</property>
+                            </object>
+                          </child>
+                        </object>
+                      </child>
+                    </object>
+                  </child>
                </object>
                <packing>
                   <property name="expand">False</property>
@@ -46,7 +87,7 @@
                </packing>
             </child>
             <child>
-               <object class="GtkPaned" id="aaa">
+               <object class="GtkPaned" id="paned">
                   <property name="visible">True</property>
                   <property name="orientation">horizontal</property>
                   <property name="position">300</property>
@@ -60,57 +101,37 @@
                      <object class="GtkNotebook" id="notebook1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-
-
-
-
-
-
-        <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow1">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="shadow_type">in</property>
-            <child>
-              <object class="GtkTextView" id="textview1">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="editable">True</property>
-                <property name="monospace">TRUE</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-
-
-
-
-
-
-
-
-
-                        <child type="tab">
-              
-              <object class="GtkEventBox" id="tab0">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">0000</property>
-                    <property name="use_markup">True</property>
-                    <property name="justify">center</property>
-                  </object>
-                </child>
-              </object>
-
+                        <child>
+                           <object class="GtkScrolledWindow">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="shadow_type">in</property>
+                              <child>
+                                 <object class="GtkTextView">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="editable">True</property>
+                                    <property name="monospace">TRUE</property>
+                                 </object>
+                              </child>
+                           </object>
+                           <packing>
+                              <property name="position">1</property>
+                           </packing>
                         </child>
-
+                        <child type="tab">
+                           <object class="GtkEventBox" id="tab0">
+                              <property name="visible">True</property>
+                              <child>
+                                 <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">0000</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
                         <!--
                         <child type="tab">
                            <object class="GtkLabel" id="tab0">
@@ -123,34 +144,36 @@
                            </packing>
                         </child>
                         -->
-
-
                         <child>
-                           <object class="GtkTextView" id="user1">
+                           <object class="GtkScrolledWindow">
                               <property name="visible">True</property>
                               <property name="can_focus">True</property>
-                              <property name="justification">center</property>
-                              <property name="buffer">userText</property>
+                              <property name="shadow_type">in</property>
+                              <child>
+                                 <object class="GtkTextView">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="editable">True</property>
+                                    <property name="monospace">TRUE</property>
+                                 </object>
+                              </child>
                            </object>
                            <packing>
                               <property name="position">1</property>
                            </packing>
                         </child>
                         <child type="tab">
-
-              <object class="GtkEventBox" id="tab1">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">1111</property>
-                    <property name="use_markup">True</property>
-                    <property name="justify">center</property>
-                  </object>
-                </child>
-              </object>
-
-                        
+                           <object class="GtkEventBox" id="tab1">
+                              <property name="visible">True</property>
+                              <child>
+                                 <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">1111</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                 </object>
+                              </child>
+                           </object>
                         </child>
                      </object>
                   </child>
@@ -189,8 +212,8 @@
                         <child>
                            <object class="GtkLabel">
                               <attributes>
-                                <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-                                <attribute name="background" value="red" start="0" end="10"/>
+                                 <attribute name="weight" value="PANGO_WEIGHT_BOLD" />
+                                 <attribute name="background" value="red" start="0" end="10" />
                               </attributes>
                               <property name="visible">True</property>
                               <property name="can_focus">False</property>
