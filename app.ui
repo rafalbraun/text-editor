@@ -60,22 +60,41 @@
                      <object class="GtkNotebook" id="notebook1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <child>
-                           <object class="GtkTextView" id="user0">
-                              <property name="visible">True</property>
-                              <property name="can_focus">True</property>
-                              <property name="justification">center</property>
-                              <property name="buffer">userText</property>
-                              <property name="top-margin">0</property>
-                              <property name="left-margin">0</property>
-                              <property name="monospace">TRUE</property>
-                              <property name="wrap-mode">GTK_WRAP_NONE</property>
-                              <property name="justification">GTK_JUSTIFY_LEFT</property>
-                              <property name="editable">TRUE</property>
-                              <property name="cursor-visible">TRUE</property>
-                              <property name="accepts-tab">TRUE</property>
-                           </object>
-                        </child>
+
+
+
+
+
+
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <object class="GtkTextView" id="textview1">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">True</property>
+                <property name="monospace">TRUE</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+
+
+
+
+
+
+
+
+
                         <child type="tab">
               
               <object class="GtkEventBox" id="tab0">
