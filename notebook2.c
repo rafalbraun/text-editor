@@ -115,20 +115,22 @@ static void remove_book( GtkWidget   *button,
     child = gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), pagenum);
     label = gtk_notebook_get_tab_label(GTK_NOTEBOOK(notebook), child);
     tabname = gtk_label_get_text(GTK_LABEL(label));
-    gtk_notebook_remove_page (notebook, pagenum);
 
     if (tabnum > 0) {
         for (int i=0; i < tabnum; i++) {
             GList *t = g_list_nth (filenames, i);
+            //g_print("[INFO] %s != %s \n", t->data, tabname);
             if (strcmp(((gchar*) t->data), tabname) == 0) {
+                //g_print("[INFO] removing: %s \n", t->data);
                 filenames = g_list_remove(filenames, (t->data));
-                //g_print("[INFO] %s already found\n", filepath);
                 //return;
                 break;
             }
         }
     }
     tabnum--;
+
+    gtk_notebook_remove_page (notebook, pagenum);
 
     /* Need to refresh the widget -- 
      This forces the widget to redraw itself. */
@@ -146,6 +148,19 @@ static gboolean delete( GtkWidget *widget,
 {
     gtk_main_quit ();
     return FALSE;
+}
+
+static gboolean print_tabs( GtkWidget *widget,
+                        GtkWidget *event,
+                        gpointer   data )
+{
+    if (tabnum > 0) {
+        for (int i=0; i < tabnum; i++) {
+            GList *t = g_list_nth (filenames, i);
+            g_print("%d :: %s\n", i, ((gchar*) t->data));
+        }
+        g_print("-----\n");
+    }
 }
 
 gboolean
@@ -171,6 +186,22 @@ switch_page (GtkNotebook *notebook,
     
     gint page_dst = gtk_notebook_get_current_page(notebook);
     g_print("page: %d -> %d\n", page_dst, page_src);
+}
+
+void
+page_removed (GtkNotebook *notebook,
+               GtkWidget   *child,
+               guint        page_num,
+               gpointer     user_data) {
+    g_print("page removed \n");
+}
+
+void
+page_reordered (GtkNotebook *notebook,
+               GtkWidget   *child,
+               guint        page_num,
+               gpointer     user_data) {
+    g_print("page reordered\n");
 }
 
 
@@ -208,6 +239,12 @@ int main( int argc,
     g_signal_connect (G_OBJECT (notebook), "switch-page",
                       G_CALLBACK (switch_page),
                       NULL);
+    g_signal_connect (G_OBJECT (notebook), "page-removed",
+                      G_CALLBACK (page_removed),
+                      NULL);
+    g_signal_connect (G_OBJECT (notebook), "page-reordered",
+                      G_CALLBACK (page_reordered),
+                      NULL);
 
     // Create horizontal box for buttons
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -238,6 +275,11 @@ int main( int argc,
     button = gtk_button_new_with_label ("close");
     g_signal_connect_swapped (button, "clicked",
 			      G_CALLBACK (delete), NULL);
+    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
+
+    button = gtk_button_new_with_label ("print tabs");
+    g_signal_connect_swapped (button, "clicked",
+                  G_CALLBACK (print_tabs), NULL);
     gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
 
     button = gtk_button_new_with_label ("next page");
