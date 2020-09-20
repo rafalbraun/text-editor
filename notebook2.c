@@ -39,8 +39,6 @@ open_file (GtkNotebook* notebook, gchar* filepath) {
     filenames = g_list_append (filenames, g_strdup(filepath));
 
     pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), content, label);
-    //gtk_widget_show (label);
-    //gtk_widget_show (content);
     gtk_widget_show_all (GTK_WIDGET(notebook));
 
     gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), pagenum);
@@ -68,25 +66,14 @@ open_file_dialog (GtkWidget *widget, GtkWidget* notebook) {
         GtkWidget *label1, *label2;
 
         filepath = gtk_file_chooser_get_filename (chooser);
-        //open_file (filename);
         g_print("GTK_RESPONSE_ACCEPT: %s \n", filepath);
-
-        //label1 = gtk_label_new(filepath);
-        //label2 = gtk_label_new(filepath);
         
         open_file (GTK_NOTEBOOK(notebook), filepath);
-        //gtk_notebook_append_page (GTK_NOTEBOOK (notebook), label1, label2);
-        //g_free (filename);
 
-    //gtk_widget_show (label1);
-    //gtk_widget_show (label2);
-
-  } else if (res == GTK_RESPONSE_CANCEL) {
+    } else if (res == GTK_RESPONSE_CANCEL) {
       g_print("GTK_RESPONSE_CANCEL \n");
-  }
-
+    }
   gtk_widget_destroy (dialog);
-
 }
 
 void
@@ -120,10 +107,28 @@ static void append_page( GtkWidget   *button,
 static void remove_book( GtkWidget   *button,
                          GtkNotebook *notebook )
 {
+    GtkWidget *child, *label;
     gint pagenum;
+    const gchar* tabname;
     
     pagenum = gtk_notebook_get_current_page (notebook);
+    child = gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), pagenum);
+    label = gtk_notebook_get_tab_label(GTK_NOTEBOOK(notebook), child);
+    tabname = gtk_label_get_text(GTK_LABEL(label));
     gtk_notebook_remove_page (notebook, pagenum);
+
+    if (tabnum > 0) {
+        for (int i=0; i < tabnum; i++) {
+            GList *t = g_list_nth (filenames, i);
+            if (strcmp(((gchar*) t->data), tabname) == 0) {
+                filenames = g_list_remove(filenames, (t->data));
+                //g_print("[INFO] %s already found\n", filepath);
+                //return;
+                break;
+            }
+        }
+    }
+    tabnum--;
 
     /* Need to refresh the widget -- 
      This forces the widget to redraw itself. */

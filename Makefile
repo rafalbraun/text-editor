@@ -5,8 +5,8 @@
 
 CC=gcc
 LIBS=`pkg-config --cflags --libs gtk+-3.0 gtksourceview-4`
-PROGRAMS=app treeview
-SRC=app.c treeview.c
+PROGRAMS=app treeview notebook2 notebook1 filechooser
+SRC=app.c treeview.c notebook2.c notebook1.c filechooser.c
 
 all: $(PROGRAMS)
 
