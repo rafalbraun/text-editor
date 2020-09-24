@@ -114,7 +114,6 @@ switch_page (GtkNotebook *notebook,
     g_print("page: %d -> %d\n", page_dst, page_src);
 }
 
-
 int main( int argc,
           char *argv[] )
 {

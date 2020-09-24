@@ -10,18 +10,44 @@
 // https://developer.gnome.org/gtk-tutorial/stable/x1450.html
 //
 
-
 char bufferf[32];
 char bufferl[32];
 GList* filenames;
 guint tabnum;
 GtkWidget* window;
 
+//static void
+//print_hello (GtkWidget *widget,
+//             gpointer   data)
+static gboolean print_hello(GtkWidget *widget, GdkEventButton *event, gpointer userdata)
+{
+  GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
+  GtkLabel* label = ((GtkLabel*) list->data);
+  const gchar* text = gtk_label_get_text(GTK_LABEL(label));
+  g_print("label: %s \n", text);
+
+    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
+    {//1 is left mouse btn
+        g_print("1\n");
+        return FALSE;
+    }
+    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
+    {//2 is left mouse btn
+        g_print("2\n");
+        return TRUE;
+    }
+    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
+    {   //3 is right mouse btn
+        g_print("3\n");
+        return TRUE;
+    }
+}
 
 static void
 open_file (GtkNotebook* notebook, gchar* filepath) {
     GtkWidget* label = gtk_label_new(filepath);
-    GtkWidget* content = gtk_label_new("file contents");
+    GtkWidget* frame = gtk_label_new("file contents");
+    GtkWidget *event_box = gtk_event_box_new();
     int pagenum;
 
     // check if this filepath is already in list
@@ -29,7 +55,7 @@ open_file (GtkNotebook* notebook, gchar* filepath) {
         for (int i=0; i < tabnum; i++) {
             GList *t = g_list_nth (filenames, i);
             if (strcmp(((gchar*) t->data), filepath) == 0) {
-                g_print("[INFO] %s already found\n", filepath);
+                g_print("[INFO] %s already found: %s \n", filepath, ((gchar*) t->data) );
                 gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), i);
                 return;
             }
@@ -38,8 +64,12 @@ open_file (GtkNotebook* notebook, gchar* filepath) {
     tabnum++;
     filenames = g_list_append (filenames, g_strdup(filepath));
 
-    pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), content, label);
+    gtk_container_add(GTK_CONTAINER(event_box), label);
+    pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), frame, event_box);
     gtk_widget_show_all (GTK_WIDGET(notebook));
+    gtk_widget_show (label);
+
+    g_signal_connect (event_box, "button-press-event", G_CALLBACK (print_hello), NULL);
 
     gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), pagenum);
 }
@@ -81,9 +111,6 @@ append_book(GtkNotebook *notebook, gchar* tabname) {
     GtkWidget *frame;
     GtkWidget *label;
     GtkWidget *cLabel;
-
-    //sprintf(bufferf, "aaaaaaaaa");
-    //sprintf(bufferl, "bbbbb");
     
     frame = gtk_frame_new (tabname);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 10);
@@ -94,13 +121,6 @@ append_book(GtkNotebook *notebook, gchar* tabname) {
 
     label = gtk_label_new (tabname);
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), frame, label);
-}
-
-static void append_page( GtkWidget   *button,
-                         GtkNotebook *notebook )
-{
-
-  append_book(GTK_NOTEBOOK(notebook), "ccccccc");
 }
 
 /* Remove a page from the notebook */
@@ -119,11 +139,8 @@ static void remove_book( GtkWidget   *button,
     if (tabnum > 0) {
         for (int i=0; i < tabnum; i++) {
             GList *t = g_list_nth (filenames, i);
-            //g_print("[INFO] %s != %s \n", t->data, tabname);
             if (strcmp(((gchar*) t->data), tabname) == 0) {
-                //g_print("[INFO] removing: %s \n", t->data);
                 filenames = g_list_remove(filenames, (t->data));
-                //return;
                 break;
             }
         }
@@ -135,11 +152,6 @@ static void remove_book( GtkWidget   *button,
     /* Need to refresh the widget -- 
      This forces the widget to redraw itself. */
     gtk_widget_queue_draw (GTK_WIDGET (notebook));
-
-    // remove element from list
-    //GList *t = g_list_nth (data->filenames, pagenum);
-    //data->filenames = g_list_remove (data->filenames, ((gchar*) t->data));
-    //data->tabnum--;
 }
 
 static gboolean delete( GtkWidget *widget,
@@ -204,6 +216,7 @@ page_reordered (GtkNotebook *notebook,
     g_print("page reordered\n");
 }
 
+#if !NOTEBOOK
 
 int main( int argc,
           char *argv[] )
@@ -300,11 +313,11 @@ int main( int argc,
                       notebook);
     gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
 
-    button = gtk_button_new_with_label ("append page");
-    g_signal_connect (button, "clicked",
-                      G_CALLBACK (append_page),
-                      notebook);
-    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
+    // button = gtk_button_new_with_label ("append page");
+    // g_signal_connect (button, "clicked",
+    //                   G_CALLBACK (append_page),
+    //                   notebook);
+    // gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
 
     button = gtk_button_new_with_label ("open file");
     g_signal_connect (button, "clicked",
@@ -318,3 +331,5 @@ int main( int argc,
     
     return 0;
 }
+
+#endif

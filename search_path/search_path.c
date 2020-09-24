@@ -1,21 +1,26 @@
 #include <gtk/gtk.h>
 
 void
-preedit_changed (GtkWidget *widget, GdkEventKey *event, gpointer userdata)  {
+preedit_changed (GtkEntry *widget, GdkEventKey *event, gpointer userdata)  {
   g_print("data %s \n", gtk_entry_get_text(GTK_ENTRY(widget)));
 }
 
-void add_to_list(GtkListStore* store, gchar *str0, gchar *str1, gchar *str2) {
+// widget is of type GtkTreeView
+void add_to_list(GObject* widget, gchar *str0, gchar *str1) {
+  GtkTreeView *treeview = NULL;
+  GtkTreeModel *model = NULL;
+  GtkListStore *liststore = NULL;
   GtkTreeIter iter;
-  //GType types[10];
 
-  //gtk_list_store_set_column_types(store, 2, types);
+  treeview = GTK_TREE_VIEW(widget);
+  model = gtk_tree_view_get_model(treeview);
+  liststore = GTK_LIST_STORE(model);
 
-  gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, str0, 1, str1, 2, str2, -1);
+  gtk_list_store_append(liststore, &iter);
+  gtk_list_store_set(liststore, &iter, 0, str0, 1, str1, -1);
 }
 
-void on_changed(GtkWidget *widget, gpointer userdata) {
+void on_changed(GtkTreeSelection *widget, gpointer userdata) {
   GtkTreeIter iter;
   GtkTreeModel *model;
   gchar *value;
@@ -30,47 +35,67 @@ void on_changed(GtkWidget *widget, gpointer userdata) {
   }
 }
 
+void
+row_activated (GtkTreeView       *tree_view,
+               GtkTreePath       *path,
+               GtkTreeViewColumn *column,
+               gpointer           user_data) {
+  g_print("row activated \n");
+}
+
 int
 main (int   argc,
       char *argv[])
 {
   GtkBuilder *builder;
-  GObject *window;
-  GObject *button;
+  GObject *window, *entry, *treeview;
+  GtkTreeSelection *selection;
   GError *error = NULL;
-  GtkTreeSelection *selection; 
 
   gtk_init (&argc, &argv);
 
   /* Construct a GtkBuilder instance and load our UI description */
   builder = gtk_builder_new ();
   if (gtk_builder_add_from_file (builder, "search_path.ui", &error) == 0)
-    {
+  {
       g_printerr ("Error loading file: %s\n", error->message);
       g_clear_error (&error);
       return 1;
-    }
+  }
 
   // Connect signal handlers to the constructed widgets. 
   window = gtk_builder_get_object (builder, "window");
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
   
-  button = gtk_builder_get_object (builder, "entry");
-  g_signal_connect (button, "changed", G_CALLBACK (preedit_changed), NULL);
+  entry = gtk_builder_get_object (builder, "entry");
+  g_signal_connect (entry, "changed", G_CALLBACK (preedit_changed), NULL);
 
-  GtkTreeView *treeview = NULL;
-  GtkTreeModel *model = NULL;
-  GtkListStore *liststore = NULL;
-  GtkTreeIter iter;
-  gchar* data1 = "Hello1aaaaa";
-  gchar* data2 = "Hello2aaaa";
+  treeview = gtk_builder_get_object(builder, "treeview1");
+  g_signal_connect(treeview, "row-activated", G_CALLBACK(row_activated), NULL);
 
-  treeview = GTK_TREE_VIEW(gtk_builder_get_object(builder, "treeview1"));
-  model = gtk_tree_view_get_model(treeview);
-  liststore = GTK_LIST_STORE(model);
+  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+  g_signal_connect(selection, "changed", G_CALLBACK(on_changed), NULL);
 
-  gtk_list_store_append(liststore, &iter);
-  gtk_list_store_set(liststore, &iter, 0, data1, 1, data2, -1);
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+  add_to_list(treeview, "string000000000", "string11111111111");
+
+
+
+
+
+
+
+
 
   //button = gtk_builder_get_object (builder, "listview");
   //selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(button));

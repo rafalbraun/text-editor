@@ -2,10 +2,12 @@
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
 #define TREEVIEW 1
+#define NOTEBOOK 1
 
 #include <gtk/gtk.h>
 #include "treeview.c"
-
+#include "notebook2.c"
+/*
 static void
 print_hello (GtkWidget *widget,
              gpointer   data)
@@ -14,6 +16,19 @@ print_hello (GtkWidget *widget,
   GtkLabel* label = ((GtkLabel*) list->data);
   const gchar* text = gtk_label_get_text(GTK_LABEL(label));
   g_print("label: %s \n", text);
+}
+*/
+gboolean
+key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
+{
+  g_print("key_pressed: GtkTreeView \n");
+  return FALSE;
+}
+gboolean
+key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
+{
+  g_print("key_pressed: GtkWindow \n");
+  return FALSE;
 }
 
 int
@@ -43,6 +58,7 @@ main (int   argc,
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object (builder, "window");
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+  g_signal_connect (window, "key-press-event", G_CALLBACK (key_pressed_window), NULL);
 
   //event_box = gtk_event_box_new ();
   widget = gtk_builder_get_object (builder, "tab0");
@@ -54,6 +70,13 @@ main (int   argc,
 
   widget = gtk_builder_get_object (builder, "treeview");
   create_view_and_model(filepath, GTK_WIDGET(widget));
+  gtk_tree_view_set_enable_tree_lines(GTK_TREE_VIEW(widget), TRUE);
+  gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(widget), GTK_TREE_VIEW_GRID_LINES_BOTH);
+  g_signal_connect (widget, "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
+
+  widget = gtk_builder_get_object (builder, "notebook");
+  open_file (GTK_NOTEBOOK(widget), "/tmp/Makefile");
+
 
   /*
   button = gtk_builder_get_object (builder, "button1");
