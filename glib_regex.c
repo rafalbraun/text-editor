@@ -64,15 +64,13 @@ void scan_file(char const* const filename, char const* const pattern) {
     fclose(file);
 }
 
-void *list_directory( void *ptr ) {
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL); 
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
+int list_directory( char* dirname, char* pattern ) {
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL); 
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
     //void list_directory(char const* const dirname, char const* const pattern) {
     char path[1000];
     struct dirent *dp;
-    char* dirname = ((search_data*)ptr)->dirname;
-    char* pattern = ((search_data*)ptr)->pattern;
     DIR *dir = opendir(dirname);
 
     // Unable to open directory stream
@@ -93,14 +91,17 @@ void *list_directory( void *ptr ) {
             //printf("%s\n", path);
             scan_file(path, pattern);
 
-            search_data* data = g_new0(search_data, 1);;
-            data->dirname = path;
-            data->pattern = pattern;
-            list_directory(data);
+            list_directory(path, pattern);
         }
     }
 
     closedir(dir);
+}
+
+void *topfun( void *ptr ) {
+    char* dirname = ((search_data*)ptr)->dirname;
+    char* pattern = ((search_data*)ptr)->pattern;
+    list_directory(dirname, pattern);
 }
 
 // https://stackoverflow.com/questions/9206091/going-through-a-text-file-line-by-line-in-c/9206332
@@ -110,19 +111,20 @@ void *list_directory( void *ptr ) {
 //
 // lpthread keyboard press cancel thread
 // https://www.quora.com/How-do-I-interrupt-an-infinite-loop-in-C++-using-keyboard-hit
+/*
 int main(int argc, char* argv[]) {
     pthread_t thread;
     char *dirname = "/usr/include";
     char *pattern = "int";
     void *ret; 
-    char c;
+    //char c;
 
     search_data* data = g_new0(search_data, 1);;
     data->dirname = dirname;
     data->pattern = pattern;
     //struct DispatchData *data = g_new0(struct DispatchData, 1);
 
-    if(pthread_create(&thread, NULL, list_directory, (void*) data) != 0) {
+    if(pthread_create(&thread, NULL, topfun, (void*) data) != 0) {
         printf("pthread create failed\n"); 
         exit(1); 
     }
@@ -149,105 +151,11 @@ int main(int argc, char* argv[]) {
         } 
     } 
 
-
-
-    /*
-    printf("Enter character: ");
-    while(!c) {
-        c = getchar();
-        pthread_cancel(thread);
-    }
-    */
-
     //list_directory(".");
     //list_directory("/home/rafal/IdeaProjects/gtksourceview-my-ide/application");
     //list_directory("/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path");
     //list_directory(data);
 
-    /*
-    scan_file("/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path/Makefile", "int");
-    scan_file("/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path/search_path.c", "int");
-    scan_file("/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path/search_path.ui", "int");
-    scan_file("/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path/treestore.c", "int");
-    scan_file("/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path/treestore.ui", "int");
-    */
-
-    /*
-    scan_file("read_lines.c", "int");
-    scan_file("hello_world.c", "int");
-    scan_file("filechooser.c", "int");
-    */
     return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * gcc `pkg-config --cflags --libs glib-2.0` glib_regex.c
- *
- */
-/*
-gchar *contents;
-gsize len;
-GBytes *bytes;
-GError *err = NULL;
-const char* filename = "/home/rafal/IdeaProjects/gtksourceview-my-ide/highlight_syntax/highlight_syntax.c";
-
-int main () {
-	GError *err = NULL;
-	GMatchInfo *matchInfo;
-	GRegex *regex;
-	gint match_num, start_pos, end_pos;
-
-    if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
-        g_error("error reading %s: %s", filename, err->message);
-    }
-
-    regex = g_regex_new ("int", G_REGEX_DOTALL, 0, &err);
-    g_regex_match (regex, contents, 0, &matchInfo);
-
-	while (g_match_info_matches (matchInfo)) {
-		gchar *result = g_match_info_fetch (matchInfo, 0);
-
-		g_print ("mykey=%s\n", result);
-
-		g_match_info_fetch_pos(matchInfo, 0, &start_pos, &end_pos);
-		g_print ("start: %d, end: %d \n", start_pos, end_pos);
-
-		g_match_info_next (matchInfo, &err);
-		g_free (result);
-	}
-
 }
 */
