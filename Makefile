@@ -18,7 +18,7 @@ app: app.c treeview.c notebook2.c
 	$(CC) -o $@ $^ $(GTK)
 
 glib_regex: glib_regex.c
-	$(CC) $(GLIB) glib_regex.c -o glib_regex
+	$(CC) $(GLIB) glib_regex.c -o glib_regex -lpthread
 
 clean:
 	rm $(PROGRAMS) glib_regex
