@@ -1,8 +1,19 @@
 #include <gtk/gtk.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#define BUFFER_SIZE 20000
+#define SEARCH_PATH 1
+
 #include "../glib_regex.c"
 
 int counter = 0;
+
+// needed by spawn
+int stdout_fd = -1;
+char buffer [BUFFER_SIZE];
 
 // widget is of type GtkTreeView
 void add_to_list(GObject* widget, gchar *str0, gchar *str1) {
@@ -10,11 +21,11 @@ void add_to_list(GObject* widget, gchar *str0, gchar *str1) {
   GtkTreeModel *model = NULL;
   GtkListStore *liststore = NULL;
   GtkTreeIter iter;
-  
+
   treeview = GTK_TREE_VIEW(widget);
   model = gtk_tree_view_get_model(treeview);
   liststore = GTK_LIST_STORE(model);
-  
+
   gtk_list_store_append(liststore, &iter);
   gtk_list_store_set(liststore, &iter, 0, str0, 1, str1, -1);
 }
@@ -39,30 +50,97 @@ child_exit_cb (GPid pid, gint status, gpointer data)
 }*/
 
 gboolean
-_stop_main_loop (gpointer user_data)
+_stop_main_loop (gpointer treeview)
 {
+  char** lines;
+  char** line;
+  char*  contents;
+  int    bytes;
+
   //g_main_loop_quit (loop);
-  g_print("time %d\n", counter);
+  g_print("time %d \n", counter);
   counter++;
 
+  /*
+  while (read (stdout_fd, buffer, BUFFER_SIZE) > 0) {
+   g_print("[BUFFER]\n%s\n***", buffer);
+  }*/
+
+  //while (read (stdout_fd, buffer, BUFFER_SIZE) > 0) {
+
+
+
+  //int fd = open("file.txt", O_RDONLY, 0);
+  //bytes = read (fd, buffer, BUFFER_SIZE);
+  bytes = read (stdout_fd, buffer, BUFFER_SIZE);
+  if (bytes > 0) {
+    //g_print("%s \n", buffer);
+    lines = g_strsplit(buffer, "\n", -1);
+    g_print("<<<<<%d>>>>>", g_strv_length(lines));
+    for (int i=0 ; i<g_strv_length(lines); i++) {
+      //line = g_strsplit(lines[i], "^", 5);
+      g_print("::: %s \n", lines[i]);
+      //g_strfreev(line);
+    }
+    g_strfreev(lines);
+  }
+  memset(buffer, 0, sizeof(buffer));
+
+
+  /*
+    g_print("%s", buffer);
+    memset(buffer, 0, sizeof(buffer));
+
+    lines = g_strsplit("aaaa\nergerg\nergreg\n", "\n", -1);
+    //lines = g_strsplit (";a;bc;;d;", ";", -1);
+    g_print(" <<<<<%d>>>>> \n", g_strv_length(lines));
+    //g_print("lines: %d", g_strv_length(lines));
+    //for (int i=0 ; i<g_strv_length(lines); i++) {
+        //line = g_strsplit(lines[i], "¬", 5);
+        //g_print("[%s] %d \n", line[0], i);
+        //g_strfreev(line);
+    //}
+    g_strfreev(lines);
+  */
+  //}
+
+  /*
+  lines = g_strsplit(buffer, "\n", 100);
+
+  // delimiter :: "¬"
+  for (int i=0 ; i<g_strv_length(lines); i++) {
+    //g_print("lines[%d] %s \n", i, lines[i]);
+    //line = g_strsplit(lines[i], "|", 5);
+    //contents = line[0];
+
+    //g_print("[%s] \n", contents);
+    //g_print ("[%s|%d|%d|%d|%s]\n", line[0], line[1], line[2], line[3], line[4]);
+
+    //add_to_list(treeview, line[0], line[1]);
+    g_print("[%d][%s]\n", i, lines[i]);
+
+    //g_strfreev(line);
+  }
+  g_strfreev(lines);
+  */
   return TRUE;
 }
 
 int spawn() {
   char *argv [15];
-  int stdout_fd = -1;
-  char buffer [512];
-  //pid_t child_pid = 0;
   GPid child_pid;
   int status;
 
   memset (argv, 0, 15 * sizeof (char *));
-  argv [0] = "ls";
-  argv[1] = "-lR";
-  argv[2] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path";
+  //argv [0] = "ls";
+  //argv[1] = "-lR";
+  //argv[2] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path";
+  argv[0] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/glib_regex";
+  argv[1] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path";
+  argv[2] = "int";
   status = g_spawn_async_with_pipes (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, &stdout_fd, NULL, NULL);
   if (!status) {
-    g_print("[FAILED] 1 Failed to run ls: %d \n", status);
+    g_print("[FAILED] 1 Failed to run %s: %d \n", argv [0], status);
     return 1;
   }
   if (child_pid == 0) {
@@ -74,11 +152,11 @@ int spawn() {
     return 1;
   }
 
-  while (read (stdout_fd, buffer, 512) > 0) {
-    g_print("[BUFFER]\n%s\n***", buffer);
-  }
+  // while (read (stdout_fd, buffer, BUFFER_SIZE) > 0) {
+  //   g_print("[BUFFER]\n%s\n***", buffer);
+  // }
 
-  close (stdout_fd);
+  //close (stdout_fd);
 
   return 0;
 
@@ -189,7 +267,7 @@ main (int   argc,
 
   g_timeout_add (100,
            (GSourceFunc) _stop_main_loop,
-           NULL);
+           treeview);
 
 
 

@@ -26,7 +26,7 @@ typedef struct _search_data {
 void scan_file(char const* const filename, char const* const pattern) {
     //char const* const fileName = "read_lines.c"; /* should check that argc > 1 */
     FILE* file = fopen(filename, "r");    /* should check the result */
-    int counter = 0;
+    int linenum = 0;
     char line[BUFFER];
     GMatchInfo *match_info = NULL;
     gint match_num, start_pos, end_pos;
@@ -34,7 +34,7 @@ void scan_file(char const* const filename, char const* const pattern) {
     GError *err = NULL;
 
     regex = g_regex_new (pattern, 0, 0, &err);
-    g_print("[FILE] %s \n", filename);
+    //g_print("[FILE] %s \n", filename);
 
     while (fgets(line, sizeof(line), file)) {
         /* note that fgets don't strip the terminating \n, checking its
@@ -48,14 +48,15 @@ void scan_file(char const* const filename, char const* const pattern) {
 
             g_match_info_fetch_pos(match_info, 0, &start_pos, &end_pos);
 
-            line[strlen(line)-1] = '\0'; // to overwrite \n with \0
+            //line[strlen(line)-1] = '\0'; // to overwrite \n with \0
             //g_print ("[MATCH] line: %d, \tstart: %d, \tend: %d, \t[%s][%s] \n", counter, start_pos, end_pos, filename, line);
+            g_print ("%s¬%d¬%d¬%d¬%s", filename, linenum, start_pos, end_pos, line);
 
             g_free (word);
             g_match_info_next (match_info, NULL);
         }
         g_match_info_free (match_info);
-        counter++;
+        linenum++;
     }
     /* may check feof here to make a difference between eof and io failure -- network
        timeout for instance */
@@ -112,11 +113,30 @@ void *topfun( void *ptr ) {
 // lpthread keyboard press cancel thread
 // https://www.quora.com/How-do-I-interrupt-an-infinite-loop-in-C++-using-keyboard-hit
 /*
+./glib_regex /usr/include/glib-2.0 int
+/home/rafal/IdeaProjects/gtksourceview-my-ide/application/glib_regex /usr/include/glib-2.0 int
+
+
+
+./glib_regex /home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path int
+
+
+*/
+
+#if !SEARCH_PATH
+
 int main(int argc, char* argv[]) {
     pthread_t thread;
-    char *dirname = "/usr/include";
-    char *pattern = "int";
-    void *ret; 
+    //char *dirname = "/usr/include";
+    if (argc != 3) {
+        g_print("Bad argument number (%d): %s %s %s \n", argc, argv[0], argv[1], argv[2]);
+        exit(1);
+    }
+    //char *dirname = "/usr/include/glib-2.0";
+    //char *pattern = "int";
+    void* ret; 
+    char* dirname = argv[1];
+    char* pattern = argv[2];
     //char c;
 
     search_data* data = g_new0(search_data, 1);;
@@ -128,28 +148,32 @@ int main(int argc, char* argv[]) {
         printf("pthread create failed\n"); 
         exit(1); 
     }
-    //pthread_join(thread, NULL); 
+    if(pthread_join(thread, &ret)<0){
+        perror("thread join failed\n");
+        exit(1);
+    }
 
     //printf("Thread 1 returns: %d\n",iret);
 
-    while(getchar()){
-        if(pthread_cancel(thread)<0){
-            perror("thread cancel failed");
-            exit(1); 
-        } 
-        if(pthread_join(thread, &ret)<0){
-            perror("thread join failed\n");
-            exit(1); 
-        } 
-        if(ret == PTHREAD_CANCELED){ 
-            printf("cancellation success\n");
-            break; 
-        } 
-        else{ 
-            printf("error in return status after cancellation\n"); 
-            exit(1); 
-        } 
-    } 
+    
+    // while(getchar()){
+    //     if(pthread_cancel(thread)<0){
+    //         perror("thread cancel failed");
+    //         exit(1); 
+    //     } 
+    //     if(pthread_join(thread, &ret)<0){
+    //         perror("thread join failed\n");
+    //         exit(1); 
+    //     } 
+    //     if(ret == PTHREAD_CANCELED){ 
+    //         printf("cancellation success\n");
+    //         break; 
+    //     } 
+    //     else{ 
+    //         printf("error in return status after cancellation\n"); 
+    //         exit(1); 
+    //     } 
+    // } 
 
     //list_directory(".");
     //list_directory("/home/rafal/IdeaProjects/gtksourceview-my-ide/application");
@@ -158,4 +182,5 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-*/
+
+#endif
