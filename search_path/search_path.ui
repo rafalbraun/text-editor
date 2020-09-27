@@ -4,17 +4,22 @@
       <!-- column-name column1 -->
       <column type="gchararray"/>
       <column type="gchararray"/>
+      <column type="gchararray"/>
     </columns>
+    <!--
   <data>
   <row>
-  <col id="0">Hello2</col>
-  <col id="1">Hello2222222</col>
+    <col id="0">Hello0</col>
+    <col id="1">Hello1</col>
+    <col id="2">Hello2</col>
   </row>
   <row>
-  <col id="0">Hello3</col>
-  <col id="1">Hello333333333</col>
+    <col id="0">Hello01</col>
+    <col id="1">Hello02</col>
+    <col id="2">Hello03</col>
   </row>
   </data>
+    -->
   </object>
   <!--
   <object class="GtkListStore" id="liststore">
@@ -107,9 +112,8 @@
         </child>
         <child>
           <object class="GtkTreeViewColumn" id="treeviewcolumn1">
-            <property name="title" translatable="yes">column</property>
-            <property name="min-width">800</property>
-            <property name="resizable">True</property>
+            <property name="title" translatable="yes">ocurrence</property>
+            <property name="fixed-width">800</property>
             <child>
               <object class="GtkCellRendererText" id="cellrenderertext1">
                 <property name="height">26</property>
@@ -120,11 +124,11 @@
             </child>
           </object>
         </child>
+
         <child>
           <object class="GtkTreeViewColumn" id="treeviewcolumn2">
-            <property name="title" translatable="yes">column</property>
-            <property name="min-width">200</property>
-            <property name="resizable">True</property>
+            <property name="title" translatable="yes">filename</property>
+            <property name="fixed-width">300</property>
             <child>
               <object class="GtkCellRendererText" id="cellrenderertext2">
                 <property name="height">26</property>
@@ -135,6 +139,22 @@
             </child>
           </object>
         </child>
+
+        <child>
+          <object class="GtkTreeViewColumn" id="treeviewcolumn3">
+            <property name="title" translatable="yes">linenum</property>
+            <property name="fixed-width">50</property>
+            <child>
+              <object class="GtkCellRendererText" id="cellrenderertext3">
+                <property name="height">26</property>
+              </object>
+              <attributes>
+                <attribute name="text">2</attribute>
+              </attributes>
+            </child>
+          </object>
+        </child>
+
       </object>
 
 

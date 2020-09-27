@@ -15,8 +15,22 @@ int counter = 0;
 int stdout_fd = -1;
 char buffer [BUFFER_SIZE];
 
+gchar* 
+extract_filename(gchar* filepath) {
+  gchar*  filename;
+  gchar** tokens;
+  int     tokennum;
+
+  tokens = g_strsplit(filepath, "/", -1);
+  tokennum = g_strv_length(tokens);
+  filename = g_strdup(tokens[tokennum-1]);
+  g_strfreev(tokens);
+
+  return filename;
+}
+
 // widget is of type GtkTreeView
-void add_to_list(GObject* widget, gchar *str0, gchar *str1) {
+void add_to_list(GObject* widget, gchar *str0, gchar *str1, gchar* str2) {
   GtkTreeView *treeview = NULL;
   GtkTreeModel *model = NULL;
   GtkListStore *liststore = NULL;
@@ -27,7 +41,19 @@ void add_to_list(GObject* widget, gchar *str0, gchar *str1) {
   liststore = GTK_LIST_STORE(model);
 
   gtk_list_store_append(liststore, &iter);
-  gtk_list_store_set(liststore, &iter, 0, str0, 1, str1, -1);
+  gtk_list_store_set(liststore, &iter, 0, str0, 1, str1, 2, str2, -1);
+}
+
+void clear_list(GObject* widget) {
+  GtkTreeView *treeview = NULL;
+  GtkTreeModel *model = NULL;
+  GtkListStore *liststore = NULL;
+
+  treeview = GTK_TREE_VIEW(widget);
+  model = gtk_tree_view_get_model(treeview);
+  liststore = GTK_LIST_STORE(model);
+
+  gtk_list_store_clear(liststore);
 }
 
 /*
@@ -70,17 +96,14 @@ _stop_main_loop (gpointer treeview)
 
 
 
-  //int fd = open("file.txt", O_RDONLY, 0);
-  //bytes = read (fd, buffer, BUFFER_SIZE);
   bytes = read (stdout_fd, buffer, BUFFER_SIZE);
+  buffer[bytes-1] = '\0';
   if (bytes > 0) {
-    //g_print("%s \n", buffer);
     lines = g_strsplit(buffer, "\n", -1);
-    g_print("<<<<<%d>>>>>", g_strv_length(lines));
     for (int i=0 ; i<g_strv_length(lines); i++) {
-      //line = g_strsplit(lines[i], "^", 5);
-      g_print("::: %s \n", lines[i]);
-      //g_strfreev(line);
+      line = g_strsplit(lines[i], "\x1C", 0);
+      add_to_list(treeview, line[4], extract_filename(line[0]), line[1]);
+      g_strfreev(line);
     }
     g_strfreev(lines);
   }
@@ -260,9 +283,6 @@ main (int   argc,
 
   entry = gtk_builder_get_object (builder, "entry");
   g_signal_connect (entry, "changed", G_CALLBACK (preedit_changed), treeview);
-
-  add_to_list(treeview, "string000000000", "string11111111111");
-  add_to_list(treeview, "string000000000", "string11111111111");
 
 
   g_timeout_add (100,
