@@ -26,7 +26,7 @@ typedef struct _search_data {
 void scan_file(char const* const filename, char const* const pattern) {
     //char const* const fileName = "read_lines.c"; /* should check that argc > 1 */
     FILE* file = fopen(filename, "r");    /* should check the result */
-    int linenum = 0;
+    int linenum = 1;
     char line[BUFFER];
     GMatchInfo *match_info = NULL;
     gint match_num, start_pos, end_pos;
@@ -50,7 +50,7 @@ void scan_file(char const* const filename, char const* const pattern) {
 
             //line[strlen(line)-1] = '\0'; // to overwrite \n with \0
             //g_print ("[MATCH] line: %d, \tstart: %d, \tend: %d, \t[%s][%s] \n", counter, start_pos, end_pos, filename, line);
-            g_print ("%s¬%d¬%d¬%d¬%s", filename, linenum, start_pos, end_pos, line);
+            g_print ("%s\x1C%d\x1C%d\x1C%d\x1C%s", filename, linenum, start_pos, end_pos, line);
 
             g_free (word);
             g_match_info_next (match_info, NULL);
@@ -128,10 +128,10 @@ void *topfun( void *ptr ) {
 int main(int argc, char* argv[]) {
     pthread_t thread;
     //char *dirname = "/usr/include";
-    if (argc != 3) {
-        g_print("Bad argument number (%d): %s %s %s \n", argc, argv[0], argv[1], argv[2]);
-        exit(1);
-    }
+    //if (argc != 3) {
+    //    g_print("Bad argument number (%d): %s %s %s \n", argc, argv[0], argv[1], argv[2]);
+    //    exit(1);
+    //}
     //char *dirname = "/usr/include/glib-2.0";
     //char *pattern = "int";
     void* ret; 

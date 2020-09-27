@@ -29,6 +29,20 @@ extract_filename(gchar* filepath) {
   return filename;
 }
 
+gchar* 
+read_file(gchar* filename) {
+  gchar *contents;
+  gsize len;
+  GError *err = NULL;
+
+  if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
+    g_error("error reading %s: %s", filename, err->message);
+  }
+  //bytes = g_bytes_new_take(contents, len);
+
+  return contents;
+}
+
 // widget is of type GtkTreeView
 void add_to_list(GObject* widget, gchar *str0, gchar *str1, gchar* str2) {
   GtkTreeView *treeview = NULL;
@@ -56,25 +70,6 @@ void clear_list(GObject* widget) {
   gtk_list_store_clear(liststore);
 }
 
-/*
-void *topfun( void *userdata ) {
-  printf("counting starting %d\n", c);
-  for (int i=0;i<5;i++) {
-    printf("adding %d::%d \n", c, i);
-  }
-  printf("counting ended %d\n", c);
-  c++;
-}
-*/
-/*
-static void
-child_exit_cb (GPid pid, gint status, gpointer data)
-{
-  //final_status = status;
-  //g_main_loop_quit (main_loop);
-  g_print("exit\n");
-}*/
-
 gboolean
 _stop_main_loop (gpointer treeview)
 {
@@ -83,18 +78,8 @@ _stop_main_loop (gpointer treeview)
   char*  contents;
   int    bytes;
 
-  //g_main_loop_quit (loop);
-  g_print("time %d \n", counter);
+  //g_print("time %d \n", counter);
   counter++;
-
-  /*
-  while (read (stdout_fd, buffer, BUFFER_SIZE) > 0) {
-   g_print("[BUFFER]\n%s\n***", buffer);
-  }*/
-
-  //while (read (stdout_fd, buffer, BUFFER_SIZE) > 0) {
-
-
 
   bytes = read (stdout_fd, buffer, BUFFER_SIZE);
   buffer[bytes-1] = '\0';
@@ -102,50 +87,14 @@ _stop_main_loop (gpointer treeview)
     lines = g_strsplit(buffer, "\n", -1);
     for (int i=0 ; i<g_strv_length(lines); i++) {
       line = g_strsplit(lines[i], "\x1C", 0);
-      add_to_list(treeview, line[4], extract_filename(line[0]), line[1]);
+      //add_to_list(treeview, line[4], extract_filename(line[0]), line[1]);
+      add_to_list(treeview, line[4], (line[0]), line[1]);
       g_strfreev(line);
     }
     g_strfreev(lines);
   }
   memset(buffer, 0, sizeof(buffer));
 
-
-  /*
-    g_print("%s", buffer);
-    memset(buffer, 0, sizeof(buffer));
-
-    lines = g_strsplit("aaaa\nergerg\nergreg\n", "\n", -1);
-    //lines = g_strsplit (";a;bc;;d;", ";", -1);
-    g_print(" <<<<<%d>>>>> \n", g_strv_length(lines));
-    //g_print("lines: %d", g_strv_length(lines));
-    //for (int i=0 ; i<g_strv_length(lines); i++) {
-        //line = g_strsplit(lines[i], "¬", 5);
-        //g_print("[%s] %d \n", line[0], i);
-        //g_strfreev(line);
-    //}
-    g_strfreev(lines);
-  */
-  //}
-
-  /*
-  lines = g_strsplit(buffer, "\n", 100);
-
-  // delimiter :: "¬"
-  for (int i=0 ; i<g_strv_length(lines); i++) {
-    //g_print("lines[%d] %s \n", i, lines[i]);
-    //line = g_strsplit(lines[i], "|", 5);
-    //contents = line[0];
-
-    //g_print("[%s] \n", contents);
-    //g_print ("[%s|%d|%d|%d|%s]\n", line[0], line[1], line[2], line[3], line[4]);
-
-    //add_to_list(treeview, line[0], line[1]);
-    g_print("[%d][%s]\n", i, lines[i]);
-
-    //g_strfreev(line);
-  }
-  g_strfreev(lines);
-  */
   return TRUE;
 }
 
@@ -155,9 +104,6 @@ int spawn() {
   int status;
 
   memset (argv, 0, 15 * sizeof (char *));
-  //argv [0] = "ls";
-  //argv[1] = "-lR";
-  //argv[2] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path";
   argv[0] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/glib_regex";
   argv[1] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path";
   argv[2] = "int";
@@ -175,63 +121,42 @@ int spawn() {
     return 1;
   }
 
-  // while (read (stdout_fd, buffer, BUFFER_SIZE) > 0) {
-  //   g_print("[BUFFER]\n%s\n***", buffer);
-  // }
-
-  //close (stdout_fd);
-
   return 0;
-
-  /*
-  gchar *out;
-  gchar *err;
-  gint status = -1;
-  GError *error = NULL;
-
-  if (!g_spawn_command_line_sync ("ls -lR /home/rafal", &out, &err, &status, &error)) {
-    g_print("[FAILED] Error executing 'ls' \n");
-    return 1;
-  }
-
-  if (status != 0) {
-    g_print("[FAILED] Status is %d \n", status);
-    return 1;
-  }
-
-  if (out == NULL || strlen (out) == 0) {
-    g_print("[FAILED] Didn't get any output from ls!? \n");
-    return 1;
-  }
-
-  g_print(out);
-
-  g_free (out);
-  g_free (err);
-  return 0;
-  */
 }
 
 void
-preedit_changed (GtkEntry *widget, gpointer userdata)  {
-  g_print("preedit_changed %s \n", gtk_entry_get_text(GTK_ENTRY(widget)));
+preedit_changed (GtkEntry *widget, gpointer treeview)  {
+  //g_print("preedit_changed %s \n", gtk_entry_get_text(GTK_ENTRY(widget)));
   //add_to_list(userdata, "string000000000", "string11111111111");
+  clear_list(treeview);
 
-  spawn();
+  gchar* needle = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget));
+  if (strlen(needle)>2) {
+    spawn(needle);
+  }
 }
 
-void on_changed(GtkTreeSelection *widget, gpointer userdata) {
+void on_changed(GtkTreeSelection *widget, gpointer textbuffer) {
   GtkTreeIter iter;
   GtkTreeModel *model;
-  gchar *value;
+  gchar *filename;
+  gchar *contents;
+  gsize len;
+  GError *err = NULL;
 
   if (gtk_tree_selection_get_selected(
       GTK_TREE_SELECTION(widget), &model, &iter)) {
 
-    gtk_tree_model_get(model, &iter, 0, &value,  -1);
+    gtk_tree_model_get(model, &iter, 1, &filename,  -1);
     //gtk_label_set_text(GTK_LABEL(label), value);
-    g_print("value: %s \n", value);
-    g_free(value);
+    g_print("value: %s \n", filename);
+
+    if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
+      g_error("error reading %s: %s", filename, err->message);
+    }
+
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(textbuffer), contents, len);
+    g_free(filename);
   }
 }
 
@@ -255,7 +180,7 @@ main (int   argc,
       char *argv[])
 {
   GtkBuilder *builder;
-  GObject *window, *entry, *treeview;
+  GObject *window, *entry, *treeview, *textbuffer;
   GtkTreeSelection *selection;
   GError *error = NULL;
 
@@ -278,8 +203,9 @@ main (int   argc,
   treeview = gtk_builder_get_object(builder, "treeview1");
   g_signal_connect(treeview, "row-activated", G_CALLBACK(row_activated), NULL);
 
+  textbuffer = gtk_builder_get_object (builder, "textbuffer");
   selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-  g_signal_connect(selection, "changed", G_CALLBACK(on_changed), NULL);
+  g_signal_connect(selection, "changed", G_CALLBACK(on_changed), textbuffer);
 
   entry = gtk_builder_get_object (builder, "entry");
   g_signal_connect (entry, "changed", G_CALLBACK (preedit_changed), treeview);
