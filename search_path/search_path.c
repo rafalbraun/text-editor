@@ -17,6 +17,8 @@ int counter = 0;
 // needed by spawn
 int stdout_fd = -1;
 char buffer [BUFFER_SIZE];
+GObject *adjustment;
+
 
 gchar* 
 extract_filename(gchar* filepath) {
@@ -47,7 +49,7 @@ read_file(gchar* filename) {
 }
 
 // widget is of type GtkTreeView
-void add_to_list(GObject* widget, gchar *str0, gchar *str1, gchar* str2) {
+void add_to_list(GObject* widget, gchar *str0, gchar *str1, gchar* str2, gchar* str3, gchar* str4) {
   GtkTreeView *treeview = NULL;
   GtkTreeModel *model = NULL;
   GtkListStore *liststore = NULL;
@@ -58,7 +60,7 @@ void add_to_list(GObject* widget, gchar *str0, gchar *str1, gchar* str2) {
   liststore = GTK_LIST_STORE(model);
 
   gtk_list_store_append(liststore, &iter);
-  gtk_list_store_set(liststore, &iter, 0, str0, 1, str1, 2, str2, -1);
+  gtk_list_store_set(liststore, &iter, 0, str0, 1, str1, 2, str2, 3, str3, 4, str4, -1);
 }
 
 void clear_list(GObject* widget) {
@@ -80,18 +82,29 @@ _stop_main_loop (gpointer treeview)
   char** line;
   char*  contents;
   int    bytes;
+  gchar* filename;
+  gchar* occurrence;
+  gchar* linenum;
+  gchar* start;
+  gchar* end;
 
   //g_print("time %d \n", counter);
   counter++;
 
   bytes = read (stdout_fd, buffer, BUFFER_SIZE);
   buffer[bytes-1] = '\0';
+
   if (bytes > 0) {
     lines = g_strsplit(buffer, "\n", -1);
     for (int i=0 ; i<g_strv_length(lines); i++) {
       line = g_strsplit(lines[i], "\x1C", 0);
       //add_to_list(treeview, line[4], extract_filename(line[0]), line[1]);
-      add_to_list(treeview, line[4], (line[0]), line[1]);
+      filename = line[0];
+      linenum = line[1];
+      start = line[2];
+      end = line[3];
+      occurrence = line[4];
+      add_to_list(treeview, occurrence, filename, linenum, start, end);
       g_strfreev(line);
     }
     g_strfreev(lines);
@@ -105,6 +118,8 @@ int spawn(gchar* needle) {
   char *argv [15];
   GPid child_pid;
   int status;
+
+  g_print("searching %s\n", needle);
 
   memset (argv, 0, 15 * sizeof (char *));
   argv[0] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/glib_regex";
@@ -158,10 +173,13 @@ void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
   gchar *linenum;
   gsize len;
   GError *err = NULL;
-  GObject *adj;
   int count;
-  gdouble upper;
+  gdouble upper, lower;
   gdouble pagesize;
+  gchar *start, *end;
+  GtkTextTagTable *tagtable;
+  GtkTextTag* tag;
+  GtkTextIter start_iter, end_iter;
 
   GList* children = gtk_container_get_children(GTK_CONTAINER(textbufferscroll));
   GList *child = g_list_nth (children, 0);
@@ -173,8 +191,12 @@ void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
 
     gtk_tree_model_get(model, &iter, 1, &filename,  -1);
     gtk_tree_model_get(model, &iter, 2, &linenum,  -1);
+    gtk_tree_model_get(model, &iter, 3, &start,  -1);
+    gtk_tree_model_get(model, &iter, 4, &end,  -1);
     // g_print("-- filename: %s \n", filename);
     // g_print("-- linenum:  %s \n", linenum);
+    // g_print("-- start:  %s \n", start);
+    // g_print("-- end:  %s \n", end);
 
     if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
       g_error("error reading %s: %s", filename, err->message);
@@ -183,23 +205,44 @@ void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
     // g_print("-- len:  %d \n", len);
 
     gtk_text_buffer_set_text(GTK_TEXT_BUFFER(textbuffer), contents, len);
-
-    adj = (GObject*)gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(textbufferscroll));
     count = count_lines(contents, len);
-    upper = gtk_adjustment_get_upper(GTK_ADJUSTMENT(adj));
-    pagesize = gtk_adjustment_get_page_size (GTK_ADJUSTMENT(adj));
 
-    gdouble factor = (((gdouble)atoi(linenum)) * upper) / (gdouble)count - pagesize/2;
-    // g_print("linenum %s / %d / %f \n", linenum, atoi(linenum), (gdouble)atoi(linenum));
+    //adj = (GObject*)gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(textbufferscroll));
+    upper = gtk_adjustment_get_upper(GTK_ADJUSTMENT(adjustment));
+    //lower = gtk_adjustment_get_lower(GTK_ADJUSTMENT(adjustment));
+    pagesize = gtk_adjustment_get_page_size (GTK_ADJUSTMENT(adjustment));
+
+    //g_object_get (adjustment, "upper", &upper, NULL);
+
+    //gdouble factor = (((gdouble)atoi(linenum)) * upper) / (gdouble)count - pagesize/2; // THIS WORKED
+    gdouble factor = (g_strtod(linenum, NULL) * upper) / (gdouble)count - pagesize/2;   // NEW
+
+    // g_print("linenum %s / %d \n", linenum, atoi(linenum));
     // g_print("count %d /%f \n", count, (gdouble)count);
-    // g_print("upper %f \n", upper);
+    g_print("lower %f \n", lower);
+    g_print("upper %f \n", upper);
     // g_print("pagesize %f \n", pagesize);
-    // g_print("factor: %f \n", factor);
+    // g_print("[INFO] factor: %f :: %s \n", factor, filename);
 
-    gtk_adjustment_set_value (GTK_ADJUSTMENT(adj), factor);
+    //gtk_adjustment_set_value (GTK_ADJUSTMENT(adjustment), factor);
+
+
+    tagtable = gtk_text_buffer_get_tag_table(GTK_TEXT_BUFFER(textbuffer));
+    tag = gtk_text_tag_table_lookup(tagtable, "red_bg");
+    gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), &start_iter, atoi(linenum)-1, atoi(start));
+    gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), &end_iter, atoi(linenum)-1, atoi(end));
+    gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(textbuffer), tag, &start_iter, &end_iter);
 
     g_free(filename);
   }
+}
+
+void
+adjustment_changed (GtkAdjustment *adjustment,
+               gpointer       user_data) {
+    gdouble upper;
+    upper = gtk_adjustment_get_upper(GTK_ADJUSTMENT(adjustment));
+    g_print("[aaaaaa] upper %f \n", upper);
 }
 
 void
@@ -217,14 +260,56 @@ key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata)
   return FALSE;
 }
 */
+
+gchar* escape_ampersands(gchar* str) {
+    gchar** strstr;
+    gchar* joined;
+    const gchar* separator = "&amp;";
+
+    strstr = g_strsplit(str, "&", 0);
+    joined = g_strjoinv(separator, strstr);
+    return joined;
+}
+
+void
+cell_data_func (GtkTreeViewColumn *col,
+                    GtkCellRenderer   *renderer,
+                    GtkTreeModel      *model,
+                    GtkTreeIter       *iter,
+                    gpointer           user_data)
+{
+
+    //gchar *markuptxt;
+    gchar *buff;
+    //gchar *escaped;
+
+    gtk_tree_model_get(model, iter, 0, &buff, -1);
+
+    //g_print("[%s] -> ", buff);
+    //escaped = escape_ampersands(buff);
+    //g_print("[%s] \n", buff);
+
+    //markuptxt = g_markup_printf_escaped( g_strconcat("<tt>", buff, "</tt>", NULL) );
+
+    //g_object_set( renderer, "markup", markuptxt, NULL );
+
+    g_object_set( renderer, "text", buff, NULL );
+
+    //g_free(markuptxt);
+    g_free(buff);
+    //g_free(escaped);
+}
+
 int
 main (int   argc,
       char *argv[])
 {
   GtkBuilder *builder;
-  GObject *window, *entry, *treeview, *textbufferscroll;
+  GObject *window, *entry, *treeview, *textbufferscroll, *buffer;
   GtkTreeSelection *selection;
   GError *error = NULL;
+  GObject* renderer;
+  GObject* column;
 
   gtk_init (&argc, &argv);
 
@@ -249,41 +334,33 @@ main (int   argc,
   selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
   g_signal_connect(selection, "changed", G_CALLBACK(on_changed), textbufferscroll);
 
+  adjustment = (GObject*)gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(textbufferscroll));
+  g_signal_connect(adjustment, "changed", G_CALLBACK(adjustment_changed), NULL);
+
+
+  /*
+    TODO
+    wszystko co pod sygnałem changed na selection trzeba przenieść na sygnał changed z adjustment bo 
+    okazuje się, że jest wywoływany kilkakrotnie (doładowywanie kontentu do buffera)
+
+  */
+
+
   entry = gtk_builder_get_object (builder, "entry");
   g_signal_connect (entry, "changed", G_CALLBACK (preedit_changed), treeview);
+
+  renderer = gtk_builder_get_object (builder, "cellrenderertext1");
+  column   = gtk_builder_get_object (builder, "treeviewcolumn1");
+  gtk_tree_view_column_set_cell_data_func(GTK_TREE_VIEW_COLUMN(column), GTK_CELL_RENDERER(renderer), cell_data_func, NULL, NULL);
+
+  buffer = gtk_builder_get_object (builder, "textbuffer");
+  gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "red_bg", "background", "red", NULL); 
 
 
   g_timeout_add (100,
            (GSourceFunc) _stop_main_loop,
            treeview);
 
-
-
-
-
-
-  //button = gtk_builder_get_object (builder, "listview");
-  //selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(button));
-  //g_signal_connect(selection, "changed", G_CALLBACK(on_changed), NULL);
-
-  //button = gtk_builder_get_object (builder, "liststore");
-  /*
-  add_to_list(GTK_LIST_STORE(button), "Aaa", "aaa", "Aadwd");
-  add_to_list(GTK_LIST_STORE(button), "Aaa", "aaa", "Aadwd");
-  add_to_list(GTK_LIST_STORE(button), "Aaa", "aaa", "Aadwd");
-  add_to_list(GTK_LIST_STORE(button), "Aaa", "aaa", "Aadwd");
-  add_to_list(GTK_LIST_STORE(button), "Aaa", "aaa", "Aadwd");
-  */
-  /*
-  button = gtk_builder_get_object (builder, "button1");
-  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
-
-  button = gtk_builder_get_object (builder, "button2");
-  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
-
-  button = gtk_builder_get_object (builder, "quit");
-  g_signal_connect (button, "clicked", G_CALLBACK (gtk_main_quit), NULL);
-  */
   gtk_main ();
 
   return 0;
