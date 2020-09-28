@@ -1,3 +1,6 @@
+#define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
+#define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
+
 #include <gtk/gtk.h>
 
 #include <sys/types.h>
@@ -98,7 +101,7 @@ _stop_main_loop (gpointer treeview)
   return TRUE;
 }
 
-int spawn() {
+int spawn(gchar* needle) {
   char *argv [15];
   GPid child_pid;
   int status;
@@ -106,7 +109,7 @@ int spawn() {
   memset (argv, 0, 15 * sizeof (char *));
   argv[0] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/glib_regex";
   argv[1] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path";
-  argv[2] = "int";
+  argv[2] = needle; //"int";
   status = g_spawn_async_with_pipes (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, &stdout_fd, NULL, NULL);
   if (!status) {
     g_print("[FAILED] 1 Failed to run %s: %d \n", argv [0], status);
@@ -136,26 +139,65 @@ preedit_changed (GtkEntry *widget, gpointer treeview)  {
   }
 }
 
-void on_changed(GtkTreeSelection *widget, gpointer textbuffer) {
+int count_lines(gchar* contents, int len) {
+  int count = 0;
+  for (int i=0; i<len; i++) {
+    if (contents[i]==10) { // here checking for newline, could be also '\n'
+      count++;
+    }
+  }
+  return count;
+}
+
+void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
+  GObject *textbuffer, *textview;
   GtkTreeIter iter;
   GtkTreeModel *model;
   gchar *filename;
   gchar *contents;
+  gchar *linenum;
   gsize len;
   GError *err = NULL;
+  GObject *adj;
+  int count;
+  gdouble upper;
+  gdouble pagesize;
+
+  GList* children = gtk_container_get_children(GTK_CONTAINER(textbufferscroll));
+  GList *child = g_list_nth (children, 0);
+  textview = ((GObject*) child->data);
+  textbuffer = ((GObject*) gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview)));
 
   if (gtk_tree_selection_get_selected(
       GTK_TREE_SELECTION(widget), &model, &iter)) {
 
     gtk_tree_model_get(model, &iter, 1, &filename,  -1);
-    //gtk_label_set_text(GTK_LABEL(label), value);
-    g_print("value: %s \n", filename);
+    gtk_tree_model_get(model, &iter, 2, &linenum,  -1);
+    // g_print("-- filename: %s \n", filename);
+    // g_print("-- linenum:  %s \n", linenum);
 
     if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
       g_error("error reading %s: %s", filename, err->message);
     }
 
+    // g_print("-- len:  %d \n", len);
+
     gtk_text_buffer_set_text(GTK_TEXT_BUFFER(textbuffer), contents, len);
+
+    adj = (GObject*)gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(textbufferscroll));
+    count = count_lines(contents, len);
+    upper = gtk_adjustment_get_upper(GTK_ADJUSTMENT(adj));
+    pagesize = gtk_adjustment_get_page_size (GTK_ADJUSTMENT(adj));
+
+    gdouble factor = (((gdouble)atoi(linenum)) * upper) / (gdouble)count - pagesize/2;
+    // g_print("linenum %s / %d / %f \n", linenum, atoi(linenum), (gdouble)atoi(linenum));
+    // g_print("count %d /%f \n", count, (gdouble)count);
+    // g_print("upper %f \n", upper);
+    // g_print("pagesize %f \n", pagesize);
+    // g_print("factor: %f \n", factor);
+
+    gtk_adjustment_set_value (GTK_ADJUSTMENT(adj), factor);
+
     g_free(filename);
   }
 }
@@ -180,7 +222,7 @@ main (int   argc,
       char *argv[])
 {
   GtkBuilder *builder;
-  GObject *window, *entry, *treeview, *textbuffer;
+  GObject *window, *entry, *treeview, *textbufferscroll;
   GtkTreeSelection *selection;
   GError *error = NULL;
 
@@ -203,9 +245,9 @@ main (int   argc,
   treeview = gtk_builder_get_object(builder, "treeview1");
   g_signal_connect(treeview, "row-activated", G_CALLBACK(row_activated), NULL);
 
-  textbuffer = gtk_builder_get_object (builder, "textbuffer");
+  textbufferscroll = gtk_builder_get_object (builder, "textbufferscroll");
   selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-  g_signal_connect(selection, "changed", G_CALLBACK(on_changed), textbuffer);
+  g_signal_connect(selection, "changed", G_CALLBACK(on_changed), textbufferscroll);
 
   entry = gtk_builder_get_object (builder, "entry");
   g_signal_connect (entry, "changed", G_CALLBACK (preedit_changed), treeview);

@@ -32,7 +32,7 @@
 -->
   <object id="window" class="GtkWindow">
     <property name="visible">True</property>
-    <property name="title">Grid</property>
+    <property name="title">Full Search</property>
     <property name="border-width">2</property>
     <property name="default-width">1400</property>
     <property name="default-height">800</property>
@@ -169,7 +169,7 @@
                </object>
              </child>
              <child>
-               <object class="GtkScrolledWindow">
+               <object class="GtkScrolledWindow" id="textbufferscroll">
                   <property name="visible">True</property>
                   <property name="can_focus">True</property>
                   <property name="shadow_type">in</property>
