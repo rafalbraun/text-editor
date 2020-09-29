@@ -75,8 +75,9 @@ int list_directory( char* dirname, char* pattern ) {
     DIR *dir = opendir(dirname);
 
     // Unable to open directory stream
-    if (!dir)
+    if (!dir) {
         return 0;
+    }
 
     while ((dp = readdir(dir)) != NULL)
     {

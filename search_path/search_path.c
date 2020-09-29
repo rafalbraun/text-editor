@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define BUFFER_SIZE 20000
+#define BUFFER_SIZE 50000
 #define SEARCH_PATH 1
 
 #include "../glib_regex.c"
@@ -17,8 +17,10 @@ int counter = 0;
 // needed by spawn
 int stdout_fd = -1;
 char buffer [BUFFER_SIZE];
-GObject *adjustment;
+guint gLinenum;
+guint gCount;
 
+guint gLimit = 0;
 
 gchar* 
 extract_filename(gchar* filepath) {
@@ -34,6 +36,8 @@ extract_filename(gchar* filepath) {
   return filename;
 }
 
+// utf8 problem
+// https://mail.gnome.org/archives/gtk-list/2007-February/msg00142.html
 gchar* 
 read_file(gchar* filename) {
   gchar *contents;
@@ -149,7 +153,9 @@ preedit_changed (GtkEntry *widget, gpointer treeview)  {
   clear_list(treeview);
 
   gchar* needle = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget));
-  if (strlen(needle)>2) {
+
+  // check if string is more than gLimit
+  if (strlen(needle) > gLimit) {
     spawn(needle);
   }
 }
@@ -165,84 +171,81 @@ int count_lines(gchar* contents, int len) {
 }
 
 void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
-  GObject *textbuffer, *textview;
-  GtkTreeIter iter;
-  GtkTreeModel *model;
-  gchar *filename;
-  gchar *contents;
-  gchar *linenum;
-  gsize len;
-  GError *err = NULL;
-  int count;
-  gdouble upper, lower;
-  gdouble pagesize;
-  gchar *start, *end;
-  GtkTextTagTable *tagtable;
-  GtkTextTag* tag;
-  GtkTextIter start_iter, end_iter;
+    GObject *textbuffer, *textview;
+    GtkTextIter start_iter, end_iter;
+    GtkTreeIter iter;
+    GtkTextTagTable *tagtable;
+    GtkTextTag *btag, *wtag;
+    GtkTreeModel *model;
+    gchar *filename, *contents, *linenum, *start, *end;
+    gsize len;
+    GError *err = NULL;
+    GList *children, *child;
+    gsize bytes_read, bytes_written;
+    gchar* str;
 
-  GList* children = gtk_container_get_children(GTK_CONTAINER(textbufferscroll));
-  GList *child = g_list_nth (children, 0);
-  textview = ((GObject*) child->data);
-  textbuffer = ((GObject*) gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview)));
+    children = gtk_container_get_children(GTK_CONTAINER(textbufferscroll));
+    child = g_list_nth (children, 0);
+    textview = ((GObject*) child->data);
+    textbuffer = ((GObject*) gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview)));
 
-  if (gtk_tree_selection_get_selected(
-      GTK_TREE_SELECTION(widget), &model, &iter)) {
+    if (gtk_tree_selection_get_selected(
+        GTK_TREE_SELECTION(widget), &model, &iter)) {
 
-    gtk_tree_model_get(model, &iter, 1, &filename,  -1);
-    gtk_tree_model_get(model, &iter, 2, &linenum,  -1);
-    gtk_tree_model_get(model, &iter, 3, &start,  -1);
-    gtk_tree_model_get(model, &iter, 4, &end,  -1);
-    // g_print("-- filename: %s \n", filename);
-    // g_print("-- linenum:  %s \n", linenum);
-    // g_print("-- start:  %s \n", start);
-    // g_print("-- end:  %s \n", end);
+        gtk_tree_model_get(model, &iter, 1, &filename,  -1);
+        gtk_tree_model_get(model, &iter, 2, &linenum,  -1);
+        gtk_tree_model_get(model, &iter, 3, &start,  -1);
+        gtk_tree_model_get(model, &iter, 4, &end,  -1);
+        g_print("filename %s, linenum %s, start %s, end %s \n", filename, linenum, start, end);
 
-    if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
-      g_error("error reading %s: %s", filename, err->message);
-    }
+        if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
+          g_error("error reading %s: %s", filename, err->message);
+        }
 
-    // g_print("-- len:  %d \n", len);
+        // convert to utf8
+        str = g_convert (contents,
+                   len,
+                   "UTF-8",
+                   "ANSI_X3.4-1968",
+                   &bytes_read,
+                   &bytes_written,
+                   &err);
+        if (str == NULL) {
+          g_error("error converting %s: %s", filename, err->message);
+        }
 
-    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(textbuffer), contents, len);
-    count = count_lines(contents, len);
+        //g_print("bytes_read: %d \n", bytes_read);
+        //g_print("bytes_written: %d \n", bytes_written);
 
-    //adj = (GObject*)gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(textbufferscroll));
-    upper = gtk_adjustment_get_upper(GTK_ADJUSTMENT(adjustment));
-    //lower = gtk_adjustment_get_lower(GTK_ADJUSTMENT(adjustment));
-    pagesize = gtk_adjustment_get_page_size (GTK_ADJUSTMENT(adjustment));
+        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(textbuffer), str, len);
+        gCount = count_lines(str, len);
+        gLinenum = atoi(linenum);
 
-    //g_object_get (adjustment, "upper", &upper, NULL);
-
-    //gdouble factor = (((gdouble)atoi(linenum)) * upper) / (gdouble)count - pagesize/2; // THIS WORKED
-    gdouble factor = (g_strtod(linenum, NULL) * upper) / (gdouble)count - pagesize/2;   // NEW
-
-    // g_print("linenum %s / %d \n", linenum, atoi(linenum));
-    // g_print("count %d /%f \n", count, (gdouble)count);
-    g_print("lower %f \n", lower);
-    g_print("upper %f \n", upper);
-    // g_print("pagesize %f \n", pagesize);
-    // g_print("[INFO] factor: %f :: %s \n", factor, filename);
-
-    //gtk_adjustment_set_value (GTK_ADJUSTMENT(adjustment), factor);
-
-
-    tagtable = gtk_text_buffer_get_tag_table(GTK_TEXT_BUFFER(textbuffer));
-    tag = gtk_text_tag_table_lookup(tagtable, "red_bg");
-    gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), &start_iter, atoi(linenum)-1, atoi(start));
-    gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), &end_iter, atoi(linenum)-1, atoi(end));
-    gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(textbuffer), tag, &start_iter, &end_iter);
-
-    g_free(filename);
+        /*
+        tagtable = gtk_text_buffer_get_tag_table(GTK_TEXT_BUFFER(textbuffer));
+        btag = gtk_text_tag_table_lookup(tagtable, "black_bg");
+        wtag = gtk_text_tag_table_lookup(tagtable, "white_fg");
+        gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), &start_iter, gLinenum, atoi(start));
+        gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), &end_iter, gLinenum, atoi(end));
+        gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(textbuffer), btag, &start_iter, &end_iter);
+        gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(textbuffer), wtag, &start_iter, &end_iter);
+        */
+        
+        g_free(filename);
   }
 }
 
+// needed: linenum, count
 void
 adjustment_changed (GtkAdjustment *adjustment,
-               gpointer       user_data) {
-    gdouble upper;
+                    gpointer userdata) {
+    gdouble upper, pagesize, factor;
+
     upper = gtk_adjustment_get_upper(GTK_ADJUSTMENT(adjustment));
-    g_print("[aaaaaa] upper %f \n", upper);
+    pagesize = gtk_adjustment_get_page_size (GTK_ADJUSTMENT(adjustment));
+    factor = ( ((gdouble)gLinenum) * upper) / (gdouble)gCount - pagesize/2;
+
+    gtk_adjustment_set_value (GTK_ADJUSTMENT(adjustment), factor);
 }
 
 void
@@ -310,6 +313,12 @@ main (int   argc,
   GError *error = NULL;
   GObject* renderer;
   GObject* column;
+  GObject *adjustment;
+
+  const gchar *charset;
+  g_get_charset (&charset);
+  g_print("%s \n", charset);
+
 
   gtk_init (&argc, &argv);
 
@@ -337,15 +346,6 @@ main (int   argc,
   adjustment = (GObject*)gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(textbufferscroll));
   g_signal_connect(adjustment, "changed", G_CALLBACK(adjustment_changed), NULL);
 
-
-  /*
-    TODO
-    wszystko co pod sygnałem changed na selection trzeba przenieść na sygnał changed z adjustment bo 
-    okazuje się, że jest wywoływany kilkakrotnie (doładowywanie kontentu do buffera)
-
-  */
-
-
   entry = gtk_builder_get_object (builder, "entry");
   g_signal_connect (entry, "changed", G_CALLBACK (preedit_changed), treeview);
 
@@ -354,7 +354,8 @@ main (int   argc,
   gtk_tree_view_column_set_cell_data_func(GTK_TREE_VIEW_COLUMN(column), GTK_CELL_RENDERER(renderer), cell_data_func, NULL, NULL);
 
   buffer = gtk_builder_get_object (builder, "textbuffer");
-  gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "red_bg", "background", "red", NULL); 
+  gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "black_bg", "background", "black", NULL); 
+  gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "white_fg", "foreground", "white", NULL); 
 
 
   g_timeout_add (100,
