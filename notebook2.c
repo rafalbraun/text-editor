@@ -69,9 +69,8 @@ static gboolean print_hello(GtkWidget *widget, GdkEventButton *event, gpointer n
 }
 
 static void
-open_file (GtkNotebook* notebook, gchar* filepath) {
+open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content) {
     GtkWidget* label = gtk_label_new(filepath);
-    GtkWidget* frame = gtk_label_new("file contents");
     GtkWidget *event_box = gtk_event_box_new();
     int pagenum;
 
@@ -90,7 +89,12 @@ open_file (GtkNotebook* notebook, gchar* filepath) {
     filenames = g_list_append (filenames, g_strdup(filepath));
 
     gtk_container_add(GTK_CONTAINER(event_box), label);
-    pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), frame, event_box);
+    if (content == NULL) {
+        GtkWidget* frame = gtk_label_new("file contents");
+        pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), frame, event_box);
+    } else {
+        pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), content, event_box);
+    }
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 
@@ -123,7 +127,7 @@ open_file_dialog (GtkWidget *widget, GtkWidget* notebook) {
         filepath = gtk_file_chooser_get_filename (chooser);
         g_print("GTK_RESPONSE_ACCEPT: %s \n", filepath);
         
-        open_file (GTK_NOTEBOOK(notebook), filepath);
+        open_file (GTK_NOTEBOOK(notebook), filepath, NULL);
 
     } else if (res == GTK_RESPONSE_CANCEL) {
       g_print("GTK_RESPONSE_CANCEL \n");
@@ -292,9 +296,10 @@ int main( int argc,
     //for (int i = 0; i < 5; i++) {
     //    append_book(GTK_NOTEBOOK(notebook), "bbb");
     //}
-    open_file (GTK_NOTEBOOK(notebook), "/tmp/Makefile");
-    open_file (GTK_NOTEBOOK(notebook), "/tmp/main.c");
-    open_file (GTK_NOTEBOOK(notebook), "/tmp/main.h");
+
+    open_file (GTK_NOTEBOOK(notebook), "/tmp/Makefile", NULL);
+    open_file (GTK_NOTEBOOK(notebook), "/tmp/main.c", NULL);
+    open_file (GTK_NOTEBOOK(notebook), "/tmp/main.h", NULL);
 
       
     // Now let's add a page to a specific spot 

@@ -6,8 +6,8 @@
 CC=gcc
 GTK=`pkg-config --cflags --libs gtk+-3.0 gtksourceview-4`
 GLIB=`pkg-config --cflags --libs glib-2.0`
-PROGRAMS=app treeview notebook2 notebook1 filechooser search_path
-SRC=app.c treeview.c notebook2.c notebook1.c filechooser.c search_path.c
+PROGRAMS=app treeview notebook2 notebook1 filechooser
+SRC=app.c treeview.c notebook2.c notebook1.c filechooser.c
 
 all: $(PROGRAMS) glib_regex
 

@@ -180,17 +180,17 @@ create_and_fill_model(const char *pathname) {
 }
 
 void
-create_view_and_model(gchar* filepath, GtkWidget *view) {
-  
-  GtkTreeViewColumn *col;
+create_view_and_model(gchar* filepath, GtkWidget *treeview) {
   GtkCellRenderer *renderer;
+  GtkTreeViewColumn *col;
+  GtkTreePath* treepath;
   GtkTreeModel *model;
 
   //view = gtk_tree_view_new();
 
   col = gtk_tree_view_column_new();
   gtk_tree_view_column_set_title(col, "Programming languages");
-  gtk_tree_view_append_column(GTK_TREE_VIEW(view), col);
+  gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
 
   renderer = gtk_cell_renderer_text_new();
   gtk_tree_view_column_pack_start(col, renderer, TRUE);
@@ -198,8 +198,12 @@ create_view_and_model(gchar* filepath, GtkWidget *view) {
       "text", COLUMN);
 
   model = create_and_fill_model(filepath);
-  gtk_tree_view_set_model(GTK_TREE_VIEW(view), model);
+  gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), model);
   g_object_unref(model); 
+
+  /* Expand top tree node */
+  treepath = gtk_tree_path_new_from_string("0");
+  gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
 
   //g_signal_connect(view, "button-press-event", (GCallback) on_button_pressed, NULL);
 

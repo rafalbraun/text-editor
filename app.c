@@ -4,6 +4,7 @@
 #define TREEVIEW 1
 #define NOTEBOOK 1
 
+#include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
 //static void open_file (GtkNotebook* notebook, gchar* filepath);
@@ -21,6 +22,9 @@ print_hello (GtkWidget *widget,
   g_print("label: %s \n", text);
 }
 */
+
+GObject *buffer;
+
 gboolean
 key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
 {
@@ -35,6 +39,32 @@ key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata)
   return FALSE;
 }
 
+
+GtkWidget*
+sourceview_new(GtkSourceBuffer* buffer) {
+    GtkWidget *scroll, *sourceview;
+
+    scroll = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
+                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+    sourceview = gtk_source_view_new_with_buffer(buffer);
+    gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (sourceview));
+
+    /* change font */
+    GtkCssProvider *provider = gtk_css_provider_new ();
+    gtk_css_provider_load_from_data (provider,
+                                     "textview { font-family: Monospace; font-size: 12pt; }",
+                                     -1,
+                                     NULL);
+    gtk_style_context_add_provider (gtk_widget_get_style_context (sourceview),
+                                    GTK_STYLE_PROVIDER (provider),
+                                    GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    g_object_unref (provider);
+
+    return scroll;
+}
+
 gboolean 
 on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 {
@@ -44,6 +74,7 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
   GtkTreeIter       parent;
   gboolean          hasParent;
   gchar            *path, *name, *parent_name;
+  GtkWidget* content;
 
   if (event->type == GDK_2BUTTON_PRESS) {
       GtkTreeSelection * selection;
@@ -69,7 +100,9 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
         path = g_strconcat(path, name, NULL);
         //g_print ("on_button_pressed: %s\n", path);
-        open_file (GTK_NOTEBOOK(userdata), path);
+
+        content = sourceview_new(GTK_SOURCE_BUFFER(buffer));
+        open_file (GTK_NOTEBOOK(userdata), path, content);
 
         g_free(name);
         g_free(path);
@@ -114,7 +147,8 @@ main (int   argc,
   GError *error = NULL;
   GtkWidget *event_box;
   GtkWidget *view;
-  gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
+  //gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
+  gchar* filepath = ".";
 
   gtk_init (&argc, &argv);
 
@@ -131,6 +165,8 @@ main (int   argc,
   window = gtk_builder_get_object (builder, "window");
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
   g_signal_connect (window, "key-press-event", G_CALLBACK (key_pressed_window), NULL);
+
+  buffer = gtk_builder_get_object (builder, "sourcebuffer");
 
   //event_box = gtk_event_box_new ();
   /*
