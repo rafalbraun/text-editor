@@ -2,7 +2,7 @@
 <interface>
    <object id="window" class="GtkWindow">
       <property name="visible">True</property>
-      <property name="title">Grid</property>
+      <property name="title">Text Editor</property>
       <property name="border-width">0</property>
       <property name="default-width">1200</property>
       <property name="default-height">800</property>

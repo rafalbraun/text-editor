@@ -8,6 +8,7 @@
          <column type="gchararray" />
          <column type="gchararray" />
          <column type="gchararray" />
+         <column type="gchararray" />
       </columns>
       <!--
   <data>
@@ -33,11 +34,35 @@
   </data>
     -->
    </object>
+
+  <object class="GtkListStore" id="pp2_input_list">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">c</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">c++</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">java</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">css</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">groovy</col>
+      </row>
+    </data>
+  </object>
+
    <object id="window" class="GtkWindow">
       <property name="visible">True</property>
       <property name="title">Full Search</property>
       <property name="border-width">2</property>
-      <property name="default-width">1400</property>
+      <property name="default-width">1000</property>
       <property name="default-height">800</property>
       <child>
          <object class="GtkBox">
@@ -60,6 +85,71 @@
                         <property name="position">0</property>
                      </packing>
                   </child>
+                  <child>
+                     <object class="GtkCheckButton">
+                        <property name="visible">True</property>
+                        <property name="label">Match Case</property>
+                     </object>
+                     <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                     </packing>
+                  </child>
+                  <child>
+                     <object class="GtkCheckButton">
+                        <property name="visible">True</property>
+                        <property name="label">File Mask:</property>
+                        <property name="halign">GTK_ALIGN_END</property>
+                     </object>
+                     <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">2</property>
+                     </packing>
+                  </child>
+
+
+                <!--
+                https://developer.gnome.org/gtk3/unstable/GtkWidget.html#GtkAlign
+                -->
+                <child>
+                  <object class="GtkComboBox" id="pp2_pin2_in">
+                    <property name="visible">True</property>
+                    <property name="model">pp2_input_list</property>
+                    <property name="hexpand">True</property>
+                    <!--
+                    <property name="halign">GTK_ALIGN_END</property>
+                  -->
+                    <property name="has-frame">True</property>
+                    <!--
+                    <signal name="popdown" handler="combo_box_changed"/>
+                  -->
+                    <child>
+                      <object class="GtkCellRendererText" id="cellrenderertext18"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+
+                <!--
+                    <child>
+                      <object class="GtkComboBox" id="reportTypeCombobox">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="valign">center</property>
+                        <property name="hexpand">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                -->
                </object>
                <packing>
                   <property name="expand">False</property>
@@ -107,7 +197,7 @@
                               <child>
                                  <object class="GtkTreeViewColumn" id="treeviewcolumn1">
                                     <property name="title" translatable="yes">ocurrence</property>
-                                    <property name="fixed-width">630</property>
+                                    <property name="fixed-width">700</property>
                                     <child>
                                        <object class="GtkCellRendererText" id="cellrenderertext1">
                                           <property name="height">26</property>
@@ -121,7 +211,7 @@
                               <child>
                                  <object class="GtkTreeViewColumn" id="treeviewcolumn2">
                                     <property name="title" translatable="yes">filename</property>
-                                    <property name="fixed-width">700</property>
+                                    <property name="fixed-width">230</property>
                                     <child>
                                        <object class="GtkCellRendererText" id="cellrenderertext2">
                                           <property name="height">26</property>
@@ -174,6 +264,20 @@
                                     </child>
                                  </object>
                               </child>
+                              <child>
+                                 <object class="GtkTreeViewColumn" id="treeviewcolumn6">
+                                    <property name="title" translatable="yes">filepath</property>
+                                    <property name="visible">False</property>
+                                    <child>
+                                       <object class="GtkCellRendererText" id="cellrenderertext6">
+                                          <property name="height">26</property>
+                                       </object>
+                                       <attributes>
+                                          <attribute name="text">5</attribute>
+                                       </attributes>
+                                    </child>
+                                 </object>
+                              </child>
                            </object>
                         </child>
                      </object>
@@ -184,8 +288,15 @@
                         <property name="can_focus">True</property>
                         <property name="shadow_type">in</property>
                         <child>
-                           <object class="GtkTextBuffer" id="textbuffer" />
-                           <object class="GtkTextView">
+                           <object class="GtkSourceBuffer" id="textbuffer">
+                              <property name="highlight-syntax">True</property>
+                           </object>
+                           <object class="GtkSourceView">
+                              <property name="highlight-current-line">True</property>
+                              <property name="show-right-margin">True</property>
+                              <property name="show-line-numbers">True</property>
+                              <property name="tab_width">4</property>
+                              <property name="auto_indent">True</property>
                               <property name="visible">True</property>
                               <property name="buffer">textbuffer</property>
                               <property name="editable">True</property>

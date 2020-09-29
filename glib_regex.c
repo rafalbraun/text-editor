@@ -26,7 +26,7 @@ typedef struct _search_data {
 void scan_file(char const* const filename, char const* const pattern) {
     //char const* const fileName = "read_lines.c"; /* should check that argc > 1 */
     FILE* file = fopen(filename, "r");    /* should check the result */
-    int linenum = 1;
+    int linenum = 0;
     char line[BUFFER];
     GMatchInfo *match_info = NULL;
     gint match_num, start_pos, end_pos;
