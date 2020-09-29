@@ -32,7 +32,7 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
   gtk_menu_popup_at_pointer (GTK_MENU(menu), (GdkEvent*) event);
 }
-
+/*
 gboolean 
 on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 {
@@ -66,7 +66,7 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
         }
 
         path = g_strconcat(path, name, NULL);
-        g_print ("%s\n", path);
+        g_print ("on_button_pressed: %s\n", path);
 
         g_free(name);
         g_free(path);
@@ -106,12 +106,12 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
     popup_menu(treeview, event, userdata);
 
-    return TRUE; /*we handled this */
+    return TRUE; //we handled this 
   }
 
-  return FALSE; /*we did not handle this */
+  return FALSE; //we did not handle this 
 }
-
+*/
 void 
 on_changed(GtkWidget *widget, gpointer statusbar) {
     
@@ -136,8 +136,9 @@ fill_treestore(const char *pathname, GtkTreeStore *treestore, GtkTreeIter toplev
     struct dirent *entry;
     GtkTreeIter child;
 
-    if (!(dir = opendir(pathname)))
+    if (!(dir = opendir(pathname))) {
         return;
+    }
 
     while ((entry = readdir(dir)) != NULL) {
         if (entry->d_type == DT_DIR) {
@@ -180,7 +181,7 @@ create_and_fill_model(const char *pathname) {
 
 void
 create_view_and_model(gchar* filepath, GtkWidget *view) {
-    
+  
   GtkTreeViewColumn *col;
   GtkCellRenderer *renderer;
   GtkTreeModel *model;
@@ -200,7 +201,7 @@ create_view_and_model(gchar* filepath, GtkWidget *view) {
   gtk_tree_view_set_model(GTK_TREE_VIEW(view), model);
   g_object_unref(model); 
 
-  g_signal_connect(view, "button-press-event", (GCallback) on_button_pressed, NULL);
+  //g_signal_connect(view, "button-press-event", (GCallback) on_button_pressed, NULL);
 
 }
 

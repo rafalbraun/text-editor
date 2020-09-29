@@ -16,29 +16,54 @@ GList* filenames;
 guint tabnum;
 GtkWidget* window;
 
+
+static void
+close_file(GtkNotebook* notebook, gchar* filepath) {
+    if (tabnum > 0) {
+        for (int i=0; i < tabnum; i++) {
+            GList *t = g_list_nth (filenames, i);
+            if (strcmp(((gchar*) t->data), filepath) == 0) {
+                //g_print("[INFO] %s already found: %s \n", filepath, ((gchar*) t->data) );
+                //gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), i);
+
+                g_print("[%d] close_file: %s \n", i, filepath);
+                GList *t = g_list_nth (filenames, i);
+                filenames = g_list_remove(filenames, (t->data));
+                gtk_notebook_remove_page (notebook, i);
+                tabnum--;
+                
+                /*
+                gtk_notebook_remove_page (notebook, i);
+                */
+                return;
+            }
+        }
+    }
+}
+
 //static void
 //print_hello (GtkWidget *widget,
 //             gpointer   data)
-static gboolean print_hello(GtkWidget *widget, GdkEventButton *event, gpointer userdata)
-{
-  GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
-  GtkLabel* label = ((GtkLabel*) list->data);
-  const gchar* text = gtk_label_get_text(GTK_LABEL(label));
-  g_print("label: %s \n", text);
+static gboolean print_hello(GtkWidget *widget, GdkEventButton *event, gpointer notebook) {
+    GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
+    GtkLabel* label = ((GtkLabel*) list->data);
+    gchar* text = (gchar *)gtk_label_get_text(GTK_LABEL(label));
+    g_print("label: %s \n", text);
 
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
     {//1 is left mouse btn
-        g_print("1\n");
+        //g_print("1\n");
         return FALSE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
     {//2 is left mouse btn
-        g_print("2\n");
+        //g_print("2\n");
+        close_file (notebook, text);
         return TRUE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
     {   //3 is right mouse btn
-        g_print("3\n");
+        //g_print("3\n");
         return TRUE;
     }
 }
@@ -69,7 +94,7 @@ open_file (GtkNotebook* notebook, gchar* filepath) {
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 
-    g_signal_connect (event_box, "button-press-event", G_CALLBACK (print_hello), NULL);
+    g_signal_connect (event_box, "button-press-event", G_CALLBACK (print_hello), notebook);
 
     gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), pagenum);
 }
