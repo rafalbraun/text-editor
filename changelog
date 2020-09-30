@@ -1,0 +1,54 @@
+-------------------------------------
+
+Project  		:: TextEditor 
+Version  		:: 0.0.1 
+Codename 		:: "Yamcha" 
+Status   		:: released
+Release Date	:: 01.10.2020
+
+Features:
+	o treeview panel
+	o notebook tabs
+	o closable tabs
+	o full search (idea-java-like)
+	o gtk sourceview integration
+	o syntax highlight (including functions)
+	o interface definition in ui files
+
+-------------------------------------
+
+Project  		:: TextEditor 
+Version  		:: 0.0.2 
+Codename 		:: "Tien Shinhan" 
+Status   		:: in development
+Features:
+	o settings window
+	o find & replace bars
+	o code all lacking menus
+	o local file history
+	o terminal
+
+-------------------------------------
+
+Project  		:: TextEditor 
+Version  		:: 0.0.3 
+Codename 		:: "Chiaotzu" 
+Status   		:: in development
+Features:
+	o multicursor (!)
+	o code navigation
+	o git integration
+	o autocomplete
+	o parser for autocomplete
+	o git integration
+	o changes and recompliation of gtksourceview library:
+		- remove ctrl + / shorcut
+		- fixing copying text
+
+-------------------------------------
+
+Future versions:
+	o Yajirobe
+	o Krillin
+	o Piccolo
+	o Goku

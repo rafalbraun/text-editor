@@ -9,8 +9,10 @@
 
 //static void open_file (GtkNotebook* notebook, gchar* filepath);
 
+GObject *buffer;
+
 #include "treeview.c"
-#include "notebook2.c"
+#include "notebook.c"
 /*
 static void
 print_hello (GtkWidget *widget,
@@ -23,7 +25,6 @@ print_hello (GtkWidget *widget,
 }
 */
 
-GObject *buffer;
 
 gboolean
 key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
@@ -39,6 +40,35 @@ key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata)
   return FALSE;
 }
 
+static void
+guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
+    GtkSourceLanguageManager *manager;
+    GtkSourceLanguage *lang = NULL;
+    gboolean result_uncertain;
+    gchar *content_type;
+
+    manager = gtk_source_language_manager_get_default ();
+    content_type = g_content_type_guess (filepath, NULL, 0, &result_uncertain);
+    if (result_uncertain) {
+        g_free (content_type);
+        return;
+    }
+
+    lang = gtk_source_language_manager_guess_language (manager, filepath, content_type);
+    if (lang != NULL) {
+        g_print("lang recognized: %s \n", gtk_source_language_get_name(lang));
+        gtk_source_buffer_set_language (buffer, lang);
+        g_free (content_type);
+    }
+}
+
+void clear_buffer(GtkSourceBuffer* buffer) {
+    GtkTextIter iter_start, iter_end;
+
+    gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &iter_start);
+    gtk_text_buffer_get_end_iter   (GTK_TEXT_BUFFER (buffer), &iter_end);
+    gtk_text_buffer_delete ( GTK_TEXT_BUFFER( buffer ), &iter_start, &iter_end );
+}
 
 GtkWidget*
 sourceview_new(GtkSourceBuffer* buffer) {
@@ -48,7 +78,13 @@ sourceview_new(GtkSourceBuffer* buffer) {
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
                                     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
+    //gtk_source_buffer_set_highlight_syntax(buffer, TRUE);
+    //gtk_source_buffer_set_highlight_matching_brackets(buffer, TRUE);
+
     sourceview = gtk_source_view_new_with_buffer(buffer);
+    gtk_source_view_set_show_right_margin(GTK_SOURCE_VIEW(sourceview), TRUE);
+    gtk_source_view_set_show_line_numbers(GTK_SOURCE_VIEW(sourceview), TRUE);
+    gtk_source_view_set_highlight_current_line(GTK_SOURCE_VIEW(sourceview), TRUE);
     gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (sourceview));
 
     /* change font */
@@ -102,7 +138,8 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
         //g_print ("on_button_pressed: %s\n", path);
 
         content = sourceview_new(GTK_SOURCE_BUFFER(buffer));
-        open_file (GTK_NOTEBOOK(userdata), path, content);
+        guess_language(GTK_SOURCE_BUFFER(buffer), path);
+        open_file (GTK_NOTEBOOK(userdata), path, content, buffer);
 
         g_free(name);
         g_free(path);

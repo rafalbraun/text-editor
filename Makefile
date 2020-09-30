@@ -6,13 +6,13 @@
 CC=gcc
 GTK=`pkg-config --cflags --libs gtk+-3.0 gtksourceview-4`
 GLIB=`pkg-config --cflags --libs glib-2.0`
-PROGRAMS=app treeview notebook2 notebook1 filechooser
-SRC=app.c treeview.c notebook2.c notebook1.c filechooser.c
+PROGRAMS=app treeview notebook full_search
+#SRC=app.c treeview.c notebook.c full_search.c
 
 all: $(PROGRAMS) glib_regex
 
-app: app.c treeview.c notebook2.c
-	gcc app.c $(GTK) -o app
+app: app.c treeview.c notebook.c
+	$(CC) app.c $(GTK) -o app
 
 %: %.c
 	$(CC) -o $@ $^ $(GTK)
