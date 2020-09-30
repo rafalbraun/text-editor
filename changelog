@@ -52,3 +52,14 @@ Future versions:
 	o Krillin
 	o Piccolo
 	o Goku
+
+
+
+
+
+MAJOR BUG
+gdy używamy close_file to nie podmienia nam zawartości bufora z tekstem!!!
+
+
+
+

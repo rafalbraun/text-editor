@@ -41,10 +41,8 @@ close_file(GtkNotebook* notebook, gchar* filepath) {
     }
 }
 
-//static void
-//print_hello (GtkWidget *widget,
-//             gpointer   data)
-static gboolean print_hello(GtkWidget *widget, GdkEventButton *event, gpointer notebook) {
+static gboolean
+notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook) {
     GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
     GtkLabel* label = ((GtkLabel*) list->data);
     gchar* text = (gchar *)gtk_label_get_text(GTK_LABEL(label));
@@ -110,7 +108,7 @@ open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* 
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 
-    g_signal_connect (event_box, "button-press-event", G_CALLBACK (print_hello), notebook);
+    g_signal_connect (event_box, "button-press-event", G_CALLBACK (notebook_tab_clicked), notebook);
 
     gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), pagenum);
 }
@@ -216,7 +214,7 @@ static gboolean print_tabs( GtkWidget *widget,
     }
 }
 
-gboolean
+static gboolean
 key_pressed(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
 {
   if (event->keyval == GDK_KEY_q && (event->state & GDK_CONTROL_MASK)) {

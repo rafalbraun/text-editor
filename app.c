@@ -7,36 +7,23 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
-//static void open_file (GtkNotebook* notebook, gchar* filepath);
-
 GObject *buffer;
 
+#include "config.h"
 #include "treeview.c"
 #include "notebook.c"
-/*
-static void
-print_hello (GtkWidget *widget,
-             gpointer   data)
-{
-  GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
-  GtkLabel* label = ((GtkLabel*) list->data);
-  const gchar* text = gtk_label_get_text(GTK_LABEL(label));
-  g_print("label: %s \n", text);
-}
-*/
-
 
 gboolean
 key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
 {
-  g_print("key_pressed_treeview \n");
+  //g_print("key_pressed_treeview \n");
   return FALSE;
 }
 
 gboolean
 key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
 {
-  g_print("key_pressed_window \n");
+  //g_print("key_pressed_window \n");
   return FALSE;
 }
 
@@ -145,23 +132,23 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
         g_free(path);
 
       }
-    return TRUE;
-  } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-    if (1) {
-      GtkTreeSelection * selection;
 
-      selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-      if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
-        GtkTreePath * path;
+      return TRUE;
+    } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+        if (1) {
+            GtkTreeSelection * selection;
 
-        if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
-            event->x, event->y, &path, NULL, NULL, NULL))
-        {
-          gtk_tree_selection_unselect_all(selection);
-          gtk_tree_selection_select_path(selection, path);
-          gtk_tree_path_free(path);
+            selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+            if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
+                GtkTreePath * path;
+
+            if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
+                event->x, event->y, &path, NULL, NULL, NULL)) {
+                gtk_tree_selection_unselect_all(selection);
+                gtk_tree_selection_select_path(selection, path);
+                gtk_tree_path_free(path);
+            }
         }
-      }
     }
 
     popup_menu(treeview, event, userdata);
@@ -182,10 +169,13 @@ main (int   argc,
   GObject *treeview;
   GObject *notebook;
   GError *error = NULL;
-  GtkWidget *event_box;
-  GtkWidget *view;
+  //GtkWidget *event_box;
+  //GtkWidget *view;
   //gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
   gchar* filepath = ".";
+
+  UserData *userdata = g_new0(UserData, 1);
+  init_user_data (userdata);
 
   gtk_init (&argc, &argv);
 
@@ -197,6 +187,10 @@ main (int   argc,
     g_clear_error (&error);
     return 1;
   }
+
+  userdata->treeview = gtk_builder_get_object (builder, "treeview");
+  userdata->notebook = gtk_builder_get_object (builder, "notebook");
+  userdata->buffer   = gtk_builder_get_object (builder, "sourcebuffer");
 
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object (builder, "window");
@@ -221,9 +215,9 @@ main (int   argc,
   g_signal_connect (treeview, "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
 
   notebook = gtk_builder_get_object (builder, "notebook");
-  //open_file (GTK_NOTEBOOK(notebook), "/tmp/Makefile");
-
   g_signal_connect (treeview, "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)notebook);
+
+  //open_file (GTK_NOTEBOOK(notebook), "/tmp/Makefile");
 
   gtk_main ();
 

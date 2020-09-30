@@ -100,7 +100,7 @@ _stop_main_loop (gpointer treeview)
   gchar* filepath;
 
   //g_print("time %d \n", counter);
-  counter++;
+  //counter++;
 
   bytes = read (stdout_fd, buffer, BUFFER_SIZE);
   buffer[bytes-1] = '\0';
@@ -326,8 +326,8 @@ void combo_selected(GtkWidget *widget, gpointer user_data) {
     gchar *lang = NULL;
 
     if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (widget), &iter)) {
-        gtk_tree_model_get_value (gtk_combo_box_get_model (GTK_COMBO_BOX(widget)),
-                      &iter, 0, &value);
+        model = gtk_combo_box_get_model (GTK_COMBO_BOX(widget));
+        gtk_tree_model_get_value (model, &iter, 0, &value);
         lang = g_value_dup_string (&value);
         g_print("%s \n", lang);
         g_free (lang);
@@ -336,8 +336,7 @@ void combo_selected(GtkWidget *widget, gpointer user_data) {
 }
 
 int
-main (int   argc,
-      char *argv[])
+main (int   argc, char *argv[])
 {
   GtkBuilder *builder;
   GObject *window, *entry, *treeview, *textbufferscroll, *buffer, *combobox;

@@ -11,7 +11,7 @@ PROGRAMS=app treeview notebook full_search
 
 all: $(PROGRAMS) glib_regex
 
-app: app.c treeview.c notebook.c
+app: app.c treeview.c notebook.c config.h
 	$(CC) app.c $(GTK) -o app
 
 %: %.c

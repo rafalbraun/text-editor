@@ -8,13 +8,29 @@ enum {
   NUM_COLS
 };
 
-void 
-popup_menu_on_DoSomething(GtkWidget *menuitem, gpointer userdata)
-{
-  /*we passed the view as userdata when we connected the signal */
-  GtkTreeView *treeview = GTK_TREE_VIEW(userdata);
+gchar* get_selection(GtkWidget* treeview) {
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    GtkTreeSelection* selection;
+    gchar *value;
 
-  g_print("Do something!\n");
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
+
+    if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), &model, &iter)) {
+        gtk_tree_model_get(model, &iter, COLUMN, &value,  -1);
+        return value;
+        //g_free(value);
+    }
+    return NULL;
+}
+
+void 
+popup_menu_copy_file(GtkWidget *menuitem, gpointer treeview)
+{
+    gchar* filename = get_selection(treeview);
+    g_print("File %s copied\n", filename);
+    g_free(filename);
 }
 
 void
@@ -23,9 +39,9 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
   GtkWidget *menu, *menuitem;
 
   menu = gtk_menu_new();
-  menuitem = gtk_menu_item_new_with_label("Do something");
 
-  g_signal_connect(menuitem, "activate", (GCallback) popup_menu_on_DoSomething, treeview);
+  menuitem = gtk_menu_item_new_with_label("Copy");
+  g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
 
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
   gtk_widget_show_all(menu);
