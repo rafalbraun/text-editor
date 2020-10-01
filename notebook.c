@@ -17,8 +17,8 @@ char bufferl[32];
 GList* filenames;
 guint tabnum;
 
-static const gchar*
-get_page_label(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
+static void
+load_file(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
     const gchar* tabname;
     GtkWidget *eventbox, *child;
     GtkSourceView *textview;
@@ -42,16 +42,11 @@ get_page_label(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
 
         if (g_file_get_contents(tabname, &text, &len, &err) == FALSE) {
             g_error("error reading %s: %s", tabname, err->message);
-            return NULL;
         }
 
         gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), text, len);
         g_free(text);
-
-        return tabname;
     }
-
-    return NULL;
 }
 
 static void
@@ -251,17 +246,23 @@ switch_page (GtkNotebook *notebook,
              gpointer     buffer) {
     
     gint page_dst = gtk_notebook_get_current_page(notebook);
+    load_file(notebook, buffer, page_src);
+
+    /*
     const gchar* src = get_page_label(notebook, buffer, page_src);
     const gchar* dst = get_page_label(notebook, buffer, page_dst);
     if ( (src!=NULL) && (dst!=NULL) ) {
         g_print("page: %d -> %d :: %s -> %s \n", page_dst, page_src, dst, src);
     } else {
         g_print("page: %d -> %d \n", page_dst, page_src);
-    }
+    }*/
+
+    g_print("page: %d -> %d \n", page_dst, page_src);
 
     //g_free(src);
     //g_free(dst);
 }
+
 
 void
 page_removed (GtkNotebook *notebook,
