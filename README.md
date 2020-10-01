@@ -32,3 +32,7 @@ $./full_search
 ```
 
 The other files (notebook and treeview) serve as components unit tests
+
+## Tips
+To close tab use middle mouse button
+

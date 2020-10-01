@@ -65,9 +65,17 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook
     GtkLabel* label = ((GtkLabel*) list->data);
     gchar* text = (gchar *)gtk_label_get_text(GTK_LABEL(label));
 
+    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
+    {
+        return FALSE;
+    }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
     {
         close_file (notebook, text);
+        return TRUE;
+    }
+    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
+    {
         return TRUE;
     }
 }
