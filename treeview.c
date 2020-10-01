@@ -40,12 +40,31 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
   menu = gtk_menu_new();
 
+  menuitem = gtk_menu_item_new_with_label("Rename");
+  g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
   menuitem = gtk_menu_item_new_with_label("Copy");
   g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
-
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-  gtk_widget_show_all(menu);
 
+  menuitem = gtk_menu_item_new_with_label("Paste");
+  g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+  menuitem = gtk_menu_item_new_with_label("Local History");
+  g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+  menuitem = gtk_menu_item_new_with_label("Format File");
+  g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+  menuitem = gtk_menu_item_new_with_label("Git");
+  g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+  gtk_widget_show_all(menu);
   gtk_menu_popup_at_pointer (GTK_MENU(menu), (GdkEvent*) event);
 }
 /*
@@ -157,10 +176,20 @@ fill_treestore(const char *pathname, GtkTreeStore *treestore, GtkTreeIter toplev
     }
 
     while ((entry = readdir(dir)) != NULL) {
+
+	    if (entry->d_name[0] == '.') {
+		//g_print("omitting: %s\n", entry->d_name);
+		continue; 
+	    } else {
+		//g_print("joining: %s\n", entry->d_name);
+	    }
+
+
         if (entry->d_type == DT_DIR) {
             char path[1024];
             if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
                 continue;
+
             snprintf(path, sizeof(path), "%s/%s", pathname, entry->d_name); // create name of subdirectory
 
             gtk_tree_store_append(treestore, &child, &toplevel);
@@ -205,13 +234,12 @@ create_view_and_model(gchar* filepath, GtkWidget *treeview) {
   //view = gtk_tree_view_new();
 
   col = gtk_tree_view_column_new();
-  gtk_tree_view_column_set_title(col, "Programming languages");
+  //gtk_tree_view_column_set_title(col, "Programming languages");
   gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
 
   renderer = gtk_cell_renderer_text_new();
   gtk_tree_view_column_pack_start(col, renderer, TRUE);
-  gtk_tree_view_column_add_attribute(col, renderer, 
-      "text", COLUMN);
+  gtk_tree_view_column_add_attribute(col, renderer, "text", COLUMN);
 
   model = create_and_fill_model(filepath);
   gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), model);

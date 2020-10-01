@@ -8,8 +8,21 @@
 #include <gtk/gtk.h>
 
 GObject *buffer;
+GObject *window;
 
-#include "config.h"
+void show_error(GObject* window, gchar* message) {
+  
+  GtkWidget *dialog;
+  dialog = gtk_message_dialog_new(GTK_WINDOW(window),
+            GTK_DIALOG_DESTROY_WITH_PARENT,
+            GTK_MESSAGE_ERROR,
+            GTK_BUTTONS_OK,
+            message);
+  gtk_window_set_title(GTK_WINDOW(dialog), "Error");
+  gtk_dialog_run(GTK_DIALOG(dialog));
+  gtk_widget_destroy(dialog);
+}
+
 #include "treeview.c"
 #include "notebook.c"
 
@@ -26,6 +39,7 @@ key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata)
   //g_print("key_pressed_window \n");
   return FALSE;
 }
+
 
 static void
 guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
@@ -126,7 +140,18 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
         content = sourceview_new(GTK_SOURCE_BUFFER(buffer));
         guess_language(GTK_SOURCE_BUFFER(buffer), path);
-        open_file (GTK_NOTEBOOK(userdata), path, content, buffer);
+
+	if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
+		if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
+        		open_file (GTK_NOTEBOOK(userdata), path, content, buffer);
+		} else {
+			//g_print("no file under filepath\n");
+      show_error(window, "no file under filepath");
+		}
+	} else {
+		//g_print("filepath is directory\n");
+      show_error(window, "filepath is directory");
+	}
 
         g_free(name);
         g_free(path);
@@ -164,7 +189,6 @@ main (int   argc,
       char *argv[])
 {
   GtkBuilder *builder;
-  GObject *window;
   GObject *button;
   GObject *treeview;
   GObject *notebook;
@@ -174,8 +198,8 @@ main (int   argc,
   //gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
   gchar* filepath = ".";
 
-  UserData *userdata = g_new0(UserData, 1);
-  init_user_data (userdata);
+  //UserData *userdata = g_new0(UserData, 1);
+  //init_user_data (userdata);
 
   gtk_init (&argc, &argv);
 
@@ -188,9 +212,9 @@ main (int   argc,
     return 1;
   }
 
-  userdata->treeview = gtk_builder_get_object (builder, "treeview");
-  userdata->notebook = gtk_builder_get_object (builder, "notebook");
-  userdata->buffer   = gtk_builder_get_object (builder, "sourcebuffer");
+  // userdata->treeview = gtk_builder_get_object (builder, "treeview");
+  // userdata->notebook = gtk_builder_get_object (builder, "notebook");
+  // userdata->buffer   = gtk_builder_get_object (builder, "sourcebuffer");
 
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object (builder, "window");

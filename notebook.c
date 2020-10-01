@@ -14,7 +14,6 @@ char bufferf[32];
 char bufferl[32];
 GList* filenames;
 guint tabnum;
-GtkWidget* window;
 
 
 static void
@@ -83,28 +82,37 @@ open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* 
             }
         }
     }
-    tabnum++;
-    filenames = g_list_append (filenames, g_strdup(filepath));
 
     gtk_container_add(GTK_CONTAINER(event_box), label);
     if (content == NULL) {
         GtkWidget* frame = gtk_label_new("file contents");
         pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), frame, event_box);
     } else {
-        pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), content, event_box);
-
         gchar *text;
         gsize len;
         GError *err = NULL;
 
         if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
-          g_error("error reading %s: %s", filepath, err->message);
+            g_error("error reading %s: %s", filepath, err->message);
+            return;
         }
-        
+
+#if NOTEBOOK
+        if (!g_utf8_validate (text, len, NULL)) {
+            show_error(window, "the file is binary");
+            return;
+        }
+#endif
+
+        pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), content, event_box);
         gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), text, len);
 
         g_free(text);
     }
+
+    tabnum++;
+    filenames = g_list_append (filenames, g_strdup(filepath));
+
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 
@@ -113,37 +121,6 @@ open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* 
     gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), pagenum);
 }
 
-static void
-open_file_dialog (GtkWidget *widget, GtkWidget* notebook) {
-  GtkWidget *dialog;
-  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
-  gint res;
-
-  dialog = gtk_file_chooser_dialog_new ("Open File",
-                                        GTK_WINDOW(window),
-                                        action,
-                                        "_Cancel",
-                                        GTK_RESPONSE_CANCEL,
-                                        "_Open",
-                                        GTK_RESPONSE_ACCEPT,
-                                        NULL);
-
-    res = gtk_dialog_run (GTK_DIALOG (dialog));
-    if (res == GTK_RESPONSE_ACCEPT) {
-        gchar *filepath;
-        GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
-        GtkWidget *label1, *label2;
-
-        filepath = gtk_file_chooser_get_filename (chooser);
-        g_print("GTK_RESPONSE_ACCEPT: %s \n", filepath);
-        
-        open_file (GTK_NOTEBOOK(notebook), filepath, NULL, NULL);
-
-    } else if (res == GTK_RESPONSE_CANCEL) {
-      g_print("GTK_RESPONSE_CANCEL \n");
-    }
-  gtk_widget_destroy (dialog);
-}
 
 void
 append_book(GtkNotebook *notebook, gchar* tabname) {
@@ -257,6 +234,41 @@ page_reordered (GtkNotebook *notebook,
 
 #if !NOTEBOOK
 
+GtkWidget* window;
+
+
+static void
+open_file_dialog (GtkWidget *widget, GtkWidget* notebook) {
+  GtkWidget *dialog;
+  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+  gint res;
+
+  dialog = gtk_file_chooser_dialog_new ("Open File",
+                                        GTK_WINDOW(window),
+                                        action,
+                                        "_Cancel",
+                                        GTK_RESPONSE_CANCEL,
+                                        "_Open",
+                                        GTK_RESPONSE_ACCEPT,
+                                        NULL);
+
+    res = gtk_dialog_run (GTK_DIALOG (dialog));
+    if (res == GTK_RESPONSE_ACCEPT) {
+        gchar *filepath;
+        GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+        GtkWidget *label1, *label2;
+
+        filepath = gtk_file_chooser_get_filename (chooser);
+        g_print("GTK_RESPONSE_ACCEPT: %s \n", filepath);
+        
+        open_file (GTK_NOTEBOOK(notebook), filepath, NULL, NULL);
+
+    } else if (res == GTK_RESPONSE_CANCEL) {
+      g_print("GTK_RESPONSE_CANCEL \n");
+    }
+  gtk_widget_destroy (dialog);
+}
+
 int main( int argc,
           char *argv[] )
 {
@@ -266,7 +278,6 @@ int main( int argc,
     GtkWidget *vbox, *hbox;
     GtkWidget *notebook;
     GtkWidget *checkbutton;
-
     
     gtk_init (&argc, &argv);
     

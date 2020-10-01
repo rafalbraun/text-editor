@@ -41,6 +41,7 @@ Features:
 	o autocomplete
 	o parser for autocomplete
 	o git integration
+	o ftp
 	o changes and recompliation of gtksourceview library:
 		- remove ctrl + / shorcut
 		- fixing copying text

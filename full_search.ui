@@ -97,15 +97,14 @@
                      </packing>
                   </child>
                   <!--
-                https://developer.gnome.org/gtk3/unstable/GtkWidget.html#GtkAlign
-                -->
+                  https://developer.gnome.org/gtk3/unstable/GtkWidget.html#GtkAlign
+                  -->
                   <child>
                      <object class="GtkComboBox" id="pp2_pin2_in">
                         <property name="visible">True</property>
                         <property name="model">pp2_input_list</property>
                         <property name="hexpand">True</property>
                         <property name="halign">GTK_ALIGN_END</property>
-
                         <property name="has-frame">True</property>
                         <!--
                     <signal name="popdown" handler="combo_box_changed"/>

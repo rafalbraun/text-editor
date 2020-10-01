@@ -215,6 +215,7 @@ void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
 
         // convert to utf8
         /*
+        // g_utf8_validate
         str = g_convert (contents,
                    len,
                    "UTF-8",
