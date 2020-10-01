@@ -11,7 +11,7 @@
       </columns>
 
    </object>
-   <object class="GtkListStore" id="combobox">
+   <object class="GtkListStore" id="combobox_model">
       <columns>
          <column type="gchararray" />
       </columns>
@@ -76,7 +76,7 @@
                   <child>
                      <object class="GtkComboBox" id="combobox">
                         <property name="visible">True</property>
-                        <property name="model">pp2_input_list</property>
+                        <property name="model">combobox_model</property>
                         <property name="hexpand">True</property>
                         <property name="halign">GTK_ALIGN_END</property>
                         <property name="has-frame">True</property>
