@@ -21,9 +21,9 @@ $ make
 
 ## Usage
 
-To use editor launch app binary
+To use editor launch text_editor binary
 ```bash
-$./app
+$./text_editor
 ```
 
 To try out full search feature launch full_search binary
@@ -35,4 +35,10 @@ The other files (notebook and treeview) serve as components unit tests
 
 ## Tips
 To close tab use middle mouse button
+
+### Text Editor
+![Text Editor](images/text-editor.png?raw=true "Text Editor")
+
+### Full Search
+![Full Search](images/full-search.png?raw=true "Full Search")
 

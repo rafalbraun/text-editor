@@ -196,7 +196,7 @@ main (int   argc,
 
   /* Construct a GtkBuilder instance and load our UI description */
   builder = gtk_builder_new ();
-  if (gtk_builder_add_from_file (builder, "app.ui", &error) == 0)
+  if (gtk_builder_add_from_file (builder, "text_editor.ui", &error) == 0)
   {
     g_printerr ("Error loading file: %s\n", error->message);
     g_clear_error (&error);
