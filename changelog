@@ -58,9 +58,4 @@ Future versions:
 
 
 
-MAJOR BUG
-gdy używamy close_file to nie podmienia nam zawartości bufora z tekstem!!!
-
-
-
 
