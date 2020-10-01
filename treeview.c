@@ -233,6 +233,8 @@ create_view_and_model(gchar* filepath, GtkWidget *treeview) {
 
   //view = gtk_tree_view_new();
 
+  gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview), FALSE);
+
   col = gtk_tree_view_column_new();
   //gtk_tree_view_column_set_title(col, "Programming languages");
   gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);

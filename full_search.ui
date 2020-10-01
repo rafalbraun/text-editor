@@ -100,7 +100,7 @@
                   https://developer.gnome.org/gtk3/unstable/GtkWidget.html#GtkAlign
                   -->
                   <child>
-                     <object class="GtkComboBox" id="pp2_pin2_in">
+                     <object class="GtkComboBox" id="combobox">
                         <property name="visible">True</property>
                         <property name="model">pp2_input_list</property>
                         <property name="hexpand">True</property>

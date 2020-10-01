@@ -3,6 +3,7 @@
 
 #define TREEVIEW 1
 #define NOTEBOOK 1
+#define FULL_SEARCH 1
 
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
@@ -36,7 +37,13 @@ key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata)
 gboolean
 key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
 {
-  //g_print("key_pressed_window \n");
+  //g_print("key_pressed_window %d %d \n", event->state, event->keyval);
+
+  // check ctrl + shift + f
+  if (event->state & GDK_CONTROL_MASK && event->keyval == 'F') {
+      g_print("ctrl + shift + f \n");
+  }
+
   return FALSE;
 }
 
@@ -218,30 +225,20 @@ main (int   argc,
 
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object (builder, "window");
+  buffer = gtk_builder_get_object (builder, "sourcebuffer");
+  treeview = gtk_builder_get_object (builder, "treeview");
+  notebook = gtk_builder_get_object (builder, "notebook");
+
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
   g_signal_connect (window, "key-press-event", G_CALLBACK (key_pressed_window), NULL);
 
-  buffer = gtk_builder_get_object (builder, "sourcebuffer");
-
-  //event_box = gtk_event_box_new ();
-  /*
-  widget = gtk_builder_get_object (builder, "tab0");
-  g_signal_connect (widget, "button-press-event", G_CALLBACK (print_hello), NULL);
-
-  widget = gtk_builder_get_object (builder, "tab1");
-  g_signal_connect (widget, "button-press-event", G_CALLBACK (print_hello), NULL);
-  */
-
-  treeview = gtk_builder_get_object (builder, "treeview");
   create_view_and_model(filepath, GTK_WIDGET(treeview));
   gtk_tree_view_set_enable_tree_lines(GTK_TREE_VIEW(treeview), TRUE);
   gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
   g_signal_connect (treeview, "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
 
-  notebook = gtk_builder_get_object (builder, "notebook");
-  g_signal_connect (treeview, "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)notebook);
-
-  //open_file (GTK_NOTEBOOK(notebook), "/tmp/Makefile");
+  g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)notebook);
+  g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)buffer);
 
   gtk_main ();
 

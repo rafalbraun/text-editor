@@ -4,6 +4,8 @@
 // gcc -o notebook notebook.c `pkg-config --cflags --libs gtk+-3.0`
 
 #include <stdio.h>
+
+#include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
 //
@@ -15,6 +17,42 @@ char bufferl[32];
 GList* filenames;
 guint tabnum;
 
+static const gchar*
+get_page_label(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
+    const gchar* tabname;
+    GtkWidget *eventbox, *child;
+    GtkSourceView *textview;
+    GtkScrolledWindow *scroll;
+    GtkLabel  *label;
+    GList* list;
+
+    if (tabnum > 0) {
+        child = gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), pagenum);
+        eventbox = gtk_notebook_get_tab_label(GTK_NOTEBOOK(notebook), child);
+
+        list = gtk_container_get_children(GTK_CONTAINER(eventbox));
+        label = ((GtkLabel*) list->data);
+        tabname = gtk_label_get_text(GTK_LABEL(label));
+        g_print("tabname %s \n", tabname);
+
+        // fill buffer
+        gchar *text;
+        gsize len;
+        GError *err = NULL;
+
+        if (g_file_get_contents(tabname, &text, &len, &err) == FALSE) {
+            g_error("error reading %s: %s", tabname, err->message);
+            return NULL;
+        }
+
+        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), text, len);
+        g_free(text);
+
+        return tabname;
+    }
+
+    return NULL;
+}
 
 static void
 close_file(GtkNotebook* notebook, gchar* filepath) {
@@ -210,10 +248,19 @@ void
 switch_page (GtkNotebook *notebook,
              GtkWidget   *page,
              guint        page_src,
-             gpointer     user_data) {
+             gpointer     buffer) {
     
     gint page_dst = gtk_notebook_get_current_page(notebook);
-    g_print("page: %d -> %d\n", page_dst, page_src);
+    const gchar* src = get_page_label(notebook, buffer, page_src);
+    const gchar* dst = get_page_label(notebook, buffer, page_dst);
+    if ( (src!=NULL) && (dst!=NULL) ) {
+        g_print("page: %d -> %d :: %s -> %s \n", page_dst, page_src, dst, src);
+    } else {
+        g_print("page: %d -> %d \n", page_dst, page_src);
+    }
+
+    //g_free(src);
+    //g_free(dst);
 }
 
 void

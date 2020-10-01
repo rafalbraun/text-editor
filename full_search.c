@@ -336,23 +336,19 @@ void combo_selected(GtkWidget *widget, gpointer user_data) {
     }
 }
 
-int
-main (int   argc, char *argv[])
-{
+GObject* full_search_window_new() {
   GtkBuilder *builder;
-  GObject *window, *entry, *treeview, *textbufferscroll, *buffer, *combobox;
+  GObject *window;
+  GObject *entry;
+  GObject *treeview;
+  GObject *textbufferscroll;
+  GObject *buffer;
+  GObject *combobox;
   GtkTreeSelection *selection;
   GError *error = NULL;
   GObject* renderer;
   GObject* column;
   GObject *adjustment;
-
-  const gchar *charset;
-  g_get_charset (&charset);
-  g_print("%s \n", charset);
-
-
-  gtk_init (&argc, &argv);
 
   /* Construct a GtkBuilder instance and load our UI description */
   builder = gtk_builder_new ();
@@ -360,7 +356,7 @@ main (int   argc, char *argv[])
   {
       g_printerr ("Error loading file: %s\n", error->message);
       g_clear_error (&error);
-      return 1;
+      return NULL;
   }
 
   // Connect signal handlers to the constructed widgets. 
@@ -389,20 +385,30 @@ main (int   argc, char *argv[])
   gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "black_bg", "background", "black", NULL); 
   gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "white_fg", "foreground", "white", NULL); 
 
-  //gtk_list_store_append(liststore, &iter);
-  //gtk_list_store_set(liststore, &iter, 0, str0, 1, str1, 2, str2, 3, str3, 4, str4, -1, str5, -1);
-
-
-
-  combobox = gtk_builder_get_object (builder, "pp2_pin2_in");
-  //g_signal_connect (combobox, "changed", G_CALLBACK (combo_box_changed), NULL);
+  combobox = gtk_builder_get_object (builder, "combobox");
   g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(combo_selected), NULL);
 
   g_timeout_add (100,
            (GSourceFunc) _stop_main_loop,
            treeview);
 
+  return window;
+}
+
+#if !FULL_SEARCH
+
+int
+main (int   argc, char *argv[])
+{
+  GObject *window;
+
+  gtk_init (&argc, &argv);
+
+  window = full_search_window_new();
+
   gtk_main ();
 
   return 0;
 }
+
+#endif

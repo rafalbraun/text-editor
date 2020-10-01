@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define BUFFER 100
+#define BUFFER 500
 
 /**
  * https://codeforwin.org/2018/03/c-program-to-list-all-files-in-a-directory-recursively.html
