@@ -2,7 +2,6 @@
 <interface>
    <object class="GtkListStore" id="liststore1">
       <columns>
-         <!-- column-name column1 -->
          <column type="gchararray" />
          <column type="gchararray" />
          <column type="gchararray" />
@@ -12,7 +11,7 @@
       </columns>
 
    </object>
-   <object class="GtkListStore" id="pp2_input_list">
+   <object class="GtkListStore" id="combobox">
       <columns>
          <column type="gchararray" />
       </columns>
@@ -74,9 +73,6 @@
                         <property name="position">2</property>
                      </packing>
                   </child>
-                  <!--
-                  https://developer.gnome.org/gtk3/unstable/GtkWidget.html#GtkAlign
-                  -->
                   <child>
                      <object class="GtkComboBox" id="combobox">
                         <property name="visible">True</property>
@@ -84,9 +80,6 @@
                         <property name="hexpand">True</property>
                         <property name="halign">GTK_ALIGN_END</property>
                         <property name="has-frame">True</property>
-                        <!--
-                    <signal name="popdown" handler="combo_box_changed"/>
-                  -->
                         <child>
                            <object class="GtkCellRendererText" id="cellrenderertext18" />
                            <attributes>
@@ -98,19 +91,6 @@
                         <property name="position">3</property>
                      </packing>
                   </child>
-                  <!--
-                    <child>
-                      <object class="GtkComboBox" id="reportTypeCombobox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="valign">center</property>
-                        <property name="hexpand">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                -->
                </object>
                <packing>
                   <property name="expand">False</property>
@@ -124,23 +104,6 @@
                   <property name="can_focus">False</property>
                   <property name="orientation">vertical</property>
                   <property name="border-width">10</property>
-                  <!--
-                  <child>
-                     <object class="GtkFileChooserButton" id="filechooserbutton_ubsrc">
-                        <property name="local_only">False</property>
-                        <property name="action">GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER</property>
-                        <property name="visible">True</property>
-
-                        <property name="action">select-folder</property>
-
-                        <property name="create_folders">False</property>
-                        <property name="title" translatable="yes">U-boot source code</property>
-                     </object>
-                     <packing>
-                        <property name="position">0</property>
-                     </packing>
-                  </child>
-                  -->
                   <child>
                      <object class="GtkEntry" id="entry">
                         <property name="visible">True</property>
