@@ -101,27 +101,18 @@
                   <property name="orientation">horizontal</property>
                   <property name="position">300</property>
                   <child>
-
-
-
-                           <object class="GtkScrolledWindow">
-                              <property name="visible">True</property>
-                              <property name="can_focus">True</property>
-                              <property name="shadow_type">in</property>
-                              <child>
-                                <object id="treeview" class="GtkTreeView">
-                                <property name="visible">True</property>
-                                </object>
-                              </child>
-                            </object>
-
-
-
+                     <object class="GtkScrolledWindow">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object id="treeview" class="GtkTreeView">
+                          <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
                   </child>
                   <child>
-                     <!--
-                     <object class="GtkTextBuffer" id="userText" />
-                     -->
                      <object class="GtkSourceBuffer" id="sourcebuffer">
                         <property name="highlight-syntax">True</property>
                      </object>
@@ -130,70 +121,6 @@
                         <property name="can_focus">True</property>
                         <property name="scrollable">True</property>
                         <property name="resize-mode">GTK_RESIZE_QUEUE</property>
-                        <!--
-                        <child>
-                           <object class="GtkScrolledWindow">
-                              <property name="visible">True</property>
-                              <property name="can_focus">True</property>
-                              <property name="shadow_type">in</property>
-                              <child>
-                                 <object class="GtkTextView">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="editable">True</property>
-                                    <property name="monospace">TRUE</property>
-                                 </object>
-                              </child>
-                           </object>
-                           <packing>
-                              <property name="position">1</property>
-                           </packing>
-                        </child>
-                        <child type="tab">
-                           <object class="GtkEventBox" id="tab0">
-                              <property name="visible">True</property>
-                              <child>
-                                 <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">0000</property>
-                                    <property name="use_markup">True</property>
-                                    <property name="justify">center</property>
-                                 </object>
-                              </child>
-                           </object>
-                        </child>
-                        <child>
-                           <object class="GtkScrolledWindow">
-                              <property name="visible">True</property>
-                              <property name="can_focus">True</property>
-                              <property name="shadow_type">in</property>
-                              <child>
-                                 <object class="GtkTextView">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="editable">True</property>
-                                    <property name="monospace">TRUE</property>
-                                 </object>
-                              </child>
-                           </object>
-                           <packing>
-                              <property name="position">1</property>
-                           </packing>
-                        </child>
-                        <child type="tab">
-                           <object class="GtkEventBox" id="tab1">
-                              <property name="visible">True</property>
-                              <child>
-                                 <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">1111</property>
-                                    <property name="use_markup">True</property>
-                                    <property name="justify">center</property>
-                                 </object>
-                              </child>
-                           </object>
-                        </child>
-                        -->
                      </object>
                   </child>
                </object>
@@ -203,158 +130,7 @@
                   <property name="position">1</property>
                </packing>
             </child>
-            <!--
-            <child>
-               <object class="GtkActionBar">
-                  <property name="visible">True</property>
-                  <child>
-                     <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Find:</property>
-                     </object>
-                  </child>
-               </object>
-               <packing>
-                  <property name="expand">False</property>
-                  <property name="fill">False</property>
-                  <property name="position">2</property>
-               </packing>
-            </child>
-            -->
-            <!--
-            <child>
-               <object class="GtkActionBar">
-                  <property name="visible">True</property>
-                  <property name="height-request">10</property>
-                  <child>
-                     <object class="GtkLabel">
-                        <attributes>
-                           <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-                           <attribute name="background" value="red"/>
-                        </attributes>
-                        <property name="height-request">10</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">branch:</property>
-                        <property name="halign">GTK_ALIGN_FILL</property>
-                     </object>
-                     <packing>
-                        <property name="position">1</property>
-                        <property name="pack-type">GTK_PACK_END</property>
-                     </packing>
-                  </child>
-                  <child>
-                     <object class="GtkComboBox">
-                        <property name="height-request">10</property>
-                        <property name="visible">True</property>
-                        <property name="model">branches</property>
-                        <property name="halign">GTK_ALIGN_END</property>
-                        <property name="has-frame">True</property>
-                        <child>
-                           <object class="GtkCellRendererText" id="cellrenderertext18" />
-                           <attributes>
-                              <attribute name="text">0</attribute>
-                           </attributes>
-                        </child>
-                     </object>
-                     <packing>
-                        <property name="position">0</property>
-                        <property name="pack-type">GTK_PACK_END</property>
-                     </packing>
-                  </child>
-               </object>
-               <packing>
-                  <property name="position">3</property>
-               </packing>
-            </child>
-            -->
          </object>
       </child>
    </object>
 </interface>
-
-
-
-
-
-
-                        <!--
-                        <child>
-                           <object class="GtkLabel">
-                              <attributes>
-                                 <attribute name="weight" value="PANGO_WEIGHT_BOLD" />
-                                 <attribute name="background" value="red" start="0" end="10" />
-                              </attributes>
-                              <property name="visible">True</property>
-                              <property name="can_focus">False</property>
-                              <property name="label" translatable="yes">Characters selected:</property>
-                           </object>
-                           <packing>
-                              <property name="position">0</property>
-                           </packing>
-                        </child>
-
-
-
-
-
-
-
-
-
-
-
-                  <child>
-                     <object class="GtkLabel">
-                        <attributes>
-                           <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-                           <attribute name="background" value="red"/>
-                        </attributes>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">master</property>
-                        <property name="halign">GTK_ALIGN_FILL</property>
-                     </object>
-                     <packing>
-                        <property name="position">0</property>
-                        <property name="pack-type">GTK_PACK_END</property>
-                     </packing>
-                  </child>
-
-
-
-
-
-
-
-               <object class="GtkActionBar">
-                  <property name="visible">True</property>
-                  <child>
-                     <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="orientation">horizontal</property>
-                        <child>
-                           <object class="GtkLabel">
-                              <attributes>
-                                 <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-                                 <attribute name="background" value="red"/>
-                              </attributes>
-                              <property name="visible">True</property>
-                              <property name="can_focus">False</property>
-                              <property name="label" translatable="yes">master</property>
-                              <property name="halign">GTK_ALIGN_FILL</property>
-                           </object>
-                           <packing>
-                              <property name="position">1</property>
-                              <property name="expand">True</property>
-                              <property name="fill">True</property>
-                           </packing>
-                        </child>
-                     </object>
-                  </child>
-               </object>
-
-
-                        -->
