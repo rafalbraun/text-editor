@@ -30,16 +30,12 @@ void show_error(GObject* window, gchar* message) {
 gboolean
 key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
 {
-  //g_print("key_pressed_treeview \n");
   return FALSE;
 }
 
 gboolean
 key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
 {
-  //g_print("key_pressed_window %d %d \n", event->state, event->keyval);
-
-  // check ctrl + shift + f
   if (event->state & GDK_CONTROL_MASK && event->keyval == 'F') {
       g_print("ctrl + shift + f \n");
   }
@@ -85,9 +81,6 @@ sourceview_new(GtkSourceBuffer* buffer) {
     scroll = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
                                     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-    //gtk_source_buffer_set_highlight_syntax(buffer, TRUE);
-    //gtk_source_buffer_set_highlight_matching_brackets(buffer, TRUE);
 
     sourceview = gtk_source_view_new_with_buffer(buffer);
     gtk_source_view_set_show_right_margin(GTK_SOURCE_VIEW(sourceview), TRUE);
@@ -143,22 +136,19 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
         }
 
         path = g_strconcat(path, name, NULL);
-        //g_print ("on_button_pressed: %s\n", path);
 
         content = sourceview_new(GTK_SOURCE_BUFFER(buffer));
         guess_language(GTK_SOURCE_BUFFER(buffer), path);
 
-	if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
-		if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
-        		open_file (GTK_NOTEBOOK(userdata), path, content, buffer);
-		} else {
-			//g_print("no file under filepath\n");
-      show_error(window, "no file under filepath");
-		}
-	} else {
-		//g_print("filepath is directory\n");
-      show_error(window, "filepath is directory");
-	}
+      	if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
+      		  if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
+              		open_file (GTK_NOTEBOOK(userdata), path, content, buffer);
+      		  } else {
+                show_error(window, "no file under filepath");
+      		  }
+      	} else {
+            show_error(window, "filepath is directory");
+      	}
 
         g_free(name);
         g_free(path);
@@ -200,13 +190,7 @@ main (int   argc,
   GObject *treeview;
   GObject *notebook;
   GError *error = NULL;
-  //GtkWidget *event_box;
-  //GtkWidget *view;
-  //gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
   gchar* filepath = ".";
-
-  //UserData *userdata = g_new0(UserData, 1);
-  //init_user_data (userdata);
 
   gtk_init (&argc, &argv);
 
@@ -218,10 +202,6 @@ main (int   argc,
     g_clear_error (&error);
     return 1;
   }
-
-  // userdata->treeview = gtk_builder_get_object (builder, "treeview");
-  // userdata->notebook = gtk_builder_get_object (builder, "notebook");
-  // userdata->buffer   = gtk_builder_get_object (builder, "sourcebuffer");
 
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object (builder, "window");

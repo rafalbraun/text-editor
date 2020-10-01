@@ -1,16 +1,10 @@
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
-// gcc -o notebook notebook.c `pkg-config --cflags --libs gtk+-3.0`
-
 #include <stdio.h>
 
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
-
-//
-// https://developer.gnome.org/gtk-tutorial/stable/x1450.html
-//
 
 char bufferf[32];
 char bufferl[32];
@@ -33,9 +27,7 @@ load_file(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
         list = gtk_container_get_children(GTK_CONTAINER(eventbox));
         label = ((GtkLabel*) list->data);
         tabname = gtk_label_get_text(GTK_LABEL(label));
-        g_print("tabname %s \n", tabname);
 
-        // fill buffer
         gchar *text;
         gsize len;
         GError *err = NULL;
@@ -55,18 +47,12 @@ close_file(GtkNotebook* notebook, gchar* filepath) {
         for (int i=0; i < tabnum; i++) {
             GList *t = g_list_nth (filenames, i);
             if (strcmp(((gchar*) t->data), filepath) == 0) {
-                //g_print("[INFO] %s already found: %s \n", filepath, ((gchar*) t->data) );
-                //gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), i);
 
-                g_print("[%d] close_file: %s \n", i, filepath);
                 GList *t = g_list_nth (filenames, i);
                 filenames = g_list_remove(filenames, (t->data));
                 gtk_notebook_remove_page (notebook, i);
                 tabnum--;
                 
-                /*
-                gtk_notebook_remove_page (notebook, i);
-                */
                 return;
             }
         }
@@ -78,22 +64,10 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook
     GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
     GtkLabel* label = ((GtkLabel*) list->data);
     gchar* text = (gchar *)gtk_label_get_text(GTK_LABEL(label));
-    g_print("label: %s \n", text);
 
-    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
-    {//1 is left mouse btn
-        //g_print("1\n");
-        return FALSE;
-    }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
-    {//2 is left mouse btn
-        //g_print("2\n");
+    {
         close_file (notebook, text);
-        return TRUE;
-    }
-    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
-    {   //3 is right mouse btn
-        //g_print("3\n");
         return TRUE;
     }
 }
@@ -104,12 +78,10 @@ open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* 
     GtkWidget *event_box = gtk_event_box_new();
     int pagenum;
 
-    // check if this filepath is already in list
     if (tabnum > 0) {
         for (int i=0; i < tabnum; i++) {
             GList *t = g_list_nth (filenames, i);
             if (strcmp(((gchar*) t->data), filepath) == 0) {
-                g_print("[INFO] %s already found: %s \n", filepath, ((gchar*) t->data) );
                 gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), i);
                 return;
             }
@@ -172,7 +144,6 @@ append_book(GtkNotebook *notebook, gchar* tabname) {
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), frame, label);
 }
 
-/* Remove a page from the notebook */
 static void remove_book( GtkWidget   *button,
                          GtkNotebook *notebook )
 {
@@ -228,12 +199,10 @@ static gboolean
 key_pressed(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
 {
   if (event->keyval == GDK_KEY_q && (event->state & GDK_CONTROL_MASK)) {
-    printf("key pressed: %s\n", "ctrl + Q");
     remove_book(NULL, GTK_NOTEBOOK(notebook));
   }
   if (event->keyval == GDK_KEY_n && (event->state == GDK_CONTROL_MASK)) {
-    printf("key pressed: %s\n", "ctrl + N");
-    append_book(GTK_NOTEBOOK(notebook), "aaaaa");
+    append_book(GTK_NOTEBOOK(notebook), "foo");
   }
 
   return FALSE;
@@ -247,20 +216,6 @@ switch_page (GtkNotebook *notebook,
     
     gint page_dst = gtk_notebook_get_current_page(notebook);
     load_file(notebook, buffer, page_src);
-
-    /*
-    const gchar* src = get_page_label(notebook, buffer, page_src);
-    const gchar* dst = get_page_label(notebook, buffer, page_dst);
-    if ( (src!=NULL) && (dst!=NULL) ) {
-        g_print("page: %d -> %d :: %s -> %s \n", page_dst, page_src, dst, src);
-    } else {
-        g_print("page: %d -> %d \n", page_dst, page_src);
-    }*/
-
-    g_print("page: %d -> %d \n", page_dst, page_src);
-
-    //g_free(src);
-    //g_free(dst);
 }
 
 
@@ -322,7 +277,6 @@ int main( int argc,
 {
     GtkWidget *button;
     GtkWidget *label;
-    //GtkWidget *table;
     GtkWidget *vbox, *hbox;
     GtkWidget *notebook;
     GtkWidget *checkbutton;
@@ -361,24 +315,9 @@ int main( int argc,
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
-    // Let's append a bunch of pages to the notebook 
-    //for (int i = 0; i < 5; i++) {
-    //    append_book(GTK_NOTEBOOK(notebook), "bbb");
-    //}
-
     open_file (GTK_NOTEBOOK(notebook), "/tmp/Makefile", NULL, NULL);
     open_file (GTK_NOTEBOOK(notebook), "/tmp/main.c", NULL, NULL);
     open_file (GTK_NOTEBOOK(notebook), "/tmp/main.h", NULL, NULL);
-
-      
-    // Now let's add a page to a specific spot 
-    // checkbutton = gtk_check_button_new_with_label ("Check me please!");
-    // gtk_widget_set_size_request (checkbutton, 100, 75);
-    // gtk_widget_show (checkbutton);
-   
-    // label = gtk_label_new ("Add page");
-    // gtk_notebook_insert_page (GTK_NOTEBOOK (notebook), checkbutton, label, 2);
-
 
     // Set what page to start at (page 4) 
     gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 3);
@@ -411,12 +350,6 @@ int main( int argc,
                       G_CALLBACK (remove_book),
                       notebook);
     gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
-
-    // button = gtk_button_new_with_label ("append page");
-    // g_signal_connect (button, "clicked",
-    //                   G_CALLBACK (append_page),
-    //                   notebook);
-    // gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
 
     button = gtk_button_new_with_label ("open file");
     g_signal_connect (button, "clicked",

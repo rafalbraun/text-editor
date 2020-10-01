@@ -14,7 +14,6 @@
 
 int counter = 0;
 
-// needed by spawn
 int stdout_fd = -1;
 char buffer [BUFFER_SIZE];
 guint gLinenum;
@@ -36,8 +35,6 @@ extract_filename(gchar* filepath) {
   return filename;
 }
 
-// utf8 problem
-// https://mail.gnome.org/archives/gtk-list/2007-February/msg00142.html
 gchar* 
 read_file(gchar* filename) {
   gchar *contents;
@@ -47,7 +44,6 @@ read_file(gchar* filename) {
   if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
     g_error("error reading %s: %s", filename, err->message);
   }
-  //bytes = g_bytes_new_take(contents, len);
 
   return contents;
 }
@@ -86,7 +82,7 @@ void clear_list(GObject* widget) {
 }
 
 gboolean 
-_stop_main_loop (gpointer treeview)
+_main_loop (gpointer treeview)
 {
   char** lines;
   char** line;
@@ -99,9 +95,6 @@ _stop_main_loop (gpointer treeview)
   gchar* end;
   gchar* filepath;
 
-  //g_print("time %d \n", counter);
-  //counter++;
-
   bytes = read (stdout_fd, buffer, BUFFER_SIZE);
   buffer[bytes-1] = '\0';
 
@@ -109,7 +102,6 @@ _stop_main_loop (gpointer treeview)
     lines = g_strsplit(buffer, "\n", -1);
     for (int i=0 ; i<g_strv_length(lines); i++) {
       line = g_strsplit(lines[i], "\x1C", 0);
-      //add_to_list(treeview, line[4], extract_filename(line[0]), line[1]);
       filepath = line[0];
       linenum = line[1];
       start = line[2];
@@ -126,7 +118,7 @@ _stop_main_loop (gpointer treeview)
   return TRUE;
 }
 
-int spawn(gchar* needle) {
+int search_process(gchar* needle) {
   char *argv [15];
   GPid child_pid;
   int status;
@@ -134,11 +126,9 @@ int spawn(gchar* needle) {
   g_print("searching %s\n", needle);
 
   memset (argv, 0, 15 * sizeof (char *));
-  argv[0] = 
-    "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/glib_regex";
-  argv[1] = 
-    "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
-  argv[2] = needle; //"int";
+  argv[0] = "./glib_regex";
+  argv[1] =  ".";
+  argv[2] = needle; 
   status = g_spawn_async_with_pipes (NULL, argv, NULL, 
       G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, &stdout_fd, NULL, NULL);
   if (!status) {
@@ -159,26 +149,23 @@ int spawn(gchar* needle) {
 
 void
 preedit_changed (GtkEntry *widget, gpointer treeview)  {
-  //g_print("preedit_changed %s \n", gtk_entry_get_text(GTK_ENTRY(widget)));
-  //add_to_list(userdata, "string000000000", "string11111111111");
-  clear_list(treeview);
+    clear_list(treeview);
 
-  gchar* needle = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget));
+    gchar* needle = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget));
 
-  // check if string is more than gLimit
-  if (strlen(needle) > gLimit) {
-    spawn(needle);
-  }
+    if (strlen(needle) > gLimit) {
+        search_process(needle);
+    }
 }
 
 int count_lines(gchar* contents, int len) {
-  int count = 0;
-  for (int i=0; i<len; i++) {
-    if (contents[i]==10) { // here checking for newline, could be also '\n'
-      count++;
+    int count = 0;
+    for (int i=0; i<len; i++) {
+        if (contents[i]==10) { // here checking for newline, could be also '\n'
+            count++;
+        }
     }
-  }
-  return count;
+    return count;
 }
 
 void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
@@ -206,30 +193,12 @@ void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
         gtk_tree_model_get(model, &iter, 1, &filename,  -1);
         gtk_tree_model_get(model, &iter, 2, &linenum,  -1);
         gtk_tree_model_get(model, &iter, 3, &start,  -1);
-        gtk_tree_model_get(model, &iter, 4, &end,  -1); //filename
+        gtk_tree_model_get(model, &iter, 4, &end,  -1);
         g_print("filename %s, linenum %s, start %s, end %s \n", filename, linenum, start, end);
 
         if (g_file_get_contents(filename, &contents, &len, &err) == FALSE) {
           g_error("error reading %s: %s", filename, err->message);
         }
-
-        // convert to utf8
-        /*
-        // g_utf8_validate
-        str = g_convert (contents,
-                   len,
-                   "UTF-8",
-                   "ANSI_X3.4-1968",
-                   &bytes_read,
-                   &bytes_written,
-                   &err);
-        if (str == NULL) {
-          g_error("error converting %s: %s", filename, err->message);
-        }
-        */
-
-        //g_print("bytes_read: %d \n", bytes_read);
-        //g_print("bytes_written: %d \n", bytes_written);
 
         gtk_text_buffer_set_text(GTK_TEXT_BUFFER(textbuffer), contents, len);
         gCount = count_lines(contents, len);
@@ -238,20 +207,15 @@ void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
         tagtable = gtk_text_buffer_get_tag_table(GTK_TEXT_BUFFER(textbuffer));
         btag = gtk_text_tag_table_lookup(tagtable, "black_bg");
         wtag = gtk_text_tag_table_lookup(tagtable, "white_fg");
-        gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), 
-            &start_iter, gLinenum, atoi(start));
-        gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), 
-            &end_iter, gLinenum, atoi(end));
-        gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(textbuffer), btag, 
-            &start_iter, &end_iter);
-        gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(textbuffer), wtag, 
-            &start_iter, &end_iter);
+        gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), &start_iter, gLinenum, atoi(start));
+        gtk_text_buffer_get_iter_at_line_index(GTK_TEXT_BUFFER(textbuffer), &end_iter, gLinenum, atoi(end));
+        gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(textbuffer), btag, &start_iter, &end_iter);
+        gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(textbuffer), wtag, &start_iter, &end_iter);
 
         g_free(filename);
   }
 }
 
-// needed: linenum, count
 void
 adjustment_changed (GtkAdjustment *adjustment,
                     gpointer userdata) {
@@ -271,14 +235,6 @@ row_activated (GtkTreeView       *tree_view,
                gpointer           user_data) {
   g_print("row activated \n");
 }
-/*
-gboolean
-key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
-{
-  g_print("key_pressed: GtkWindow \n");
-  return FALSE;
-}
-*/
 
 gchar* escape_ampersands(gchar* str) {
     gchar** strstr;
@@ -289,36 +245,6 @@ gchar* escape_ampersands(gchar* str) {
     joined = g_strjoinv(separator, strstr);
     return joined;
 }
-
-void
-cell_data_func (GtkTreeViewColumn *col,
-                    GtkCellRenderer   *renderer,
-                    GtkTreeModel      *model,
-                    GtkTreeIter       *iter,
-                    gpointer           user_data)
-{
-
-    //gchar *markuptxt;
-    gchar *buff;
-    //gchar *escaped;
-
-    gtk_tree_model_get(model, iter, 0, &buff, -1);
-
-    //g_print("[%s] -> ", buff);
-    //escaped = escape_ampersands(buff);
-    //g_print("[%s] \n", buff);
-
-    //markuptxt = g_markup_printf_escaped( g_strconcat("<tt>", buff, "</tt>", NULL) );
-
-    //g_object_set( renderer, "markup", markuptxt, NULL );
-
-    g_object_set( renderer, "text", buff, NULL );
-
-    //g_free(markuptxt);
-    g_free(buff);
-    //g_free(escaped);
-}
-
 
 void combo_selected(GtkWidget *widget, gpointer user_data) {
     GtkTreeModel* model;
@@ -350,7 +276,7 @@ GObject* full_search_window_new() {
   GObject* column;
   GObject *adjustment;
 
-  /* Construct a GtkBuilder instance and load our UI description */
+  // Construct a GtkBuilder instance and load our UI description 
   builder = gtk_builder_new ();
   if (gtk_builder_add_from_file (builder, "full_search.ui", &error) == 0)
   {
@@ -362,7 +288,6 @@ GObject* full_search_window_new() {
   // Connect signal handlers to the constructed widgets. 
   window = gtk_builder_get_object (builder, "window");
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-  //g_signal_connect (window, "key-press-event", G_CALLBACK (key_pressed_window), NULL);
 
   treeview = gtk_builder_get_object(builder, "treeview1");
   g_signal_connect(treeview, "row-activated", G_CALLBACK(row_activated), NULL);
@@ -379,7 +304,6 @@ GObject* full_search_window_new() {
 
   renderer = gtk_builder_get_object (builder, "cellrenderertext1");
   column   = gtk_builder_get_object (builder, "treeviewcolumn1");
-  gtk_tree_view_column_set_cell_data_func(GTK_TREE_VIEW_COLUMN(column), GTK_CELL_RENDERER(renderer), cell_data_func, NULL, NULL);
 
   buffer = gtk_builder_get_object (builder, "textbuffer");
   gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "black_bg", "background", "black", NULL); 
@@ -389,7 +313,7 @@ GObject* full_search_window_new() {
   g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(combo_selected), NULL);
 
   g_timeout_add (100,
-           (GSourceFunc) _stop_main_loop,
+           (GSourceFunc) _main_loop,
            treeview);
 
   return window;

@@ -1,13 +1,7 @@
-##
-## https://stackoverflow.com/questions/9052792/how-to-pass-macro-definition-from-make-command-line-arguments-d-to-c-source
-## https://stackoverflow.com/questions/2198186/purpose-of-ifndef-filename-endif-in-header-file
-##
-
 CC=gcc
 GTK=`pkg-config --cflags --libs gtk+-3.0 gtksourceview-4`
 GLIB=`pkg-config --cflags --libs glib-2.0`
 PROGRAMS=app treeview notebook full_search
-#SRC=app.c treeview.c notebook.c full_search.c
 
 all: $(PROGRAMS) glib_regex
 

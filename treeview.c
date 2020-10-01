@@ -20,7 +20,6 @@ gchar* get_selection(GtkWidget* treeview) {
     if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), &model, &iter)) {
         gtk_tree_model_get(model, &iter, COLUMN, &value,  -1);
         return value;
-        //g_free(value);
     }
     return NULL;
 }
@@ -29,7 +28,6 @@ void
 popup_menu_copy_file(GtkWidget *menuitem, gpointer treeview)
 {
     gchar* filename = get_selection(treeview);
-    g_print("File %s copied\n", filename);
     g_free(filename);
 }
 
@@ -67,86 +65,7 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
   gtk_widget_show_all(menu);
   gtk_menu_popup_at_pointer (GTK_MENU(menu), (GdkEvent*) event);
 }
-/*
-gboolean 
-on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
-{
-  GtkTreeSelection *selection;
-  GtkTreeModel     *model;
-  GtkTreeIter       child;
-  GtkTreeIter       parent;
-  gboolean          hasParent;
-  gchar            *path, *name, *parent_name;
 
-  if (event->type == GDK_2BUTTON_PRESS) {
-      GtkTreeSelection * selection;
-      selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-
-      if (gtk_tree_selection_count_selected_rows(selection) == 1) {
-
-        model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
-        gtk_tree_selection_get_selected(selection, &model, &child);
-
-        path = "";
-        gtk_tree_model_get (model, &child, COLUMN, &name, -1);
-
-        while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) {
-          if ( hasParent == TRUE ) {
-            parent_name = "";
-            gtk_tree_model_get (model, &parent, COLUMN, &parent_name, -1);
-            path = g_strconcat(parent_name, "/", path, NULL);
-            g_free(parent_name);
-            child = parent;
-          }
-        }
-
-        path = g_strconcat(path, name, NULL);
-        g_print ("on_button_pressed: %s\n", path);
-
-        g_free(name);
-        g_free(path);
-
-      }
-    return TRUE;
-  }
-
-  // single click with the right mouse button?
-  else if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-    g_print("Single right click on the tree view.\n");
-
-    // optional: select row if no row is selected or only
-    //           one other row is selected (will only do something
-    //           if you set a tree selection mode as described later
-    //           in the tutorial)
-    if (1) {
-      GtkTreeSelection * selection;
-
-      selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-
-      // Note: gtk_tree_selection_count_selected_rows() does not
-      //       exist in gtk+-2.0, only in gtk+ >= v2.2 !
-      if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
-        GtkTreePath * path;
-
-        // Get tree path for row that was clicked
-        if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
-            event->x, event->y, &path, NULL, NULL, NULL))
-        {
-          gtk_tree_selection_unselect_all(selection);
-          gtk_tree_selection_select_path(selection, path);
-          gtk_tree_path_free(path);
-        }
-      }
-    } // end of optional bit
-
-    popup_menu(treeview, event, userdata);
-
-    return TRUE; //we handled this 
-  }
-
-  return FALSE; //we did not handle this 
-}
-*/
 void 
 on_changed(GtkWidget *widget, gpointer statusbar) {
     
@@ -177,13 +96,9 @@ fill_treestore(const char *pathname, GtkTreeStore *treestore, GtkTreeIter toplev
 
     while ((entry = readdir(dir)) != NULL) {
 
-	    if (entry->d_name[0] == '.') {
-		//g_print("omitting: %s\n", entry->d_name);
-		continue; 
-	    } else {
-		//g_print("joining: %s\n", entry->d_name);
-	    }
-
+        if (entry->d_name[0] == '.') {
+            continue; 
+        }
 
         if (entry->d_type == DT_DIR) {
             char path[1024];
@@ -194,15 +109,15 @@ fill_treestore(const char *pathname, GtkTreeStore *treestore, GtkTreeIter toplev
 
             gtk_tree_store_append(treestore, &child, &toplevel);
             gtk_tree_store_set(treestore, &child,
-                     COLUMN, entry->d_name,
-                     -1);
+                   COLUMN, entry->d_name,
+                   -1);
 
             fill_treestore(path, treestore, child);
         } else {
             gtk_tree_store_append(treestore, &child, &toplevel);
             gtk_tree_store_set(treestore, &child,
-                     COLUMN, entry->d_name,
-                     -1);
+                   COLUMN, entry->d_name,
+                   -1);
         }
     }
     closedir(dir);
@@ -231,12 +146,9 @@ create_view_and_model(gchar* filepath, GtkWidget *treeview) {
   GtkTreePath* treepath;
   GtkTreeModel *model;
 
-  //view = gtk_tree_view_new();
-
   gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview), FALSE);
 
   col = gtk_tree_view_column_new();
-  //gtk_tree_view_column_set_title(col, "Programming languages");
   gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
 
   renderer = gtk_cell_renderer_text_new();
@@ -250,9 +162,6 @@ create_view_and_model(gchar* filepath, GtkWidget *treeview) {
   /* Expand top tree node */
   treepath = gtk_tree_path_new_from_string("0");
   gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
-
-  //g_signal_connect(view, "button-press-event", (GCallback) on_button_pressed, NULL);
-
 }
 
 #if !TREEVIEW
@@ -265,7 +174,7 @@ int main(int argc, char *argv[]) {
   GtkTreeSelection *selection; 
   GtkWidget *vbox;
   GtkWidget *statusbar;
-  gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
+  gchar* filepath = ".";
 
   gtk_init(&argc, &argv);
 

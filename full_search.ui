@@ -10,29 +10,7 @@
          <column type="gchararray" />
          <column type="gchararray" />
       </columns>
-      <!--
-  <data>
-  <row>
-    <col id="0">extract_filename(gchar* filepath) {</col>
-    <col id="1">/home/rafal/IdeaProjects/gtksourceview-my-ide/application/search_path/tmp</col>
-    <col id="2">19</col>
-  </row>
-  </data>
-  -->
-      <!--
-  <data>
-  <row>
-    <col id="0">Hello0</col>
-    <col id="1">Hello1</col>
-    <col id="2">Hello2</col>
-  </row>
-  <row>
-    <col id="0">Hello01</col>
-    <col id="1">Hello02</col>
-    <col id="2">Hello03</col>
-  </row>
-  </data>
-    -->
+
    </object>
    <object class="GtkListStore" id="pp2_input_list">
       <columns>
