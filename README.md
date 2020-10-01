@@ -2,6 +2,14 @@
 
 GtkTextEditor is an example text editor written in Gtk
 
+## Dependencies
+
+```
+libglib2.0-dev
+libgtksourceview-4-dev
+libgtk-3-dev
+```
+
 ## Compilation
 
 Use make command to compile GtkTextEditor.
