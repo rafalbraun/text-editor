@@ -123,6 +123,18 @@ fill_treestore(const char *pathname, GtkTreeStore *treestore, GtkTreeIter toplev
     closedir(dir);
 }
 
+
+static void
+fill_treestore_new(GtkTreeStore *treestore, const char *pathname) {
+  GtkTreeIter toplevel;
+  
+  gtk_tree_store_append(treestore, &toplevel, NULL);
+  gtk_tree_store_set(treestore, &toplevel, COLUMN, pathname, -1);
+  
+  fill_treestore (pathname, treestore, toplevel);
+}
+
+
 GtkTreeModel*
 create_and_fill_model(const char *pathname) {
   GtkTreeIter toplevel;
@@ -137,6 +149,14 @@ create_and_fill_model(const char *pathname) {
   fill_treestore (pathname, treestore, toplevel);
 
   return GTK_TREE_MODEL(treestore);
+}
+
+void expand_top_node(GObject* treeview) {
+  GtkTreePath* treepath;
+
+  /* Expand top tree node */
+  treepath = gtk_tree_path_new_from_string("0");
+  gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
 }
 
 void
