@@ -58,6 +58,10 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
   g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
+  menuitem = gtk_menu_item_new_with_label("Filter");
+  g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
   menuitem = gtk_menu_item_new_with_label("Git");
   g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);

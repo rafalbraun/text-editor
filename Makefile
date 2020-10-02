@@ -1,11 +1,11 @@
 CC=gcc
 GTK=`pkg-config --cflags --libs gtk+-3.0 gtksourceview-4`
 GLIB=`pkg-config --cflags --libs glib-2.0`
-PROGRAMS=text_editor treeview notebook full_search
+PROGRAMS=text_editor treeview notebook full_search sourceview
 
 all: $(PROGRAMS) glib_regex
 
-text_editor: text_editor.c treeview.c notebook.c
+text_editor: text_editor.c treeview.c notebook.c callback.c sourceview.c
 	$(CC) text_editor.c $(GTK) -o text_editor
 
 %: %.c

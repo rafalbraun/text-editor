@@ -6,40 +6,8 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
-char bufferf[32];
-char bufferl[32];
 GList* filenames;
 guint tabnum;
-
-static void
-load_file(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
-    const gchar* tabname;
-    GtkWidget *eventbox, *child;
-    GtkSourceView *textview;
-    GtkScrolledWindow *scroll;
-    GtkLabel  *label;
-    GList* list;
-
-    if (tabnum > 0) {
-        child = gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), pagenum);
-        eventbox = gtk_notebook_get_tab_label(GTK_NOTEBOOK(notebook), child);
-
-        list = gtk_container_get_children(GTK_CONTAINER(eventbox));
-        label = ((GtkLabel*) list->data);
-        tabname = gtk_label_get_text(GTK_LABEL(label));
-
-        gchar *text;
-        gsize len;
-        GError *err = NULL;
-
-        if (g_file_get_contents(tabname, &text, &len, &err) == FALSE) {
-            g_error("error reading %s: %s", tabname, err->message);
-        }
-
-        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), text, len);
-        g_free(text);
-    }
-}
 
 static void
 close_file(GtkNotebook* notebook, gchar* filepath) {
@@ -80,6 +48,41 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook
         // context menu
         return TRUE;
     }
+}
+
+static void
+load_file(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
+    const gchar* tabname;
+    GtkWidget *eventbox, *child;
+    GtkSourceView *textview;
+    GtkScrolledWindow *scroll;
+    GtkLabel  *label;
+    GList* list;
+
+    if (tabnum > 0) {
+        child = gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), pagenum);
+        eventbox = gtk_notebook_get_tab_label(GTK_NOTEBOOK(notebook), child);
+
+        list = gtk_container_get_children(GTK_CONTAINER(eventbox));
+        label = ((GtkLabel*) list->data);
+        tabname = gtk_label_get_text(GTK_LABEL(label));
+
+        gchar *text;
+        gsize len;
+        GError *err = NULL;
+
+        if (g_file_get_contents(tabname, &text, &len, &err) == FALSE) {
+            g_error("error reading %s: %s", tabname, err->message);
+        }
+
+        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), text, len);
+        g_free(text);
+    }
+}
+
+static void
+save_file(gchar* path, gchar* contents) {
+
 }
 
 static void
@@ -135,7 +138,6 @@ open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* 
 
     gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), pagenum);
 }
-
 
 void
 append_book(GtkNotebook *notebook, gchar* tabname) {
@@ -228,27 +230,9 @@ switch_page (GtkNotebook *notebook,
     load_file(notebook, buffer, page_src);
 }
 
-
-void
-page_removed (GtkNotebook *notebook,
-               GtkWidget   *child,
-               guint        page_num,
-               gpointer     user_data) {
-    g_print("page removed \n");
-}
-
-void
-page_reordered (GtkNotebook *notebook,
-               GtkWidget   *child,
-               guint        page_num,
-               gpointer     user_data) {
-    g_print("page reordered\n");
-}
-
 #if !NOTEBOOK
 
 GtkWidget* window;
-
 
 static void
 open_file_dialog (GtkWidget *widget, GtkWidget* notebook) {
@@ -314,24 +298,12 @@ int main( int argc,
     g_signal_connect (G_OBJECT (notebook), "switch-page",
                       G_CALLBACK (switch_page),
                       NULL);
-    g_signal_connect (G_OBJECT (notebook), "page-removed",
-                      G_CALLBACK (page_removed),
-                      NULL);
-    g_signal_connect (G_OBJECT (notebook), "page-reordered",
-                      G_CALLBACK (page_reordered),
-                      NULL);
 
     // Create horizontal box for buttons
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
     open_file (GTK_NOTEBOOK(notebook), "./notebook.c", NULL, NULL);
-
-    /*
-    open_file (GTK_NOTEBOOK(notebook), "/tmp/Makefile", NULL, NULL);
-    open_file (GTK_NOTEBOOK(notebook), "/tmp/main.c", NULL, NULL);
-    open_file (GTK_NOTEBOOK(notebook), "/tmp/main.h", NULL, NULL);
-    */
 
     // Set what page to start at (page 4) 
     gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 3);
