@@ -114,9 +114,10 @@
                           <object id="treeview" class="GtkTreeView">
                               <property name="visible">True</property>
                               <property name="model">treestore</property>
+                              <property name="headers-visible">False</property>
                               <property name="enable-search">False</property>
                               <property name="enable-tree-lines">True</property>
-
+                              <property name="enable-grid-lines">GTK_TREE_VIEW_GRID_LINES_BOTH</property>
                               <child internal-child="selection">
                                  <object class="GtkTreeSelection" id="treeview-selection" />
                               </child>

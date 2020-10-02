@@ -67,6 +67,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook
 
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
     {
+        // empty
         return FALSE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
@@ -76,6 +77,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
     {
+        // context menu
         return TRUE;
     }
 }
@@ -323,9 +325,13 @@ int main( int argc,
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
+    open_file (GTK_NOTEBOOK(notebook), "./notebook.c", NULL, NULL);
+
+    /*
     open_file (GTK_NOTEBOOK(notebook), "/tmp/Makefile", NULL, NULL);
     open_file (GTK_NOTEBOOK(notebook), "/tmp/main.c", NULL, NULL);
     open_file (GTK_NOTEBOOK(notebook), "/tmp/main.h", NULL, NULL);
+    */
 
     // Set what page to start at (page 4) 
     gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 3);

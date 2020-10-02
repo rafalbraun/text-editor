@@ -211,20 +211,13 @@ main (int   argc,
   treestore = gtk_builder_get_object (builder, "treestore");
   notebook = gtk_builder_get_object (builder, "notebook");
 
-  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-  g_signal_connect (window, "key-press-event", G_CALLBACK (key_pressed_window), NULL);
-
-  //create_view_and_model(filepath, GTK_WIDGET(treeview));
   fill_treestore_new(GTK_TREE_STORE(treestore), filepath);
   expand_top_node (treeview);
+  //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
-  //gtk_tree_view_set_enable_tree_lines(GTK_TREE_VIEW(treeview), TRUE);
-  /*
-                              <property name="enable-grid-lines">GTK_TREE_VIEW_GRID_LINES_BOTH</property>
-  */
-  gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
+  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+  g_signal_connect (window, "key-press-event", G_CALLBACK (key_pressed_window), NULL);
   g_signal_connect (treeview, "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
-
   g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)notebook);
   g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)buffer);
 

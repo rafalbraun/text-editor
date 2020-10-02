@@ -1,11 +1,6 @@
-app
 treeview
 glib_regex
-notebook1
-notebook2
-search_path/search_path
-foo_widget/
-filechooser
 full_search
 notebook
 text_editor
+
