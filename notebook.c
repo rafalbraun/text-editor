@@ -33,11 +33,17 @@ close_file(gpointer userdata, gchar* filepath) {
     }
 }
 
-static gboolean
-notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
+static gchar*
+get_text_from_eventbox(GtkWidget* widget) {
     GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
     GtkLabel* label = ((GtkLabel*) list->data);
     gchar* text = (gchar *)gtk_label_get_text(GTK_LABEL(label));
+    return text;
+}
+
+static gboolean
+notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
+    gchar* text = get_text_from_eventbox(widget);
 
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
     {
@@ -59,26 +65,22 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
 
 static void
 load_file(gpointer userdata, guint pagenum) {
-    const gchar* tabname;
     GtkWidget *eventbox, *child;
     GtkSourceView *textview;
     GtkScrolledWindow *scroll;
     GtkLabel  *label;
     GList* list;
+    gchar *text;
+    gsize len;
+    GError *err = NULL;
+    gchar* tabname;
 
     guint tabnum = get_tabnum(userdata);
 
     if (tabnum > 0) {
         child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
         eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
-
-        list = gtk_container_get_children(GTK_CONTAINER(eventbox));
-        label = ((GtkLabel*) list->data);
-        tabname = gtk_label_get_text(GTK_LABEL(label));
-
-        gchar *text;
-        gsize len;
-        GError *err = NULL;
+        tabname = get_text_from_eventbox(eventbox);
 
         if (g_file_get_contents(tabname, &text, &len, &err) == FALSE) {
             g_error("error reading %s: %s", tabname, err->message);
@@ -97,7 +99,7 @@ save_file(gchar* path, gchar* contents) {
 static void
 open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     GtkWidget* label = gtk_label_new(filepath);
-    GtkWidget *event_box = gtk_event_box_new();
+    GtkWidget *eventbox = gtk_event_box_new();
     GtkNotebook* notebook = get_notebook(userdata);
     GtkTextBuffer* buffer = GTK_TEXT_BUFFER(get_buffer(userdata));
     int pagenum;
@@ -114,7 +116,7 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
         }
     }
 
-    gtk_container_add(GTK_CONTAINER(event_box), label);
+    gtk_container_add(GTK_CONTAINER(eventbox), label);
     gchar *text;
     gsize len;
     GError *err = NULL;
@@ -128,7 +130,7 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
         return;
     }
 
-    pagenum = gtk_notebook_append_page (notebook, content, event_box);
+    pagenum = gtk_notebook_append_page (notebook, content, eventbox);
     gtk_text_buffer_set_text(buffer, text, len);
     g_free(text);
     
@@ -138,7 +140,7 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 
-    g_signal_connect (event_box, "button-press-event", G_CALLBACK (notebook_tab_clicked), userdata);
+    g_signal_connect (eventbox, "button-press-event", G_CALLBACK (notebook_tab_clicked), userdata);
 
     gtk_notebook_set_current_page (notebook, pagenum);
 }

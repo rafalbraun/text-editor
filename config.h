@@ -17,25 +17,29 @@ typedef struct _UserData {
 	GObject*		treeview;				// directory navigation in treeview on the left side of window
 	GObject*		notebook;				// notebook with file contents and tabs in the center of window
 	GObject*		buffer;					// buffer for file contents
-	GList* 			filenames;				// list of PageInfo structures
-	guint 			tabnum;					// number of tabs
 	gchar*			font;					// font name as char array
 	gchar*			homedir;				// directory that app is opened in
 	GObject*		treestore;
 
+	guint 			tabnum;					// number of tabs
+	//GList* 			filenames;				// list of PageInfo structures
+	GList* 			open_files;
+
+
+
 	/* full search window settings */
 	int 			stdout_fd;				// file descriptor opened by glib_regex process that works as queue for search results
-	gchar*			filetypes;				// filetypes (extension) that should be filtered in full search window
-	gchar* 			full_search_buffer;		// buffer that contains search results, the contents come from ..........
-	guint 			limit;					// number of chars that need to be in entry field before searching starts
+	//gchar*			filetypes;				// filetypes (extension) that should be filtered in full search window
+	//gchar* 			full_search_buffer;		// buffer that contains search results, the contents come from ..........
+	//guint 			limit;					// number of chars that need to be in entry field before searching starts
 
 
 } UserData;
-
+/*
 void init_user_data(UserData* userdata) {
 	userdata->limit = 3;
 }
-
+*/
 GtkWindow* get_window(UserData* userdata) {
 	return GTK_WINDOW(userdata->window);
 }
