@@ -90,16 +90,18 @@ save_file(gchar* path, gchar* contents) {
 }
 
 static void
-open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* buffer) {
+open_file (GtkNotebook* n, gchar* filepath, GtkWidget* content, GObject* b) {
     GtkWidget* label = gtk_label_new(filepath);
     GtkWidget *event_box = gtk_event_box_new();
+    GtkNotebook* notebook = n;
+    GtkTextBuffer* buffer = GTK_TEXT_BUFFER(b);
     int pagenum;
 
     if (tabnum > 0) {
         for (int i=0; i < tabnum; i++) {
             GList *t = g_list_nth (filenames, i);
             if (strcmp(((gchar*) t->data), filepath) == 0) {
-                gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), i);
+                gtk_notebook_set_current_page (notebook, i);
                 return;
             }
         }
@@ -108,7 +110,7 @@ open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* 
     gtk_container_add(GTK_CONTAINER(event_box), label);
     if (content == NULL) {
         GtkWidget* frame = gtk_label_new("file contents");
-        pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), frame, event_box);
+        pagenum = gtk_notebook_append_page (notebook, frame, event_box);
     } else {
         gchar *text;
         gsize len;
@@ -126,8 +128,8 @@ open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* 
         }
 #endif
 
-        pagenum = gtk_notebook_append_page (GTK_NOTEBOOK (notebook), content, event_box);
-        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), text, len);
+        pagenum = gtk_notebook_append_page (notebook, content, event_box);
+        gtk_text_buffer_set_text(buffer, text, len);
 
         g_free(text);
     }
@@ -140,7 +142,7 @@ open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* 
 
     g_signal_connect (event_box, "button-press-event", G_CALLBACK (notebook_tab_clicked), notebook);
 
-    gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook), pagenum);
+    gtk_notebook_set_current_page (notebook, pagenum);
 }
 
 void
