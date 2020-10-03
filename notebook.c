@@ -90,11 +90,11 @@ save_file(gchar* path, gchar* contents) {
 }
 
 static void
-open_file (GtkNotebook* n, gchar* filepath, GtkWidget* content, GObject* b) {
+open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     GtkWidget* label = gtk_label_new(filepath);
     GtkWidget *event_box = gtk_event_box_new();
-    GtkNotebook* notebook = n;
-    GtkTextBuffer* buffer = GTK_TEXT_BUFFER(b);
+    GtkNotebook* notebook = get_notebook(userdata);
+    GtkTextBuffer* buffer = GTK_TEXT_BUFFER(get_buffer(userdata));
     int pagenum;
 
     if (tabnum > 0) {
@@ -264,7 +264,7 @@ open_file_dialog (GtkWidget *widget, GtkWidget* notebook) {
         filepath = gtk_file_chooser_get_filename (chooser);
         g_print("GTK_RESPONSE_ACCEPT: %s \n", filepath);
         
-        open_file (GTK_NOTEBOOK(notebook), filepath, NULL, NULL);
+        //open_file (GTK_NOTEBOOK(notebook), filepath, NULL, NULL);
 
     } else if (res == GTK_RESPONSE_CANCEL) {
       g_print("GTK_RESPONSE_CANCEL \n");
@@ -309,7 +309,7 @@ int main( int argc,
     hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
-    open_file (GTK_NOTEBOOK(notebook), "./notebook.c", NULL, NULL);
+    //open_file (GTK_NOTEBOOK(notebook), "./notebook.c", NULL, NULL);
 
     // Set what page to start at (page 4) 
     gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 3);

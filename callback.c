@@ -56,7 +56,7 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
       	if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
       		  if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
-              		open_file (GTK_NOTEBOOK(userdata), path, content, buffer);
+              		open_file (userdata, path, content);
       		  } else {
                 show_error(window, "no file under filepath");
       		  }
