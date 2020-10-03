@@ -51,17 +51,17 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
         path = g_strconcat(path, name, NULL);
 
-        content = sourceview_new(GTK_SOURCE_BUFFER(buffer));
-        guess_language(GTK_SOURCE_BUFFER(buffer), path);
+        content = sourceview_new(GTK_SOURCE_BUFFER(get_buffer(userdata)));
+        guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), path);
 
       	if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
       		  if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
               		open_file (userdata, path, content);
       		  } else {
-                show_error(window, "no file under filepath");
+                show_error(get_window(userdata), "no file under filepath");
       		  }
       	} else {
-            show_error(window, "filepath is directory");
+            show_error(get_window(userdata), "filepath is directory");
       	}
 
         g_free(name);

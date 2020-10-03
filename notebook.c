@@ -46,7 +46,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
     {
-        g_print("tabnum : %d \n", get_tabnum(userdata));
+        //g_print("tabnum : %d \n", get_tabnum(userdata));
         close_file (userdata, text);
         return TRUE;
     }
@@ -130,7 +130,7 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
 
 //#if NOTEBOOK
         if (!g_utf8_validate (text, len, NULL)) {
-            show_error(window, "the file is binary");
+            show_error(get_window(userdata), "the file is binary");
             return;
         }
 //#endif

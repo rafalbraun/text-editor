@@ -9,10 +9,7 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
-GObject *buffer;
-GObject *window;
-
-void show_error(GObject* window, gchar* message) {
+void show_error(GtkWindow* window, gchar* message) {
   
   GtkWidget *dialog;
   dialog = gtk_message_dialog_new(GTK_WINDOW(window),
@@ -36,6 +33,8 @@ main (int   argc,
       char *argv[])
 {
   GtkBuilder *builder;
+  GObject *buffer;
+  GObject *window;
   GObject *button;
   GObject *treeview;
   GObject *treestore;
