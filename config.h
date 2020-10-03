@@ -48,7 +48,9 @@ GtkNotebook* get_notebook(UserData* userdata) {
 GtkSourceBuffer* get_buffer(UserData* userdata) {
 	return GTK_SOURCE_BUFFER(userdata->buffer);
 }
-
+guint get_tabnum(UserData* userdata) {
+	return userdata->tabnum;
+}
 
 
 

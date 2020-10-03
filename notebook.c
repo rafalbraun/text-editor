@@ -11,10 +11,12 @@
 #endif
 */
 GList* filenames;
-guint tabnum;
+//guint tabnum;
 
 static void
-close_file(GtkNotebook* notebook, gchar* filepath) {
+close_file(gpointer userdata, gchar* filepath) {
+    guint tabnum = get_tabnum(userdata);
+
     if (tabnum > 0) {
         for (int i=0; i < tabnum; i++) {
             GList *t = g_list_nth (filenames, i);
@@ -22,8 +24,8 @@ close_file(GtkNotebook* notebook, gchar* filepath) {
 
                 GList *t = g_list_nth (filenames, i);
                 filenames = g_list_remove(filenames, (t->data));
-                gtk_notebook_remove_page (notebook, i);
-                tabnum--;
+                gtk_notebook_remove_page (get_notebook(userdata), i);
+                ((UserData*)userdata)->tabnum--;
                 
                 return;
             }
@@ -32,7 +34,7 @@ close_file(GtkNotebook* notebook, gchar* filepath) {
 }
 
 static gboolean
-notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook) {
+notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
     GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
     GtkLabel* label = ((GtkLabel*) list->data);
     gchar* text = (gchar *)gtk_label_get_text(GTK_LABEL(label));
@@ -44,7 +46,8 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
     {
-        close_file (notebook, text);
+        g_print("tabnum : %d \n", get_tabnum(userdata));
+        close_file (userdata, text);
         return TRUE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
@@ -62,6 +65,8 @@ load_file(gpointer userdata, guint pagenum) {
     GtkScrolledWindow *scroll;
     GtkLabel  *label;
     GList* list;
+
+    guint tabnum = get_tabnum(userdata);
 
     if (tabnum > 0) {
         child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
@@ -96,6 +101,8 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     GtkNotebook* notebook = get_notebook(userdata);
     GtkTextBuffer* buffer = GTK_TEXT_BUFFER(get_buffer(userdata));
     int pagenum;
+
+    guint tabnum = get_tabnum(userdata);
 
     if (tabnum > 0) {
         for (int i=0; i < tabnum; i++) {
@@ -134,13 +141,13 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
         g_free(text);
     }
 
-    tabnum++;
+    ((UserData*)userdata)->tabnum++;
     filenames = g_list_append (filenames, g_strdup(filepath));
 
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 
-    g_signal_connect (event_box, "button-press-event", G_CALLBACK (notebook_tab_clicked), notebook);
+    g_signal_connect (event_box, "button-press-event", G_CALLBACK (notebook_tab_clicked), userdata);
 
     gtk_notebook_set_current_page (notebook, pagenum);
 }
