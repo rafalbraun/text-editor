@@ -51,7 +51,12 @@ GtkSourceBuffer* get_buffer(UserData* userdata) {
 guint get_tabnum(UserData* userdata) {
 	return userdata->tabnum;
 }
-
+void tabnum_incr(UserData* userdata) {
+	userdata->tabnum++;
+}
+void tabnum_decr(UserData* userdata) {
+	userdata->tabnum--;
+}
 
 
 

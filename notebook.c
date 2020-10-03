@@ -25,7 +25,7 @@ close_file(gpointer userdata, gchar* filepath) {
                 GList *t = g_list_nth (filenames, i);
                 filenames = g_list_remove(filenames, (t->data));
                 gtk_notebook_remove_page (get_notebook(userdata), i);
-                ((UserData*)userdata)->tabnum--;
+                tabnum_decr(userdata);
                 
                 return;
             }
@@ -115,33 +115,24 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     }
 
     gtk_container_add(GTK_CONTAINER(event_box), label);
-    if (content == NULL) {
-        GtkWidget* frame = gtk_label_new("file contents");
-        pagenum = gtk_notebook_append_page (notebook, frame, event_box);
-    } else {
-        gchar *text;
-        gsize len;
-        GError *err = NULL;
+    gchar *text;
+    gsize len;
+    GError *err = NULL;
 
-        if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
-            g_error("error reading %s: %s", filepath, err->message);
-            return;
-        }
-
-//#if NOTEBOOK
-        if (!g_utf8_validate (text, len, NULL)) {
-            show_error(get_window(userdata), "the file is binary");
-            return;
-        }
-//#endif
-
-        pagenum = gtk_notebook_append_page (notebook, content, event_box);
-        gtk_text_buffer_set_text(buffer, text, len);
-
-        g_free(text);
+    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
+        g_error("error reading %s: %s", filepath, err->message);
+        return;
+    }
+    if (!g_utf8_validate (text, len, NULL)) {
+        show_error(get_window(userdata), "the file is binary");
+        return;
     }
 
-    ((UserData*)userdata)->tabnum++;
+    pagenum = gtk_notebook_append_page (notebook, content, event_box);
+    gtk_text_buffer_set_text(buffer, text, len);
+    g_free(text);
+    
+    tabnum_incr(userdata);
     filenames = g_list_append (filenames, g_strdup(filepath));
 
     gtk_widget_show_all (GTK_WIDGET(notebook));
@@ -162,7 +153,19 @@ switch_page (GtkNotebook *notebook,
     load_file(userdata, page_src);
 }
 
+
+
+
+
+
 /*
+
+    if (content == NULL) {
+        GtkWidget* frame = gtk_label_new("file contents");
+        pagenum = gtk_notebook_append_page (notebook, frame, event_box);
+    } 
+
+
 void
 append_book(GtkNotebook *notebook, gchar* tabname) {
     GtkWidget *frame;
