@@ -25,6 +25,7 @@ void show_error(GObject* window, gchar* message) {
   gtk_widget_destroy(dialog);
 }
 
+#include "config.h"
 #include "treeview.c"
 #include "notebook.c"
 #include "sourceview.c"
@@ -53,12 +54,14 @@ main (int   argc,
     return 1;
   }
 
+  UserData *userdata = g_new0(UserData, 1);
+
   /* Connect signal handlers to the constructed widgets. */
-  window    = gtk_builder_get_object (builder, "window");
-  buffer    = gtk_builder_get_object (builder, "sourcebuffer");
-  treeview  = gtk_builder_get_object (builder, "treeview");
-  treestore = gtk_builder_get_object (builder, "treestore");
-  notebook  = gtk_builder_get_object (builder, "notebook");
+  userdata->window    = window    = gtk_builder_get_object (builder, "window");
+  userdata->buffer    = buffer    = gtk_builder_get_object (builder, "sourcebuffer");
+  userdata->treeview  = treeview  = gtk_builder_get_object (builder, "treeview");
+  userdata->treestore = treestore = gtk_builder_get_object (builder, "treestore");
+  userdata->notebook  = notebook  = gtk_builder_get_object (builder, "notebook");
 
   fill_treestore_new(GTK_TREE_STORE(treestore), filepath);
   expand_top_node (treeview);
@@ -68,7 +71,7 @@ main (int   argc,
   g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_window), NULL);
   g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
   g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)notebook);
-  g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)buffer);
+  g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)userdata);
 
   gtk_main ();
 

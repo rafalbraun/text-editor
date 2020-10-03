@@ -6,6 +6,10 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
+#if !NOTEBOOK
+#include "config.h"
+#endif
+
 GList* filenames;
 guint tabnum;
 
@@ -51,7 +55,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook
 }
 
 static void
-load_file(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
+load_file(gpointer userdata, guint pagenum) {
     const gchar* tabname;
     GtkWidget *eventbox, *child;
     GtkSourceView *textview;
@@ -60,8 +64,8 @@ load_file(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
     GList* list;
 
     if (tabnum > 0) {
-        child = gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), pagenum);
-        eventbox = gtk_notebook_get_tab_label(GTK_NOTEBOOK(notebook), child);
+        child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
+        eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
 
         list = gtk_container_get_children(GTK_CONTAINER(eventbox));
         label = ((GtkLabel*) list->data);
@@ -75,7 +79,7 @@ load_file(GtkNotebook *notebook, GObject* buffer, guint pagenum) {
             g_error("error reading %s: %s", tabname, err->message);
         }
 
-        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), text, len);
+        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
         g_free(text);
     }
 }
@@ -224,10 +228,10 @@ void
 switch_page (GtkNotebook *notebook,
              GtkWidget   *page,
              guint        page_src,
-             gpointer     buffer) {
+             gpointer     userdata) {
     
-    gint page_dst = gtk_notebook_get_current_page(notebook);
-    load_file(notebook, buffer, page_src);
+    gint page_dst = gtk_notebook_get_current_page(get_notebook(userdata));
+    load_file(userdata, page_src);
 }
 
 #if !NOTEBOOK
