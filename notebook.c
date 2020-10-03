@@ -5,11 +5,11 @@
 
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
-
+/*
 #if !NOTEBOOK
 #include "config.h"
 #endif
-
+*/
 GList* filenames;
 guint tabnum;
 
@@ -121,12 +121,12 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
             return;
         }
 
-#if NOTEBOOK
+//#if NOTEBOOK
         if (!g_utf8_validate (text, len, NULL)) {
             show_error(window, "the file is binary");
             return;
         }
-#endif
+//#endif
 
         pagenum = gtk_notebook_append_page (notebook, content, event_box);
         gtk_text_buffer_set_text(buffer, text, len);
@@ -145,6 +145,17 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     gtk_notebook_set_current_page (notebook, pagenum);
 }
 
+void
+switch_page (GtkNotebook *notebook,
+             GtkWidget   *page,
+             guint        page_src,
+             gpointer     userdata) {
+    
+    gint page_dst = gtk_notebook_get_current_page(get_notebook(userdata));
+    load_file(userdata, page_src);
+}
+
+/*
 void
 append_book(GtkNotebook *notebook, gchar* tabname) {
     GtkWidget *frame;
@@ -187,8 +198,8 @@ static void remove_book( GtkWidget   *button,
 
     gtk_notebook_remove_page (notebook, pagenum);
 
-    /* Need to refresh the widget -- 
-     This forces the widget to redraw itself. */
+    // Need to refresh the widget -- 
+    // This forces the widget to redraw itself.
     gtk_widget_queue_draw (GTK_WIDGET (notebook));
 }
 
@@ -226,15 +237,6 @@ key_pressed(GtkWidget *notebook, GdkEventKey *event, gpointer userdata)
   return FALSE;
 }
 
-void
-switch_page (GtkNotebook *notebook,
-             GtkWidget   *page,
-             guint        page_src,
-             gpointer     userdata) {
-    
-    gint page_dst = gtk_notebook_get_current_page(get_notebook(userdata));
-    load_file(userdata, page_src);
-}
 
 #if !NOTEBOOK
 
@@ -314,7 +316,7 @@ int main( int argc,
     // Set what page to start at (page 4) 
     gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 3);
 
-    /* Create a bunch of buttons */
+    // Create a bunch of buttons
     button = gtk_button_new_with_label ("close");
     g_signal_connect_swapped (button, "clicked",
 			      G_CALLBACK (delete), NULL);
@@ -357,3 +359,5 @@ int main( int argc,
 }
 
 #endif
+
+*/
