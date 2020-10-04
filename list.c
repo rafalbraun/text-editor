@@ -3,12 +3,18 @@
 	source: https://gist.github.com/ardrabczyk/1cdc413b9eaa9a9a0c4be71d3fc9bc37
 */
 
+#define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
+#define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
+
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <gtk/gtk.h>
+
+typedef gchar datatype;
 struct node {
 	struct node *next;
-	char* data;
+	datatype* data;
 
 };
 
@@ -20,7 +26,7 @@ typedef struct node {
 */
 
 /* PRIVATE */
-int init(struct node **head, char* data)
+int init(struct node **head, datatype* data)
 {
 	*head = malloc(sizeof(struct node));
 	if (!*head) {
@@ -35,7 +41,7 @@ int init(struct node **head, char* data)
 }
 
 /* PRIVATE */
-int insert(struct node **head, char* data)
+int insert(struct node **head, datatype* data)
 {
 	struct node *current = *head;
 	struct node *tmp;
@@ -75,7 +81,7 @@ void deinit(struct node **head)
 
 
 /* PUBLIC */
-void delete(struct node **head, char* data)
+void delete(struct node **head, datatype* data)
 {
 	struct node *current = *head;
 	struct node *prev = NULL;
@@ -133,12 +139,12 @@ struct node* at(struct node **head, int index) {
 /* PUBLIC */
 void delete_at(struct node **head, int index) {
 	struct node* item = at(head, index);
-	char* data = item->data;
+	datatype* data = item->data;
 	delete(head, data);
 }
 
 /* PUBLIC */
-void append(struct node **head, char* data) {
+void append(struct node **head, datatype* data) {
 	if (*head == NULL) {
 		if (init(head, data) != 0) {
 			fprintf(stderr, "Failed to init a new linked list");
