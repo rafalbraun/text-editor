@@ -8,7 +8,7 @@
 
 struct node {
 	struct node *next;
-	int data;
+	char* data;
 
 };
 
@@ -20,7 +20,7 @@ typedef struct node {
 */
 
 /* PRIVATE */
-int init(struct node **head, int data)
+int init(struct node **head, char* data)
 {
 	*head = malloc(sizeof(struct node));
 	if (!*head) {
@@ -35,7 +35,7 @@ int init(struct node **head, int data)
 }
 
 /* PRIVATE */
-int insert(struct node **head, int data)
+int insert(struct node **head, char* data)
 {
 	struct node *current = *head;
 	struct node *tmp;
@@ -60,13 +60,6 @@ int insert(struct node **head, int data)
 }
 
 /* PUBLIC */
-void delete_at(struct node **head, int index) {
-	struct node* item = at(head, index);
-	int data = item->data;
-	delete(head, data);
-}
-
-/* PUBLIC */
 /*
 void deinit(struct node **head)
 {
@@ -82,7 +75,7 @@ void deinit(struct node **head)
 
 
 /* PUBLIC */
-void delete(struct node **head, int data)
+void delete(struct node **head, char* data)
 {
 	struct node *current = *head;
 	struct node *prev = NULL;
@@ -138,7 +131,14 @@ struct node* at(struct node **head, int index) {
 }
 
 /* PUBLIC */
-void append(struct node **head, int data) {
+void delete_at(struct node **head, int index) {
+	struct node* item = at(head, index);
+	char* data = item->data;
+	delete(head, data);
+}
+
+/* PUBLIC */
+void append(struct node **head, char* data) {
 	if (*head == NULL) {
 		if (init(head, data) != 0) {
 			fprintf(stderr, "Failed to init a new linked list");
@@ -154,7 +154,7 @@ void print(struct node **head)
 {
 	struct node *current = *head;
 	while (current) {
-		printf("current data: %d, address: %p\n", current->data,
+		printf("current data: %s, address: %p\n", current->data,
 		       current);
 		current = current->next;
 	}
@@ -175,11 +175,11 @@ int main() {
 	insert(&head, 1000000);
 	*/
 
-	append(&head, 30);
-	append(&head, 30);
-	append(&head, 55);
-	append(&head, 210);
-	append(&head, 1000000);
+	append(&head, "30");
+	append(&head, "30");
+	append(&head, "55");
+	append(&head, "210");
+	append(&head, "1000000");
 
 	puts("Print the linked list:");
 	print(&head);
