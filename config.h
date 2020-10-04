@@ -25,7 +25,7 @@ typedef struct _UserData {
 	//GList* 			filenames;				// list of PageInfo structures
 	GList* 			open_files;
 
-
+	struct node 	*head;
 
 	/* full search window settings */
 	int 			stdout_fd;				// file descriptor opened by glib_regex process that works as queue for search results
@@ -35,11 +35,11 @@ typedef struct _UserData {
 
 
 } UserData;
-/*
-void init_user_data(UserData* userdata) {
-	userdata->limit = 3;
-}
-*/
+
+//void init_user_data(UserData* userdata) {
+	//userdata->limit = 3;
+//}
+
 GtkWindow* get_window(UserData* userdata) {
 	return GTK_WINDOW(userdata->window);
 }
