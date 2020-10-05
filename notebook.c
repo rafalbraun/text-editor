@@ -45,13 +45,13 @@ static gchar*
 get_text_from_eventbox(GtkWidget* widget) {
     GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
     GtkLabel* label = ((GtkLabel*) list->data);
-    gchar* text = (gchar *)gtk_label_get_text(GTK_LABEL(label));
-    return text;
+    gchar* title = (gchar *)gtk_label_get_text(GTK_LABEL(label));
+    return title;
 }
 
 static gboolean
 notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
-    gchar* text = get_text_from_eventbox(widget);
+    gchar* title = get_text_from_eventbox(widget);
 
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
     {
@@ -62,7 +62,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
     {
         //g_print("tabnum : %d \n", get_tabnum(userdata));
-        close_file (userdata, text);
+        close_file (userdata, title);
         return TRUE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
