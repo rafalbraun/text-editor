@@ -12,11 +12,11 @@
 #include <gtk/gtk.h>
 
 typedef gchar datatype;
-struct node {
+typedef struct node {
 	struct node *next;
 	datatype* data;
 
-};
+} t_node;
 
 /*
 typedef struct node {

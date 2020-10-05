@@ -14,13 +14,11 @@
 
 char* const EMPTY = "";
 
+static int map_max = 0;
 typedef struct pair {
 	gchar* key;
 	gchar* val;
 } t_pair;
-
-int map_max = 0;
-t_pair* map_ptr;
 
 gchar* m_at(t_pair* map_ptr, gchar* key) {
 	if (map_max == 0) {
@@ -94,6 +92,8 @@ gchar* k5 = "/home/user/Pictures";
 gchar* v5 = "Pictures";
 
 int main() {
+	t_pair* map_ptr;
+	
 	map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair));
 	m_insert(map_ptr, &k1, &v1);
 	m_insert(map_ptr, &k2, &v2);
