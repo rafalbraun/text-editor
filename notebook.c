@@ -22,7 +22,7 @@ close_file(gpointer userdata, gchar* filepath) {
 
     /////////////////////////////////////////////////////////////////////////////////
     //delete_at();
-    delete_value(&head, filepath);
+    l_delete_value(&head, filepath);
     /////////////////////////////////////////////////////////////////////////////////
 
     if (tabmax > 0) {
@@ -56,7 +56,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
     {
         // empty
-        print(&head);
+        l_print(&head);
         return FALSE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
@@ -115,10 +115,11 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
 
     guint tabnum = get_tabnum(userdata);
 
-    /////////////////////////////////////////////////////////////////////////////////
-    int index = append(&head, g_strdup(filepath));
+/////////////////////////////////////////////////////////////////////////////////
+    int index = l_append(&head, g_strdup(filepath));
+    //m_insert(map_ptr, g_strdup(filepath), g_strdup(filename));
     g_print("index %d \n", index);
-    /////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 
     if (tabnum > 0) {
         for (int i=0; i < tabnum; i++) {

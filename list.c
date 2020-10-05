@@ -26,7 +26,7 @@ typedef struct node {
 */
 
 /* PRIVATE */
-int init(struct node **head, datatype* data)
+int l_init(struct node **head, datatype* data)
 {
 	*head = malloc(sizeof(struct node));
 	if (!*head) {
@@ -41,7 +41,7 @@ int init(struct node **head, datatype* data)
 }
 
 /* PRIVATE */
-int insert(struct node **head, datatype* data)
+int l_insert(struct node **head, datatype* data)
 {
 	struct node *current = *head;
 	struct node *tmp;
@@ -81,7 +81,7 @@ void deinit(struct node **head)
 
 
 /* PUBLIC */
-void delete_value(struct node **head, datatype* data)
+void l_delete_value(struct node **head, datatype* data)
 {
 	struct node *current = *head;
 	struct node *prev = NULL;
@@ -117,7 +117,7 @@ void delete_value(struct node **head, datatype* data)
 
 
 /* PUBLIC */
-struct node* at(struct node **head, int index) {
+struct node* l_at(struct node **head, int index) {
 	struct node *current = *head;
 	int iter = 0;
 
@@ -138,7 +138,7 @@ struct node* at(struct node **head, int index) {
 }
 
 /* PUBLIC */
-int index_of(struct node **head, datatype* value) {
+int l_index_of(struct node **head, datatype* value) {
 	struct node *current = *head;
 	int index = -1;
 
@@ -164,24 +164,24 @@ void delete_at(struct node **head, int index) {
 }
 */
 /* PUBLIC */
-int append(struct node **head, datatype* data) {
-	int index = index_of(head, data);
+int l_append(struct node **head, datatype* data) {
+	int index = l_index_of(head, data);
 	if (index != -1) {
 		return index;
 	}
 	if (*head == NULL) {
-		if (init(head, data) != 0) {
+		if (l_init(head, data) != 0) {
 			fprintf(stderr, "Failed to init a new linked list");
 			exit(1);
 		}
 	} else {
-		insert(head, data);
+		l_insert(head, data);
 		return -1;
 	}
 }
 
 /* PUBLIC */
-void print(struct node **head)
+void l_print(struct node **head)
 {
 	struct node *current = *head;
 	while (current) {
@@ -206,14 +206,14 @@ int main() {
 	insert(&head, 1000000);
 	*/
 
-	append(&head, "30");
-	append(&head, "30");
-	append(&head, "55");
-	append(&head, "210");
-	append(&head, "1000000");
+	l_append(&head, "30");
+	l_append(&head, "30");
+	l_append(&head, "55");
+	l_append(&head, "210");
+	l_append(&head, "1000000");
 
 	puts("Print the linked list:");
-	print(&head);
+	l_print(&head);
 
 	//for (int i=0; i<5; i++) {
 	//	fprintf(stdout, "Print element %d : %d \n", i, at(&head, i)->data);
@@ -221,10 +221,10 @@ int main() {
 
 	//delete_at(&head, 0);
 	//delete_at(&head, 3);
-	delete_value(&head, "30");
+	l_delete_value(&head, "30");
 
 	puts("Print the linked list:");
-	print(&head);
+	l_print(&head);
 
 }
 

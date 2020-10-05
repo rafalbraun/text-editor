@@ -22,7 +22,7 @@ typedef struct pair {
 int map_max = 0;
 t_pair* map_ptr;
 
-gchar* at(t_pair* map_ptr, gchar* key) {
+gchar* m_at(t_pair* map_ptr, gchar* key) {
 	if (map_max == 0) {
 		return NULL;
 	}
@@ -38,13 +38,14 @@ gchar* at(t_pair* map_ptr, gchar* key) {
 	return NULL;
 }
 
-void insert(t_pair* map_ptr, gchar** key, gchar** val) {
+void m_insert(t_pair* map_ptr, gchar** key, gchar** val) {
 	if (map_max == 0) {
 		goto empty;
 	}
 	// check if map not full
 	if (map_max == MAPSIZE) {
 		fprintf(stderr, "Map already full: %d \n", MAPSIZE);
+		exit(1);
 		return;
 	}
 	// check if key already in map
@@ -69,7 +70,7 @@ empty:
 	map_max++;
 }
 
-void delete_key(gchar* key) {
+void m_delete_key(t_pair* map_ptr, gchar* key) {
 	for (int i=0; i<map_max; i++) {
 		if (strcmp(map_ptr[i].key, key) == 0) {
 			map_ptr[i].key = EMPTY;
@@ -79,6 +80,8 @@ void delete_key(gchar* key) {
 	}
 }
 
+#if !MAP
+
 gchar* k1 = "/home/user/Documents";
 gchar* v1 = "Documents";
 gchar* k2 = "/home/user/Downloads";
@@ -87,16 +90,32 @@ gchar* k3 = "/home/user/Videos";
 gchar* v3 = "Videos";
 gchar* k4 = "/home/user/Music";
 gchar* v4 = "Music";
+gchar* k5 = "/home/user/Pictures";
+gchar* v5 = "Pictures";
 
 int main() {
 	map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair));
-	insert(map_ptr, &k1, &v1);
-	insert(map_ptr, &k2, &v2);
-	insert(map_ptr, &k3, &v3);
-	insert(map_ptr, &k4, &v4);
+	m_insert(map_ptr, &k1, &v1);
+	m_insert(map_ptr, &k2, &v2);
+	m_insert(map_ptr, &k3, &v3);
+	m_insert(map_ptr, &k4, &v4);
 
-	gchar* k = k4;
-	gchar* found = at(map_ptr, k);
-	g_print("%s -> %s \n", k, found);
+	g_print("%s -> %s \n", k4, m_at(map_ptr, k4));
+
+	m_delete_key(map_ptr, k1);
+	m_delete_key(map_ptr, k3);
+	g_print("%s -> %s (deleted) \n", k1, m_at(map_ptr, k1));
+
+	g_print("map_max: %d \n", map_max);
+
+	m_insert(map_ptr, &k4, &v4);
+	g_print("map_max: %d \n", map_max);
+
+	m_insert(map_ptr, &k5, &v5);
+	g_print("map_max: %d \n", map_max);
+
+	g_print("%s -> %s \n", k5, m_at(map_ptr, k5));
 
 }
+
+#endif

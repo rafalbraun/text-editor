@@ -6,6 +6,7 @@
 #define FULL_SEARCH 1
 #define SOURCEVIEW 1
 #define LIST 1
+#define MAP 1
 
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
@@ -23,6 +24,7 @@ void show_error(GtkWindow* window, gchar* message) {
   gtk_widget_destroy(dialog);
 }
 
+#include "map.c"
 #include "list.c"
 #include "config.h"
 #include "treeview.c"
@@ -44,7 +46,9 @@ main (int   argc,
   GError *error = NULL;
   gchar* filepath = ".";
 
+  // init code
   gtk_init (&argc, &argv);
+  map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair));
 
   /* Construct a GtkBuilder instance and load our UI description */
   builder = gtk_builder_new ();
