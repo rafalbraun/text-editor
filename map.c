@@ -3,6 +3,8 @@
 // https://www.w3.org/2001/06/blindfold/api/hashmap_8c-source.html
 // https://www.w3.org/2001/06/blindfold/api/hashmap_8h-source.html
 
+// https://web.archive.org/web/20091118050932/http://www.cl.cam.ac.uk/~cwc22/hashtable
+
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
@@ -10,7 +12,7 @@
 
 #define MAPSIZE 128
 
-const char* EMPTY = "";
+char* const EMPTY = "";
 
 typedef struct pair {
 	gchar* key;
@@ -19,9 +21,6 @@ typedef struct pair {
 
 int map_max = 0;
 t_pair* map_ptr;
-
-gchar* k = "kkk";
-gchar* v = "aaaaaaaaeefefaa";
 
 gchar* at(t_pair* map_ptr, gchar* key) {
 	if (map_max == 0) {
@@ -57,7 +56,7 @@ void insert(t_pair* map_ptr, gchar** key, gchar** val) {
 	}
 	// check if there any empty places
 	for (int i=0; i<map_max; i++) {
-		if (strcmp(map_ptr[i].key, "")==0) {
+		if (strcmp(map_ptr[i].key, EMPTY)==0) {
 			map_ptr->key = *key;
 			map_ptr->val = *val;
 			return;
@@ -65,28 +64,39 @@ void insert(t_pair* map_ptr, gchar** key, gchar** val) {
 	}
 empty:
 	// if all full and no key push at the end
-	g_print("dupa\n");
-	map_ptr->key = *key;
-	map_ptr->val = *val;
+	map_ptr[map_max].key = *key;
+	map_ptr[map_max].val = *val;
 	map_max++;
 }
 
 void delete_key(gchar* key) {
 	for (int i=0; i<map_max; i++) {
 		if (strcmp(map_ptr[i].key, key) == 0) {
-			map_ptr[i].key = "";
-			map_ptr[i].val = "";
+			map_ptr[i].key = EMPTY;
+			map_ptr[i].val = EMPTY;
 			return;
 		}
 	}
 }
 
+gchar* k1 = "/home/user/Documents";
+gchar* v1 = "Documents";
+gchar* k2 = "/home/user/Downloads";
+gchar* v2 = "Downloads";
+gchar* k3 = "/home/user/Videos";
+gchar* v3 = "Videos";
+gchar* k4 = "/home/user/Music";
+gchar* v4 = "Music";
+
 int main() {
-	map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair)); 
-	insert(map_ptr, &k, &v);
+	map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair));
+	insert(map_ptr, &k1, &v1);
+	insert(map_ptr, &k2, &v2);
+	insert(map_ptr, &k3, &v3);
+	insert(map_ptr, &k4, &v4);
+
+	gchar* k = k4;
 	gchar* found = at(map_ptr, k);
-
 	g_print("%s -> %s \n", k, found);
-
 
 }
