@@ -20,8 +20,10 @@ static void
 close_file(gpointer userdata, gchar* filepath) {
     guint tabmax = get_tabnum(userdata);
 
-
+    /////////////////////////////////////////////////////////////////////////////////
     //delete_at();
+    delete_value(&head, filepath);
+    /////////////////////////////////////////////////////////////////////////////////
 
     if (tabmax > 0) {
         for (int i=0; i < tabmax; i++) {

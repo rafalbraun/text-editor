@@ -87,23 +87,23 @@ void delete_value(struct node **head, datatype* data)
 	struct node *prev = NULL;
 
 	do {
-		if (current->data == data) {
+		if (strcmp(current->data, data)==0) {
 			break;
 		}
 		prev = current;
 		current = current->next;
 	} while (current);
 
-	// if the first element 
+	/* if the first element */
 	if (current == *head) {
-		// reuse prev 
+		/* reuse prev */
 		prev = *head;
 		*head = current->next;
 		free(prev);
 		return;
 	}
 
-	// if the last element 
+	/* if the last element */
 	if (current->next == NULL) {
 		prev->next = NULL;
 		free(current);
@@ -114,6 +114,7 @@ void delete_value(struct node **head, datatype* data)
 	free(current);
 	return;
 }
+
 
 /* PUBLIC */
 struct node* at(struct node **head, int index) {
@@ -155,12 +156,13 @@ int index_of(struct node **head, datatype* value) {
 }
 
 /* PUBLIC */
+/*
 void delete_at(struct node **head, int index) {
 	struct node* item = at(head, index);
 	datatype* data = item->data;
 	delete_value(head, data);
 }
-
+*/
 /* PUBLIC */
 int append(struct node **head, datatype* data) {
 	int index = index_of(head, data);
@@ -217,8 +219,9 @@ int main() {
 	//	fprintf(stdout, "Print element %d : %d \n", i, at(&head, i)->data);
 	//}
 
-	delete_at(&head, 0);
-	delete_at(&head, 3);
+	//delete_at(&head, 0);
+	//delete_at(&head, 3);
+	delete_value(&head, "30");
 
 	puts("Print the linked list:");
 	print(&head);
