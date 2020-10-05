@@ -61,6 +61,19 @@ void tabnum_incr(UserData* userdata) {
 void tabnum_decr(UserData* userdata) {
 	userdata->tabnum--;
 }
+/*
+void
+append() {
+	
+}
+
+void 
+remove() {
+	
+}
+*/
+
+
 
 
 

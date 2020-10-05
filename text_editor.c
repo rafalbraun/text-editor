@@ -5,6 +5,7 @@
 #define NOTEBOOK 1
 #define FULL_SEARCH 1
 #define SOURCEVIEW 1
+#define LIST 1
 
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
@@ -22,6 +23,7 @@ void show_error(GtkWindow* window, gchar* message) {
   gtk_widget_destroy(dialog);
 }
 
+#include "list.c"
 #include "config.h"
 #include "treeview.c"
 #include "notebook.c"

@@ -10,15 +10,21 @@
 #include "config.h"
 #endif
 */
+
 GList* filenames;
+struct node *head;
+
 //guint tabnum;
 
 static void
 close_file(gpointer userdata, gchar* filepath) {
-    guint tabnum = get_tabnum(userdata);
+    guint tabmax = get_tabnum(userdata);
 
-    if (tabnum > 0) {
-        for (int i=0; i < tabnum; i++) {
+
+    //delete_at();
+
+    if (tabmax > 0) {
+        for (int i=0; i < tabmax; i++) {
             GList *t = g_list_nth (filenames, i);
             if (strcmp(((gchar*) t->data), filepath) == 0) {
 
@@ -48,6 +54,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
     {
         // empty
+        print(&head);
         return FALSE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
@@ -105,6 +112,10 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     int pagenum;
 
     guint tabnum = get_tabnum(userdata);
+
+    /////////////////////////////////////////////////////////////////////////////////
+    append(&head, g_strdup(filepath));
+    /////////////////////////////////////////////////////////////////////////////////
 
     if (tabnum > 0) {
         for (int i=0; i < tabnum; i++) {

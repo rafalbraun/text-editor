@@ -137,6 +137,21 @@ struct node* at(struct node **head, int index) {
 }
 
 /* PUBLIC */
+int index_of(struct node **head, gchar* value) {
+	struct node *current = *head;
+	int index = 0;
+
+	while ( strcmp(current->data, value) == 0 ) {
+		if (current->data) {
+			return index;
+		}
+		current = current->next;
+		index++;
+	}
+	return -1;
+}
+
+/* PUBLIC */
 void delete_at(struct node **head, int index) {
 	struct node* item = at(head, index);
 	datatype* data = item->data;
