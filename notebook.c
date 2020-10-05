@@ -114,7 +114,8 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     guint tabnum = get_tabnum(userdata);
 
     /////////////////////////////////////////////////////////////////////////////////
-    append(&head, g_strdup(filepath));
+    int index = append(&head, g_strdup(filepath));
+    g_print("index %d \n", index);
     /////////////////////////////////////////////////////////////////////////////////
 
     if (tabnum > 0) {

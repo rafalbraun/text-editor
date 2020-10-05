@@ -5,7 +5,7 @@ PROGRAMS=text_editor treeview full_search sourceview
 
 all: $(PROGRAMS) glib_regex list
 
-text_editor: text_editor.c treeview.c notebook.c callback.c sourceview.c
+text_editor: text_editor.c treeview.c notebook.c callback.c sourceview.c list.c
 	$(CC) text_editor.c $(GTK) -o text_editor
 
 %: %.c

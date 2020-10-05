@@ -81,7 +81,7 @@ void deinit(struct node **head)
 
 
 /* PUBLIC */
-void delete(struct node **head, datatype* data)
+void delete_value(struct node **head, datatype* data)
 {
 	struct node *current = *head;
 	struct node *prev = NULL;
@@ -137,16 +137,19 @@ struct node* at(struct node **head, int index) {
 }
 
 /* PUBLIC */
-int index_of(struct node **head, gchar* value) {
+int index_of(struct node **head, datatype* value) {
 	struct node *current = *head;
-	int index = 0;
+	int index = -1;
 
-	while ( strcmp(current->data, value) == 0 ) {
-		if (current->data) {
+	if (current == NULL) {
+		return -1;
+	}
+	while (current) {
+		index++;
+		if (strcmp(current->data, value) == 0) {
 			return index;
 		}
 		current = current->next;
-		index++;
 	}
 	return -1;
 }
@@ -155,11 +158,15 @@ int index_of(struct node **head, gchar* value) {
 void delete_at(struct node **head, int index) {
 	struct node* item = at(head, index);
 	datatype* data = item->data;
-	delete(head, data);
+	delete_value(head, data);
 }
 
 /* PUBLIC */
-void append(struct node **head, datatype* data) {
+int append(struct node **head, datatype* data) {
+	int index = index_of(head, data);
+	if (index != -1) {
+		return index;
+	}
 	if (*head == NULL) {
 		if (init(head, data) != 0) {
 			fprintf(stderr, "Failed to init a new linked list");
@@ -167,6 +174,7 @@ void append(struct node **head, datatype* data) {
 		}
 	} else {
 		insert(head, data);
+		return -1;
 	}
 }
 
