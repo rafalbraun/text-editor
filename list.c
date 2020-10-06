@@ -1,8 +1,3 @@
-/* 
-	(c) 2017, Arkadiusz Drabczyk, arkadiusz@drabczyk.org 
-	source: https://gist.github.com/ardrabczyk/1cdc413b9eaa9a9a0c4be71d3fc9bc37
-*/
-
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
@@ -12,22 +7,12 @@
 
 #include <gtk/gtk.h>
 
-//#define g_print printf
-//typedef char gchar;
-
 typedef gchar datatype;
 typedef struct node {
 	struct node *next;
 	datatype* data;
 
 } t_node;
-
-/*
-typedef struct node {
-    int val;
-    struct node* next;
-} node_t;
-*/
 
 /* PRIVATE */
 int l_init(struct node **head, datatype* data)

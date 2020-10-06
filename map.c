@@ -1,10 +1,3 @@
-// https://stackoverflow.com/questions/1234514/very-simple-map-implemention-in-c-for-caching-purpose
-
-// https://www.w3.org/2001/06/blindfold/api/hashmap_8c-source.html
-// https://www.w3.org/2001/06/blindfold/api/hashmap_8h-source.html
-
-// https://web.archive.org/web/20091118050932/http://www.cl.cam.ac.uk/~cwc22/hashtable
-
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
@@ -29,7 +22,6 @@ gchar* m_at(t_pair* map_ptr, gchar* key) {
 	}
 	for (int i=0; i<map_max; i++) {
 		if (strcmp(map_ptr[i].key, key) == 0) {
-			//g_print("%s \n", map_ptr[i].val);
 			return map_ptr[i].val;
 		}
 	}

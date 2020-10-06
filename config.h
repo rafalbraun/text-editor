@@ -14,21 +14,10 @@ typedef struct _UserData {
 	gchar*			homedir;				// directory that app is opened in
 	GObject*		treestore;
 
-	guint 			tabnum;					// number of tabs
-	//GList* 			filenames;				// list of PageInfo structures
-	GList* 			open_files;
-
 	t_node			*head;
-
-	/* full search window settings */
-	int 			stdout_fd;				// file descriptor opened by glib_regex process that works as queue for search results
-
 
 } UserData;
 
-//void init_user_data(UserData* userdata) {
-	//userdata->limit = 3;
-//}
 
 GtkWindow* get_window(UserData* userdata) {
 	return GTK_WINDOW(userdata->window);
@@ -47,18 +36,6 @@ t_node** get_list(UserData* userdata) {
 	return &userdata->head;
 }
 
-/*
-void
-append() {
-	
-}
-
-void 
-remove() {
-	
-}
-*/
-
 static gchar*
 get_text_from_eventbox(GtkWidget* widget) {
     GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
@@ -66,33 +43,3 @@ get_text_from_eventbox(GtkWidget* widget) {
     gchar* title = (gchar *)gtk_label_get_text(GTK_LABEL(label));
     return title;
 }
-
-
-
-// function checks if all is in place:
-//	o glib_regex program is in place
-//	o all *.ui files are in place and ready to read
-//	o 
-/*
-static void test_app () {
-
-}
-
-
-
-
-// notebook
-static void open_file (GtkNotebook* notebook, gchar* filepath, GtkWidget* content, GObject* buffer)
-static void close_file(GtkNotebook* notebook, gchar* filepath);
-static void open_file_dialog (GtkWidget *widget, GtkWidget* notebook);
-static gboolean notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer notebook);
-static gboolean key_pressed(GtkWidget *notebook, GdkEventKey *event, gpointer userdata);
-
-//treeview
-void create_view_and_model(gchar* filepath, GtkWidget *treeview);
-void fill_treestore(const char *pathname, GtkTreeStore *treestore, GtkTreeIter toplevel);
-void on_changed(GtkWidget *widget, gpointer statusbar);
-void popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
-void popup_menu_on_DoSomething(GtkWidget *menuitem, gpointer userdata);
-GtkTreeModel* create_and_fill_model(const char *pathname);
-*/
