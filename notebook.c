@@ -6,10 +6,8 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
-GList* filenames;
 //t_node *head;
-t_pair *map_ptr;
-
+//t_pair *map_ptr;
 
 static void
 close_file(gpointer userdata, gchar* filepath) {
@@ -27,7 +25,6 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
         return FALSE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2) {
-        //g_print("tabnum : %d \n", get_tabnum(userdata));
         close_file (userdata, title);
         return TRUE;
     }
@@ -43,18 +40,18 @@ load_file(gpointer userdata, guint pagenum) {
     GtkSourceView *textview;
     GtkScrolledWindow *scroll;
     GtkLabel  *label;
-    GList* list;
-    gchar *text;
-    gsize len;
-    GError *err = NULL;
-    gchar* tabname;
+    gchar* title;
 
     child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
     eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
-    tabname = get_text_from_eventbox(eventbox);
+    title = get_text_from_eventbox(eventbox);
 
-    if (g_file_get_contents(tabname, &text, &len, &err) == FALSE) {
-        g_error("error reading %s: %s", tabname, err->message);
+    gchar *text;
+    gsize len;
+    GError *err = NULL;
+
+    if (g_file_get_contents(title, &text, &len, &err) == FALSE) {
+        g_error("error reading %s: %s", title, err->message);
     }
 
     gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
@@ -68,10 +65,8 @@ save_file(gchar* path, gchar* contents) {
 
 static void
 open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
-    GtkWidget* label = gtk_label_new(filepath);
-    GtkWidget *eventbox = gtk_event_box_new();
+    GtkWidget *label, *eventbox;
     GtkNotebook* notebook = get_notebook(userdata);
-    GtkTextBuffer* buffer = GTK_TEXT_BUFFER(get_buffer(userdata));
 
     t_node** head = get_list(userdata);
     int index = l_append(head, g_strdup(filepath));
@@ -80,7 +75,10 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
         return;
     }
 
+    label = gtk_label_new(filepath);
+    eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox), label);
+
     gchar *text;
     gsize len;
     GError *err = NULL;
@@ -95,7 +93,7 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     }
 
     int pagenum = gtk_notebook_append_page (notebook, content, eventbox);
-    gtk_text_buffer_set_text(buffer, text, len);
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
     g_free(text);
     
     gtk_widget_show_all (GTK_WIDGET(notebook));

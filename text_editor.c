@@ -48,7 +48,7 @@ main (int   argc,
 
   // init code
   gtk_init (&argc, &argv);
-  map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair));
+  //map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair));
 
   /* Construct a GtkBuilder instance and load our UI description */
   builder = gtk_builder_new ();
@@ -60,6 +60,7 @@ main (int   argc,
   }
 
   UserData *userdata = g_new0(UserData, 1);
+  userdata->head = NULL;
 
   /* Connect signal handlers to the constructed widgets. */
   userdata->window    = window    = gtk_builder_get_object (builder, "window");
