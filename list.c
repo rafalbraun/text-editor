@@ -83,12 +83,31 @@ void deinit(struct node **head)
 }
 */
 
+/* PUBLIC */
+int l_index_of(struct node **head, datatype* value) {
+	struct node *current = *head;
+	int index = -1;
+
+	if (current == NULL) {
+		return -1;
+	}
+	while (current) {
+		index++;
+		//g_print("aaaaaaaa %d \n", index);
+		if (strcmp(current->data, value) == 0) {
+			return index;
+		}
+		current = current->next;
+	}
+	return -1;
+}
 
 /* PUBLIC */
-void l_delete_value(struct node **head, datatype* data)
+int l_delete_value(struct node **head, datatype* data)
 {
 	struct node *current = *head;
 	struct node *prev = NULL;
+	int index = l_index_of(head, data);
 
 	do {
 		if (strcmp(current->data, data)==0) {
@@ -104,19 +123,19 @@ void l_delete_value(struct node **head, datatype* data)
 		prev = *head;
 		*head = current->next;
 		free(prev);
-		return;
+		return index;
 	}
 
 	/* if the last element */
 	if (current->next == NULL) {
 		prev->next = NULL;
 		free(current);
-		return;
+		return index;
 	}
 
 	prev->next = current->next;
 	free(current);
-	return;
+	return index;
 }
 
 
@@ -141,24 +160,6 @@ struct node* l_at(struct node **head, int index) {
 	}
 }
 
-/* PUBLIC */
-int l_index_of(struct node **head, datatype* value) {
-	struct node *current = *head;
-	int index = -1;
-
-	if (current == NULL) {
-		return -1;
-	}
-	while (current) {
-		index++;
-		//g_print("aaaaaaaa %d \n", index);
-		if (strcmp(current->data, value) == 0) {
-			return index;
-		}
-		current = current->next;
-	}
-	return -1;
-}
 
 /* PUBLIC */
 /*
@@ -179,6 +180,7 @@ int l_append(struct node **head, datatype* data) {
 			fprintf(stderr, "Failed to init a new linked list");
 			exit(1);
 		}
+		return -1;
 	} else {
 		l_insert(head, data);
 		return -1;

@@ -20,27 +20,8 @@ t_pair *map_ptr;
 
 static void
 close_file(gpointer userdata, gchar* filepath) {
-    guint tabmax = get_tabnum(userdata);
-
-    /////////////////////////////////////////////////////////////////////////////////
-    //delete_at();
-    l_delete_value(&head, filepath);
-    /////////////////////////////////////////////////////////////////////////////////
-
-    if (tabmax > 0) {
-        for (int i=0; i < tabmax; i++) {
-            GList *t = g_list_nth (filenames, i);
-            if (strcmp(((gchar*) t->data), filepath) == 0) {
-
-                GList *t = g_list_nth (filenames, i);
-                filenames = g_list_remove(filenames, (t->data));
-                gtk_notebook_remove_page (get_notebook(userdata), i);
-                tabnum_decr(userdata);
-                
-                return;
-            }
-        }
-    }
+    int index = l_delete_value(&head, filepath);
+    gtk_notebook_remove_page (get_notebook(userdata), index);
 }
 
 static gboolean
@@ -78,20 +59,16 @@ load_file(gpointer userdata, guint pagenum) {
     GError *err = NULL;
     gchar* tabname;
 
-    guint tabnum = get_tabnum(userdata);
+    child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
+    eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
+    tabname = get_text_from_eventbox(eventbox);
 
-    if (tabnum > 0) {
-        child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
-        eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
-        tabname = get_text_from_eventbox(eventbox);
-
-        if (g_file_get_contents(tabname, &text, &len, &err) == FALSE) {
-            g_error("error reading %s: %s", tabname, err->message);
-        }
-
-        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
-        g_free(text);
+    if (g_file_get_contents(tabname, &text, &len, &err) == FALSE) {
+        g_error("error reading %s: %s", tabname, err->message);
     }
+
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
+    g_free(text);
 }
 
 static void
@@ -105,24 +82,12 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     GtkWidget *eventbox = gtk_event_box_new();
     GtkNotebook* notebook = get_notebook(userdata);
     GtkTextBuffer* buffer = GTK_TEXT_BUFFER(get_buffer(userdata));
-    int pagenum;
 
-    guint tabnum = get_tabnum(userdata);
-
-/////////////////////////////////////////////////////////////////////////////////
     int index = l_append(&head, g_strdup(filepath));
-    //m_insert(map_ptr, g_strdup(filepath), g_strdup(filename));
     g_print("index %d \n", index);
-/////////////////////////////////////////////////////////////////////////////////
-
-    if (tabnum > 0) {
-        for (int i=0; i < tabnum; i++) {
-            GList *t = g_list_nth (filenames, i);
-            if (strcmp(((gchar*) t->data), filepath) == 0) {
-                gtk_notebook_set_current_page (notebook, i);
-                return;
-            }
-        }
+    if (index != -1) {
+        gtk_notebook_set_current_page (notebook, index);
+        return;
     }
 
     gtk_container_add(GTK_CONTAINER(eventbox), label);
@@ -139,13 +104,10 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
         return;
     }
 
-    pagenum = gtk_notebook_append_page (notebook, content, eventbox);
+    int pagenum = gtk_notebook_append_page (notebook, content, eventbox);
     gtk_text_buffer_set_text(buffer, text, len);
     g_free(text);
     
-    tabnum_incr(userdata);
-    filenames = g_list_append (filenames, g_strdup(filepath));
-
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 
