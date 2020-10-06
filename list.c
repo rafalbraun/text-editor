@@ -8,8 +8,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
+
+//#define g_print printf
+//typedef char gchar;
 
 typedef gchar datatype;
 typedef struct node {
@@ -147,6 +151,7 @@ int l_index_of(struct node **head, datatype* value) {
 	}
 	while (current) {
 		index++;
+		//g_print("aaaaaaaa %d \n", index);
 		if (strcmp(current->data, value) == 0) {
 			return index;
 		}
@@ -193,38 +198,35 @@ void l_print(struct node **head)
 
 #if !LIST
 
-int main() {
-	struct node *head;
-	/*
-	if (init(&head, 25) != 0) {
-		fprintf(stderr, "Failed to init a new linked list");
-		return EXIT_FAILURE;
-	}
-	insert(&head, 30);
-	insert(&head, 55);
-	insert(&head, 210);
-	insert(&head, 1000000);
-	*/
+char _30[] = "30";
+char _55[] = "55";
+char _210[] = "210";
+char _1000000[] = "1000000";
 
-	l_append(&head, "30");
-	l_append(&head, "30");
-	l_append(&head, "55");
-	l_append(&head, "210");
-	l_append(&head, "1000000");
+int main() {
+	struct node *head = NULL;
+
+	l_append(&head, _30);
+	l_append(&head, _30);
+	l_append(&head, _55);
+	l_append(&head, _210);
+	l_append(&head, _210);
+	l_append(&head, _210);
+	l_append(&head, _1000000);
 
 	puts("Print the linked list:");
 	l_print(&head);
-
-	//for (int i=0; i<5; i++) {
-	//	fprintf(stdout, "Print element %d : %d \n", i, at(&head, i)->data);
-	//}
 
 	//delete_at(&head, 0);
 	//delete_at(&head, 3);
-	l_delete_value(&head, "30");
+	l_delete_value(&head, _30);
 
 	puts("Print the linked list:");
 	l_print(&head);
+
+	puts("Print the linked list:");
+	int index = l_index_of(&head, _210);
+	g_print("%d -> %s \n", index, _210);
 
 }
 
