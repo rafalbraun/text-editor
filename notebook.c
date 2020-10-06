@@ -13,14 +13,15 @@
 */
 
 GList* filenames;
-t_node *head;
+//t_node *head;
 t_pair *map_ptr;
 
 //guint tabnum;
 
 static void
 close_file(gpointer userdata, gchar* filepath) {
-    int index = l_delete_value(&head, filepath);
+    t_node** head = get_list(userdata);
+    int index = l_delete_value(head, filepath);
     gtk_notebook_remove_page (get_notebook(userdata), index);
 }
 
@@ -31,7 +32,8 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1)
     {
         // empty
-        l_print(&head);
+        t_node** head = get_list(userdata);
+        l_print(head);
         return FALSE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2)
@@ -83,7 +85,10 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     GtkNotebook* notebook = get_notebook(userdata);
     GtkTextBuffer* buffer = GTK_TEXT_BUFFER(get_buffer(userdata));
 
-    int index = l_append(&head, g_strdup(filepath));
+    t_node** head = get_list(userdata);
+    int index = l_append(head, g_strdup(filepath));
+    g_print("head: %p \n", head);
+    l_print(head);
     g_print("index %d \n", index);
     if (index != -1) {
         gtk_notebook_set_current_page (notebook, index);

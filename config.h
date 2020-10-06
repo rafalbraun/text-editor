@@ -4,13 +4,6 @@
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
 
-typedef struct _PageInfo {
-	gchar* 		filename;
-	gchar* 		filepath;
-	guint 		pagenum;
-	
-} PageInfo;
-
 typedef struct _UserData {
 	/* main window data */
 	GObject* 		window;					// main app window
@@ -25,13 +18,10 @@ typedef struct _UserData {
 	//GList* 			filenames;				// list of PageInfo structures
 	GList* 			open_files;
 
-	struct node 	*head;
+	t_node			*head;
 
 	/* full search window settings */
 	int 			stdout_fd;				// file descriptor opened by glib_regex process that works as queue for search results
-	//gchar*			filetypes;				// filetypes (extension) that should be filtered in full search window
-	//gchar* 			full_search_buffer;		// buffer that contains search results, the contents come from ..........
-	//guint 			limit;					// number of chars that need to be in entry field before searching starts
 
 
 } UserData;
@@ -52,15 +42,11 @@ GtkNotebook* get_notebook(UserData* userdata) {
 GtkSourceBuffer* get_buffer(UserData* userdata) {
 	return GTK_SOURCE_BUFFER(userdata->buffer);
 }
-guint get_tabnum(UserData* userdata) {
-	return userdata->tabnum;
+
+t_node** get_list(UserData* userdata) {
+	return &userdata->head;
 }
-void tabnum_incr(UserData* userdata) {
-	userdata->tabnum++;
-}
-void tabnum_decr(UserData* userdata) {
-	userdata->tabnum--;
-}
+
 /*
 void
 append() {
