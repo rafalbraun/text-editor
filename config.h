@@ -43,3 +43,8 @@ get_text_from_eventbox(GtkWidget* widget) {
     gchar* title = (gchar *)gtk_label_get_text(GTK_LABEL(label));
     return title;
 }
+
+
+
+
+

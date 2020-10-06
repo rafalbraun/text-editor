@@ -9,10 +9,30 @@
 //t_node *head;
 //t_pair *map_ptr;
 
+char* relative_path[128];
+char* absolute_path[128];
+
+int index_of(gchar* basename) {
+    int i=0;
+    while (absolute_path[i]) {
+        g_print("%s %s \n", relative_path[i], basename);
+        if (strcmp(relative_path[i], basename) == 0) {
+            return i;
+        }
+        i++;
+    }
+}
+
 static void
-close_file(gpointer userdata, gchar* filepath) {
+close_file(gpointer userdata, gchar* title) {
     t_node** head = get_list(userdata);
-    int index = l_delete_value(head, filepath);
+    gchar* filepath;
+    int index;
+
+    index = index_of(title);
+    filepath = absolute_path[index];
+
+    index = l_delete_value(head, filepath);
     gtk_notebook_remove_page (get_notebook(userdata), index);
 }
 
@@ -40,17 +60,19 @@ load_file(gpointer userdata, guint pagenum) {
     GtkSourceView *textview;
     GtkScrolledWindow *scroll;
     GtkLabel  *label;
-    gchar* title;
+    gchar *title, *filepath;
+    int index;
 
     child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
     eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
     title = get_text_from_eventbox(eventbox);
+    index = index_of(title);
+    filepath = absolute_path[index];
 
     gchar *text;
     gsize len;
     GError *err = NULL;
-
-    if (g_file_get_contents(title, &text, &len, &err) == FALSE) {
+    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
         g_error("error reading %s: %s", title, err->message);
     }
 
@@ -63,26 +85,36 @@ save_file(gchar* path, gchar* contents) {
 
 }
 
+// https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 static void
 open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     GtkWidget *label, *eventbox;
     GtkNotebook* notebook = get_notebook(userdata);
 
     t_node** head = get_list(userdata);
-    int index = l_append(head, g_strdup(filepath));
+    //int index = l_append(head, g_strdup(filepath));
+    int index = l_append(head, filepath);
     if (index != -1) {
         gtk_notebook_set_current_page (notebook, index);
         return;
     }
 
-    label = gtk_label_new(filepath);
+    // TODO!!!!!
+    // Sprawdzać przy dodawaniu czy nie mamy już pliku o takiej samej nazwie!!!
+    // Będzie wtedy kolizja w relative_path i absolute_path
+
+    index = l_index_of(head, filepath);
+    gchar* basename = g_path_get_basename(filepath);
+    relative_path[index] = basename;
+    absolute_path[index] = filepath;
+
+    label = gtk_label_new(basename);
     eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox), label);
 
     gchar *text;
     gsize len;
     GError *err = NULL;
-
     if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
         g_error("error reading %s: %s", filepath, err->message);
         return;
@@ -110,6 +142,6 @@ switch_page (GtkNotebook *notebook,
              guint        page_src,
              gpointer     userdata) {
     
-    gint page_dst = gtk_notebook_get_current_page(get_notebook(userdata));
+    gtk_notebook_get_current_page(get_notebook(userdata));
     load_file(userdata, page_src);
 }

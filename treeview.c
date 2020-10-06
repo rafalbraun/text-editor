@@ -5,10 +5,11 @@
 
 enum {
     COLUMN = 0,
-        NUM_COLS
+    NUM_COLS
 };
 
-gchar * get_selection(GtkWidget * treeview) {
+gchar* 
+get_selection(GtkWidget * treeview) {
     GtkTreeIter iter;
     GtkTreeModel * model;
     GtkTreeSelection * selection;
@@ -137,20 +138,20 @@ fill_treestore_new(GtkTreeStore * treestore,
 }
 
 GtkTreeModel *
-    create_and_fill_model(const char * pathname) {
-        GtkTreeIter toplevel;
-        GtkTreeStore * treestore;
+create_and_fill_model(const char * pathname) {
+    GtkTreeIter toplevel;
+    GtkTreeStore * treestore;
 
-        treestore = gtk_tree_store_new(NUM_COLS,
-            G_TYPE_STRING);
+    treestore = gtk_tree_store_new(NUM_COLS,
+        G_TYPE_STRING);
 
-        gtk_tree_store_append(treestore, & toplevel, NULL);
-        gtk_tree_store_set(treestore, & toplevel, COLUMN, pathname, -1);
+    gtk_tree_store_append(treestore, & toplevel, NULL);
+    gtk_tree_store_set(treestore, & toplevel, COLUMN, pathname, -1);
 
-        fill_treestore(pathname, treestore, toplevel);
+    fill_treestore(pathname, treestore, toplevel);
 
-        return GTK_TREE_MODEL(treestore);
-    }
+    return GTK_TREE_MODEL(treestore);
+}
 
 void expand_top_node(GObject * treeview) {
     GtkTreePath * treepath;

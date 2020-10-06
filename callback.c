@@ -65,7 +65,7 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
       	}
 
         g_free(name);
-        g_free(path);
+        //g_free(path);
 
       }
 
