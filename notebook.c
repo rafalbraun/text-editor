@@ -15,12 +15,12 @@ char* absolute_path[128];
 int index_of(gchar* basename) {
     int i=0;
     while (absolute_path[i]) {
-        g_print("%s %s \n", relative_path[i], basename);
         if (strcmp(relative_path[i], basename) == 0) {
             return i;
         }
         i++;
     }
+    return -1;
 }
 
 static void
@@ -105,10 +105,17 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
 
     index = l_index_of(head, filepath);
     gchar* basename = g_path_get_basename(filepath);
-    relative_path[index] = basename;
-    absolute_path[index] = filepath;
+    //relative_path[index] = basename;
+    //absolute_path[index] = filepath;
 
-    label = gtk_label_new(basename);
+    if (index_of(basename) != -1) {
+        relative_path[index] = filepath;
+        label = gtk_label_new(filepath);
+    } else {
+        relative_path[index] = basename;
+        label = gtk_label_new(basename);
+    }
+    absolute_path[index] = filepath;
     eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox), label);
 
