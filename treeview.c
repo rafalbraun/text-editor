@@ -26,14 +26,14 @@ get_selection(GtkWidget * treeview) {
 }
 
 void
-popup_menu_copy_file(GtkWidget * menuitem, gpointer treeview) {
-    gchar * filename = get_selection(treeview);
+popup_menu_copy_file(GtkWidget *menuitem, gpointer treeview) {
+    gchar *filename = get_selection(treeview);
     g_free(filename);
 }
 
 void
-popup_menu(GtkWidget * treeview, GdkEventButton * event, gpointer userdata) {
-    GtkWidget * menu, * menuitem;
+popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
+    GtkWidget *menu, *menuitem;
 
     menu = gtk_menu_new();
 

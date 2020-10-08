@@ -85,37 +85,29 @@ save_file(gchar* path, gchar* contents) {
 
 }
 
+// https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 static void
 open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
     GtkWidget *label, *eventbox;
+    gchar* title;
     GtkNotebook* notebook = get_notebook(userdata);
 
     t_node** head = get_list(userdata);
-    //int index = l_append(head, g_strdup(filepath));
     int index = l_append(head, filepath);
     if (index != -1) {
         gtk_notebook_set_current_page (notebook, index);
         return;
     }
 
-    // TODO!!!!!
-    // Sprawdzać przy dodawaniu czy nie mamy już pliku o takiej samej nazwie!!!
-    // Będzie wtedy kolizja w relative_path i absolute_path
-
     index = l_index_of(head, filepath);
     gchar* basename = g_path_get_basename(filepath);
-    //relative_path[index] = basename;
-    //absolute_path[index] = filepath;
 
-    if (index_of(basename) != -1) {
-        relative_path[index] = filepath;
-        label = gtk_label_new(filepath);
-    } else {
-        relative_path[index] = basename;
-        label = gtk_label_new(basename);
-    }
+    title = (index_of(basename) == -1) ? basename : filepath;
+    relative_path[index] = title;
     absolute_path[index] = filepath;
+
+    label = gtk_label_new(title);
     eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox), label);
 

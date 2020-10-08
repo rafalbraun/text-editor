@@ -11,6 +11,8 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
+static GtkClipboard *clipboard;
+
 void show_error(GtkWindow* window, gchar* message) {
   
     GtkWidget *dialog;
@@ -23,6 +25,39 @@ void show_error(GtkWindow* window, gchar* message) {
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
 }
+
+// TODO -- check if user installed xclip
+// TODO -- check if I can cut some code from xclip to get rid of dependency
+
+// on quit save clipboard to xclip
+// https://wiki.ubuntu.com/ClipboardPersistence
+void
+on_main_quit (void) {
+
+    GdkScreen *screen = gdk_screen_get_default();
+    GdkDisplay *display = gdk_display_get_default();
+    GtkClipboard *clipboard = gtk_clipboard_get_for_display(display, GDK_SELECTION_CLIPBOARD);
+
+    gchar* filename = "/tmp/clipboard";
+    gchar* command  = g_strconcat("xclip -sel clip < ", filename, NULL);
+    gchar* contents = gtk_clipboard_wait_for_text(clipboard);
+
+    int fd = g_mkstemp(filename);
+    if (fd != -1) {
+        g_warning ("g_mkstemp works even if template doesn't contain XXXXXX");
+    }
+
+    GError *err = NULL;
+    g_file_set_contents(filename, contents, strlen(contents), &err);
+
+    // to print clipboard contents:
+    // $ xclip -selection clipboard -o
+    system(command);
+    close (fd);
+
+    gtk_main_quit();
+}
+
 /*
 gchar *
 g_basename(char *filepath) {
@@ -56,6 +91,26 @@ main (int argc, char *argv[])
     gtk_init (&argc, &argv);
     //map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair));
 
+    //clipboard = gtk_clipboard_get(GDK_SELECTION_PRIMARY);
+    //clipboard = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+    //gtk_clipboard_set_can_store(clipboard, NULL, 0);
+
+
+    /*
+    GdkScreen *screen = gdk_screen_get_default();
+    GdkDisplay *display = gdk_display_get_default();
+    GtkClipboard *clipboard =
+        gtk_clipboard_get_for_display(display, GDK_SELECTION_CLIPBOARD);
+    gtk_clipboard_set_text(clipboard, "Hello world", -1);
+    gtk_clipboard_request_text(clipboard, callback, NULL);
+    if (gdk_display_supports_clipboard_persistence(display)) {
+        printf("Supports clipboard persistence.\n");
+        gtk_clipboard_store(clipboard);
+    } else {
+        printf("Noooooooooooooooo.\n");
+    }*/
+
+
     /* Construct a GtkBuilder instance and load our UI description */
     builder = gtk_builder_new ();
     if (gtk_builder_add_from_file (builder, "text_editor.ui", &error) == 0)
@@ -79,7 +134,7 @@ main (int argc, char *argv[])
     expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
-    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), NULL);
+    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (on_main_quit), NULL);
     g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_window), NULL);
     g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);

@@ -2,14 +2,12 @@
 #include <gtk/gtk.h>
 
 gboolean
-key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
-{
+key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) {
   return FALSE;
 }
 
 gboolean
-key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) 
-{
+key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) {
   if (event->state & GDK_CONTROL_MASK && event->keyval == 'F') {
       g_print("ctrl + shift + f \n");
   }
@@ -18,8 +16,7 @@ key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata)
 }
 
 gboolean 
-on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
-{
+on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
   GtkTreeSelection *selection;
   GtkTreeIter       child, parent;
   GtkTreeModel     *model;
@@ -71,20 +68,18 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
       return TRUE;
     } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        //if (1) {
-            GtkTreeSelection * selection;
+        GtkTreeSelection * selection;
 
-            selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-            if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
-                GtkTreePath * path;
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+        if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
+            GtkTreePath * path;
 
-            if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
-                event->x, event->y, &path, NULL, NULL, NULL)) {
-                gtk_tree_selection_unselect_all(selection);
-                gtk_tree_selection_select_path(selection, path);
-                gtk_tree_path_free(path);
-            }
-        //}
+        if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
+            event->x, event->y, &path, NULL, NULL, NULL)) {
+            gtk_tree_selection_unselect_all(selection);
+            gtk_tree_selection_select_path(selection, path);
+            gtk_tree_path_free(path);
+        }
     }
 
     popup_menu(treeview, event, userdata);
