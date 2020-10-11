@@ -1,15 +1,15 @@
 CC=gcc
 GTK=`pkg-config --cflags --libs gtk+-3.0 gtksourceview-4`
 GLIB=`pkg-config --cflags --libs glib-2.0`
-PROGRAMS=text_editor treeview full_search sourceview list map
+PROGRAMS=text_editor treeview full_search sourceview list #map
 
 all: $(PROGRAMS) glib_regex 
 
-text_editor: text_editor.c treeview.c notebook.c callback.c sourceview.c list.c map.c
-	$(CC) text_editor.c $(GTK) -o text_editor
+text_editor: text_editor.c treeview.c notebook.c callback.c sourceview.c list.c #map.c
+	$(CC) $(GLIB) text_editor.c $(GTK) -o text_editor
 
 %: %.c
-	$(CC) -o $@ $^ $(GTK)
+	$(CC) $(GLIB) -o $@ $^ $(GTK)
 
 glib_regex: glib_regex.c
 	$(CC) $(GLIB) glib_regex.c -o glib_regex -lpthread

@@ -11,7 +11,13 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
-static GtkClipboard *clipboard;
+#include <glib/gstdio.h>
+
+#include <sys/stat.h>
+#include <fcntl.h>
+
+//static GtkClipboard *clipboard;
+gchar* open_files();
 
 void show_error(GtkWindow* window, gchar* message) {
   
@@ -41,19 +47,34 @@ on_main_quit (void) {
     gchar* filename = "/tmp/clipboard";
     gchar* command  = g_strconcat("xclip -sel clip < ", filename, NULL);
     gchar* contents = gtk_clipboard_wait_for_text(clipboard);
+    GError *err = NULL;
 
     int fd = g_mkstemp(filename);
     if (fd != -1) {
         g_warning ("g_mkstemp works even if template doesn't contain XXXXXX");
     }
-
-    GError *err = NULL;
     g_file_set_contents(filename, contents, strlen(contents), &err);
+    g_close (fd, &err);
+    g_free(contents);
 
     // to print clipboard contents:
     // $ xclip -selection clipboard -o
-    system(command);
-    close (fd);
+    system (command);
+
+    /*
+    // save sessions
+    // https://stackoverflow.com/questions/28533553/what-is-the-default-mode-for-open-calls-with-o-creat-and-how-to-properly-set-i
+    //fd = g_open("~session-info", O_WRONLY | O_CREAT | O_TRUNC, 0640);
+    fd = g_open("~session-info", O_RDONLY);
+    g_close (fd, &err);
+    */
+    contents = open_files();
+    //g_print("%s\n", contents);
+
+    //GError *err = NULL;
+    err = NULL;
+    g_file_set_contents ("~session-info", contents, strlen(contents), &err);
+    g_free(contents);
 
     gtk_main_quit();
 }
@@ -65,7 +86,7 @@ g_basename(char *filepath) {
     return base ? base+1 : filepath;
 }
 */
-#include "map.c"
+//#include "map.c"
 #include "list.c"
 #include "config.h"
 #include "treeview.c"
@@ -85,7 +106,10 @@ main (int argc, char *argv[])
     GObject *notebook;
     GError *error = NULL;
     //gchar* filepath = ".";
-    gchar* filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
+    //gchar* filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
+    //gchar* filepath = "/home/rafal/IdeaProjects/vamos-0.8.2-x86_64";
+    gchar* filepath = "/home/rafal/IdeaProjects/vdrift";
+
 
     // init code
     gtk_init (&argc, &argv);

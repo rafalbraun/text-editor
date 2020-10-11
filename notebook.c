@@ -6,11 +6,21 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
+#include <glib/gstdio.h>
+
 //t_node *head;
 //t_pair *map_ptr;
 
-char* relative_path[128];
-char* absolute_path[128];
+const gchar* separator = "\n";
+gchar* relative_path[128];
+gchar* absolute_path[128];
+
+gchar* open_files() {
+    int max=0;
+    while (absolute_path[max]) {max++;}
+    absolute_path[max+1] = NULL;
+    return g_strjoinv(separator, (gchar**)&absolute_path);
+}
 
 int index_of(gchar* basename) {
     int i=0;
@@ -31,6 +41,8 @@ close_file(gpointer userdata, gchar* title) {
 
     index = index_of(title);
     filepath = absolute_path[index];
+    absolute_path[index] = "";
+    relative_path[index] = "";
 
     index = l_delete_value(head, filepath);
     gtk_notebook_remove_page (get_notebook(userdata), index);
