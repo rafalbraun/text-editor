@@ -18,6 +18,7 @@
 
 //static GtkClipboard *clipboard;
 gchar* open_files();
+static void open_file (gpointer userdata, gchar* filepath);
 
 void show_error(GtkWindow* window, gchar* message) {
   
@@ -79,6 +80,31 @@ on_main_quit (void) {
     gtk_main_quit();
 }
 
+void open_files_from_last_session(gpointer userdata) {
+    gchar *text, *filepath = "~session-info";
+    gchar **filepaths;
+    gsize len;
+    GError *err = NULL;
+    guint i = 0;
+
+    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
+        g_error("error reading %s: %s", filepath, err->message);
+        return;
+    }
+    filepaths = g_strsplit(text, "\n", 0);
+
+    while(filepaths[i]) {
+        if(strcmp(filepaths[i], "")!=0) {
+            open_file(userdata, filepaths[i]);
+        }
+        i++;
+    }
+
+    //g_print ("files[0]: %s \n", filepaths[0]);
+    //open_file (userdata, filepaths[0]);
+
+}
+
 /*
 gchar *
 g_basename(char *filepath) {
@@ -89,9 +115,9 @@ g_basename(char *filepath) {
 //#include "map.c"
 #include "list.c"
 #include "config.h"
+#include "sourceview.c"
 #include "treeview.c"
 #include "notebook.c"
-#include "sourceview.c"
 #include "callback.c"
 
 int
@@ -134,7 +160,6 @@ main (int argc, char *argv[])
         printf("Noooooooooooooooo.\n");
     }*/
 
-
     /* Construct a GtkBuilder instance and load our UI description */
     builder = gtk_builder_new ();
     if (gtk_builder_add_from_file (builder, "text_editor.ui", &error) == 0)
@@ -163,6 +188,7 @@ main (int argc, char *argv[])
     g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);
     g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)userdata);
+    open_files_from_last_session (userdata);
 
     gtk_main ();
 

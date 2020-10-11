@@ -100,9 +100,11 @@ save_file(gchar* path, gchar* contents) {
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 static void
-open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
-    GtkWidget *label, *eventbox;
-    gchar* title;
+open_file (gpointer userdata, gchar* filepath) {
+    GtkWidget       *eventbox;
+    GtkWidget       *textview;
+    GtkWidget       *label;
+    gchar           *title;
     GtkNotebook* notebook = get_notebook(userdata);
 
     t_node** head = get_list(userdata);
@@ -135,7 +137,10 @@ open_file (gpointer userdata, gchar* filepath, GtkWidget* content) {
         return;
     }
 
-    int pagenum = gtk_notebook_append_page (notebook, content, eventbox);
+    textview = sourceview_new(GTK_SOURCE_BUFFER(get_buffer(userdata)));
+    guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
+
+    int pagenum = gtk_notebook_append_page (notebook, textview, eventbox);
     gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
     g_free(text);
     
