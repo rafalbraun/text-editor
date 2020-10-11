@@ -20,7 +20,7 @@ guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
 
     lang = gtk_source_language_manager_guess_language (manager, filepath, content_type);
     if (lang != NULL) {
-        g_print("lang recognized: %s \n", gtk_source_language_get_name(lang));
+        g_print("lang %s recognized in file %s \n", gtk_source_language_get_name(lang), filepath);
         gtk_source_buffer_set_language (buffer, lang);
         g_free (content_type);
     }
@@ -30,7 +30,7 @@ void clear_buffer(GtkSourceBuffer* buffer) {
     GtkTextIter iter_start, iter_end;
 
     gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &iter_start);
-    gtk_text_buffer_get_end_iter   (GTK_TEXT_BUFFER (buffer), &iter_end);
+    gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter_end);
     gtk_text_buffer_delete ( GTK_TEXT_BUFFER( buffer ), &iter_start, &iter_end );
 }
 

@@ -20,7 +20,8 @@
 gchar* open_files();
 static void open_file (gpointer userdata, gchar* filepath);
 
-void show_error(GtkWindow* window, gchar* message) {
+void 
+show_error(GtkWindow* window, gchar* message) {
   
     GtkWidget *dialog;
     dialog = gtk_message_dialog_new(GTK_WINDOW(window),
@@ -56,7 +57,7 @@ on_main_quit (void) {
     }
     g_file_set_contents(filename, contents, strlen(contents), &err);
     g_close (fd, &err);
-    g_free(contents);
+    g_free (contents);
 
     // to print clipboard contents:
     // $ xclip -selection clipboard -o
@@ -80,7 +81,8 @@ on_main_quit (void) {
     gtk_main_quit();
 }
 
-void open_files_from_last_session(gpointer userdata) {
+void 
+open_files_from_last_session(gpointer userdata) {
     gchar *text, *filepath = "~session-info";
     gchar **filepaths;
     gsize len;
@@ -99,10 +101,6 @@ void open_files_from_last_session(gpointer userdata) {
         }
         i++;
     }
-
-    //g_print ("files[0]: %s \n", filepaths[0]);
-    //open_file (userdata, filepaths[0]);
-
 }
 
 /*
@@ -120,6 +118,7 @@ g_basename(char *filepath) {
 #include "notebook.c"
 #include "callback.c"
 
+// https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
 main (int argc, char *argv[])
 {
@@ -134,31 +133,11 @@ main (int argc, char *argv[])
     //gchar* filepath = ".";
     //gchar* filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
     //gchar* filepath = "/home/rafal/IdeaProjects/vamos-0.8.2-x86_64";
-    gchar* filepath = "/home/rafal/IdeaProjects/vdrift";
-
+    //gchar* filepath = "/home/rafal/IdeaProjects/vdrift";
+    gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
 
     // init code
     gtk_init (&argc, &argv);
-    //map_ptr = (t_pair*)malloc(MAPSIZE * sizeof(t_pair));
-
-    //clipboard = gtk_clipboard_get(GDK_SELECTION_PRIMARY);
-    //clipboard = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-    //gtk_clipboard_set_can_store(clipboard, NULL, 0);
-
-
-    /*
-    GdkScreen *screen = gdk_screen_get_default();
-    GdkDisplay *display = gdk_display_get_default();
-    GtkClipboard *clipboard =
-        gtk_clipboard_get_for_display(display, GDK_SELECTION_CLIPBOARD);
-    gtk_clipboard_set_text(clipboard, "Hello world", -1);
-    gtk_clipboard_request_text(clipboard, callback, NULL);
-    if (gdk_display_supports_clipboard_persistence(display)) {
-        printf("Supports clipboard persistence.\n");
-        gtk_clipboard_store(clipboard);
-    } else {
-        printf("Noooooooooooooooo.\n");
-    }*/
 
     /* Construct a GtkBuilder instance and load our UI description */
     builder = gtk_builder_new ();

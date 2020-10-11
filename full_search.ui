@@ -9,7 +9,6 @@
          <column type="gchararray" />
          <column type="gchararray" />
       </columns>
-
    </object>
    <object class="GtkListStore" id="combobox_model">
       <columns>
