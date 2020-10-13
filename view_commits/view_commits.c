@@ -14,6 +14,13 @@ print_hello (GtkWidget *widget,
   g_print ("Hello World\n");
 }
 
+// https://stackoverflow.com/questions/15717625/how-to-get-the-last-commit-from-head-in-a-git-repository-using-libgit2
+// https://stackoverflow.com/questions/18134627/how-much-of-a-git-sha-is-generally-considered-necessary-to-uniquely-identify-a
+// https://ben.straub.cc/2013/10/02/revwalk/
+// https://github.com/libgit2/libgit2/tree/master/examples
+// https://stackoverflow.com/questions/17914375/listing-all-commits-in-a-branch-using-libgit2
+// https://libgit2.org/docs/guides/101-samples/
+
 static git_commit*
 git_get_head(git_repository *repo) {
     int rc;
