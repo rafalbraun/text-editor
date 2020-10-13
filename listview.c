@@ -39,22 +39,7 @@ void add_to_list(GtkWidget *list, const gchar *str) {
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter, LIST_ITEM, str, -1);
 }
-/*
-void on_changed(GtkWidget *widget, gpointer label) {
-    
-  GtkTreeIter iter;
-  GtkTreeModel *model;
-  gchar *value;
 
-  if (gtk_tree_selection_get_selected(
-      GTK_TREE_SELECTION(widget), &model, &iter)) {
-
-    gtk_tree_model_get(model, &iter, LIST_ITEM, &value,  -1);
-    gtk_label_set_text(GTK_LABEL(label), value);
-    g_free(value);
-  }
-}
-*/
 gboolean
 key_pressed(GtkWidget *entry, GdkEventKey *event, gpointer userdata) {
   g_print("key pressed : %s \n", gtk_entry_get_text(GTK_ENTRY(entry)));
@@ -69,7 +54,6 @@ int main(int argc, char *argv[]) {
 
   GtkWidget *vbox;
   GtkWidget *label;
-  GtkTreeSelection *selection; 
 
   gtk_init(&argc, &argv);
 
@@ -83,32 +67,19 @@ int main(int argc, char *argv[]) {
 
   gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(list), FALSE);
 
-  vbox = gtk_vbox_new(FALSE, 0);
+  //vbox = gtk_vbox_new(FALSE, 0);
+  vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+
   entry = gtk_entry_new();
   gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 2);
   gtk_box_pack_start(GTK_BOX(vbox), list, TRUE, TRUE, 2);
 
   gtk_container_add(GTK_CONTAINER(window), vbox);
 
-  /*
-  label = gtk_label_new("");
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 5);
-
-  init_list(list);
-  add_to_list(list, "Aliens");
-  add_to_list(list, "Leon");
-  add_to_list(list, "The Verdict");
-  add_to_list(list, "North Face");
-  add_to_list(list, "Der Untergang");
-
-  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(list));
-
-  g_signal_connect(selection, "changed", 
-      G_CALLBACK(on_changed), label);
-  */
-
-  g_signal_connect (G_OBJECT (entry), "changed", G_CALLBACK (key_pressed), NULL);
-  g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+  g_signal_connect (G_OBJECT (entry), 
+      "changed", G_CALLBACK (key_pressed), NULL);
+  g_signal_connect (G_OBJECT (window), 
+      "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
   gtk_widget_show_all(window);
 

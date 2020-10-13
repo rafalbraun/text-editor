@@ -11,7 +11,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define BUFFER 500
+#define BUFFER  500
+#define SIZE    1000
 
 typedef struct _search_data {
     char* dirname;
@@ -54,10 +55,10 @@ void scan_file(char const* const filename, char const* const pattern) {
 }
 
 int list_directory( char* dirname, char* pattern ) {
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL); 
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+    //pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL); 
+    //pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
-    char path[1000];
+    gchar path[SIZE];
     struct dirent *dp;
     DIR *dir = opendir(dirname);
 
@@ -68,15 +69,16 @@ int list_directory( char* dirname, char* pattern ) {
 
     while ((dp = readdir(dir)) != NULL)
     {
-        if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0 && (dp->d_name[0]!='.'))
+        if (g_strcmp0(dp->d_name, ".") != 0 && g_strcmp0(dp->d_name, "..") != 0 && (dp->d_name[0]!='.'))
         {
             // Construct new path from our base path
-            strcpy(path, dirname);
-            strcat(path, "/");
-            strcat(path, dp->d_name);
+            //g_stpcpy(path, dirname);
+            //g_strlcat(path, "/", SIZE);
+            //g_strlcat(path, dp->d_name, SIZE);
+
+            snprintf(path, SIZE, "%s/%s", dirname, dp->d_name); // create name of subdirectory
 
             scan_file(path, pattern);
-
             list_directory(path, pattern);
         }
     }

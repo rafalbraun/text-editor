@@ -3,6 +3,8 @@
 
 #include <gtk/gtk.h>
 
+#define SIZE 1000
+
 enum {
     COLUMN = 0,
     NUM_COLS
@@ -11,15 +13,15 @@ enum {
 gchar* 
 get_selection(GtkWidget * treeview) {
     GtkTreeIter iter;
-    GtkTreeModel * model;
-    GtkTreeSelection * selection;
-    gchar * value;
+    GtkTreeModel *model;
+    GtkTreeSelection *selection;
+    gchar *value;
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
 
-    if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), & model, & iter)) {
-        gtk_tree_model_get(model, & iter, COLUMN, & value, -1);
+    if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), &model, &iter)) {
+        gtk_tree_model_get(model, &iter, COLUMN, &value, -1);
         return value;
     }
     return NULL;
@@ -104,23 +106,21 @@ fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter topl
         }
 
         if (entry -> d_type == DT_DIR) {
-            char path[1024];
-            if (strcmp(entry -> d_name, ".") == 0 || strcmp(entry -> d_name, "..") == 0)
+            gchar path[SIZE];
+
+            if (g_strcmp0(entry -> d_name, ".") == 0 || g_strcmp0(entry -> d_name, "..") == 0) {
                 continue;
+            }
 
             snprintf(path, sizeof(path), "%s/%s", pathname, entry -> d_name); // create name of subdirectory
 
-            gtk_tree_store_append(treestore, & child, & toplevel);
-            gtk_tree_store_set(treestore, & child,
-                COLUMN, entry -> d_name,
-                -1);
+            gtk_tree_store_append(treestore, &child, &toplevel);
+            gtk_tree_store_set(treestore, &child, COLUMN, entry -> d_name, -1);
 
             fill_treestore(path, treestore, child);
         } else {
-            gtk_tree_store_append(treestore, & child, & toplevel);
-            gtk_tree_store_set(treestore, & child,
-                COLUMN, entry -> d_name,
-                -1);
+            gtk_tree_store_append(treestore, &child, &toplevel);
+            gtk_tree_store_set(treestore, &child, COLUMN, entry -> d_name, -1);
         }
     }
     closedir(dir);
