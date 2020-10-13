@@ -14,6 +14,8 @@ typedef struct _UserData {
 	gchar*			homedir;				// directory that app is opened in
 	GObject*		treestore;
 
+	gchar*			session_info;
+
 	t_node			*head;
 
 } UserData;

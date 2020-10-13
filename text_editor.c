@@ -34,13 +34,20 @@ show_error(GtkWindow* window, gchar* message) {
     gtk_widget_destroy(dialog);
 }
 
+#include "list.c"
+#include "config.h"
+#include "sourceview.c"
+#include "treeview.c"
+#include "notebook.c"
+#include "callback.c"
+
 // TODO -- check if user installed xclip
 // TODO -- check if I can cut some code from xclip to get rid of dependency
 
 // on quit save clipboard to xclip
 // https://wiki.ubuntu.com/ClipboardPersistence
 void
-on_main_quit (void) {
+on_main_quit (GtkWidget *widget, gpointer userdata) {
 
     GdkScreen *screen = gdk_screen_get_default();
     GdkDisplay *display = gdk_display_get_default();
@@ -75,7 +82,8 @@ on_main_quit (void) {
 
     //GError *err = NULL;
     err = NULL;
-    g_file_set_contents ("~session-info", contents, strlen(contents), &err);
+    //g_file_set_contents ("~session-info", contents, strlen(contents), &err);
+    g_file_set_contents (((UserData*)userdata)->session_info, contents, strlen(contents), &err);
     g_free(contents);
 
     gtk_main_quit();
@@ -111,12 +119,7 @@ g_basename(char *filepath) {
 }
 */
 //#include "map.c"
-#include "list.c"
-#include "config.h"
-#include "sourceview.c"
-#include "treeview.c"
-#include "notebook.c"
-#include "callback.c"
+
 
 // https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
@@ -134,6 +137,7 @@ main (int argc, char *argv[])
     //gchar* filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
     //gchar* filepath = "/home/rafal/IdeaProjects/vamos-0.8.2-x86_64";
     //gchar* filepath = "/home/rafal/IdeaProjects/vdrift";
+    //gchar* filepath = "/home/rafal/IdeaProjects";
     gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
 
     // init code
@@ -150,6 +154,7 @@ main (int argc, char *argv[])
 
     UserData *userdata = g_new0(UserData, 1);
     userdata->head = NULL;
+    userdata->session_info = "~session-info";
 
     /* Connect signal handlers to the constructed widgets. */
     userdata->window    = window    = gtk_builder_get_object (builder, "window");
@@ -162,7 +167,7 @@ main (int argc, char *argv[])
     expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
-    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (on_main_quit), NULL);
+    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (on_main_quit), (gpointer)userdata);
     g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_window), NULL);
     g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);
