@@ -8,7 +8,7 @@
 
 //int stdout_fd = -1;
 gchar buffer [BUFFER_SIZE];
-FILE *fp;
+//FILE *fp;
 
 void scan_line(gchar const* const line, gchar const* const pattern) {
     GMatchInfo *match_info = NULL;
@@ -19,18 +19,22 @@ void scan_line(gchar const* const line, gchar const* const pattern) {
     regex = g_regex_new (pattern, 0, 0, &err);
 
     g_regex_match (regex, line, 0, &match_info);
-    while (g_match_info_matches (match_info))
+    if (g_match_info_matches (match_info))
     {
         gchar *word = g_match_info_fetch (match_info, 0);
 
         g_match_info_fetch_pos(match_info, 0, &start_pos, &end_pos);
         //g_print ("%s\x1C%d\x1C%d\x1C%d\x1C%s", filename, linenum, start_pos, end_pos, line);
-        g_print("%d / %d / %s \n", start_pos, end_pos, line);
+        //g_print("%d | %d | %s \n", start_pos, end_pos, line);
+        //g_print("%d\x1C%d\x1C%s", start_pos, end_pos, line);
+        g_print("%s\n", line);
+        //fprintf(stderr, "stderr: %s :: %s \n", line, pattern);
 
         g_free (word);
         g_match_info_next (match_info, NULL);
     }
     g_match_info_free (match_info);
+    g_regex_unref (regex);
 }
 
 void scan_dir(gchar const* const topdir, gchar const* const pattern) {
@@ -65,6 +69,8 @@ void scan_dir(gchar const* const topdir, gchar const* const pattern) {
 
   			snprintf(path, sizeof(path), "%s/%s", topdir, entry->d_name);
 
+        	//fprintf(stderr, "stderr dir: %s :: %s \n", topdir, entry->d_name);
+
             //g_print("DT_REG: %s/%s \n", topdir, entry->d_name);
 
 			//snprintf(path, sizeof(path), "%s/%s", topdir, entry -> d_name);
@@ -79,49 +85,16 @@ void scan_dir(gchar const* const topdir, gchar const* const pattern) {
 }
 
 /*
-#define BUFFER 500
 
-int list_directory( char* dirname, char* pattern ) {
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL); 
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+./find_files "/usr/include" "gtk"
+/home/rafal/IdeaProjects/gtksourceview-my-ide/application/find_files /usr/include gtk
 
-    char path[1000];
-    struct dirent *dp;
-    DIR *dir = opendir(dirname);
-
-    // Unable to open directory stream
-    if (!dir) {
-        return 0;
-    }
-
-    while ((dp = readdir(dir)) != NULL)
-    {
-        if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0 && (dp->d_name[0]!='.'))
-        {
-            // Construct new path from our base path
-            strcpy(path, dirname);
-            strcat(path, "/");
-            strcat(path, dp->d_name);
-
-            scan_file(path, pattern);
-
-            list_directory(path, pattern);
-        }
-    }
-
-    closedir(dir);
-}
 */
+int main(int argc, char* argv[]) {
 
-int main() {
-
-	fp = fopen("/home/rafal/test.txt", "w+");
-
-	scan_dir("/usr/include", "gtk");
-	//scan("/");
-	//scan("/home/rafal");
-	
-	fclose(fp);
+	gchar* dirname = argv[1];
+	gchar* pattern = argv[2];
+	scan_dir(dirname, pattern);
 
 	return 0;
 }

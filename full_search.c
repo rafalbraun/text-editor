@@ -129,8 +129,8 @@ int search_process(gchar* needle) {
   argv[0] = "./glib_regex";
   argv[1] =  ".";
   argv[2] = needle; 
-  status = g_spawn_async_with_pipes (NULL, argv, NULL, 
-      G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, &stdout_fd, NULL, NULL);
+  status = g_spawn_async_with_pipes (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, &stdout_fd, NULL, NULL);
+
   if (!status) {
     g_print("[FAILED] 1 Failed to run %s: %d \n", argv [0], status);
     return 1;
