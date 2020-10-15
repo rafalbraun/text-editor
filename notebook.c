@@ -111,6 +111,19 @@ open_file (gpointer userdata, gchar* filepath) {
     int index = l_append(head, filepath);
     if (index != -1) {
         gtk_notebook_set_current_page (notebook, index);
+        g_print("[INFO] switching to file %s under index %d \n", filepath, index);
+        return;
+    }
+
+    gchar *text;
+    gsize len;
+    GError *err = NULL;
+    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
+        g_error("error reading %s: %s", filepath, err->message);
+        return;
+    }
+    if (!g_utf8_validate (text, len, NULL)) {
+        show_error(get_window(userdata), "the file is binary");
         return;
     }
 
@@ -125,25 +138,15 @@ open_file (gpointer userdata, gchar* filepath) {
     eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox), label);
 
-    gchar *text;
-    gsize len;
-    GError *err = NULL;
-    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
-        g_error("error reading %s: %s", filepath, err->message);
-        return;
-    }
-    if (!g_utf8_validate (text, len, NULL)) {
-        show_error(get_window(userdata), "the file is binary");
-        return;
-    }
-
     textview = sourceview_new(GTK_SOURCE_BUFFER(get_buffer(userdata)));
     guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
 
     int pagenum = gtk_notebook_append_page (notebook, textview, eventbox);
     gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
     g_free(text);
-    
+
+    g_print("[INFO] opening file %s under index %d \n", filepath, index);
+
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 

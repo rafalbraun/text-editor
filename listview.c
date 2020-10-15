@@ -193,7 +193,7 @@ int main(int argc, char *argv[]) {
   gtk_window_set_title(GTK_WINDOW(window), "List view");
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(window), 10);
-  gtk_window_set_default_size(GTK_WINDOW(window), 800, 1000);
+  gtk_window_set_default_size(GTK_WINDOW(window), 600, 1000);
 
   gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(listview), FALSE);
 
