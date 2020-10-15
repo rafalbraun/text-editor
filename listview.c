@@ -17,12 +17,12 @@ char buffer [BUFFER_SIZE];
 guint gLimit = 2;
 gchar entry_buffer[SIZE];
 
-void add_to_list(GtkWidget *list, const gchar *str) {
-    
+void add_to_list(GtkWidget *listview, const gchar *str) {
+
   GtkListStore *store;
   GtkTreeIter iter;
 
-  store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(list)));
+  store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(listview)));
 
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter, LIST_ITEM, str, -1);

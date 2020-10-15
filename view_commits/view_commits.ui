@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkListStore" id="liststore1">
+  <object class="GtkListStore" id="liststore">
     <columns>
        <column type="gchararray" />
     </columns>
+    <!--
       <data>
         <row>
           <col id="0" translatable="yes">[Sun Oct 11 19:44:22 2020 +0200] tabs restore</col>
@@ -12,6 +13,7 @@
           <col id="0" translatable="yes">[Sun Oct 11 18:53:32 2020 +0200] saving files on quit</col>
         </row>
       </data>
+    -->
   </object>
   <object id="window" class="GtkWindow">
     <property name="visible">True</property>
@@ -37,10 +39,10 @@
                         <property name="shadow_type">in</property>
                         <child>
 
-                           <object class="GtkTreeView" id="treeview1">
+                           <object class="GtkTreeView" id="treeview">
                               <property name="visible">True</property>
                               <property name="can_focus">True</property>
-                              <property name="model">liststore1</property>
+                              <property name="model">liststore</property>
                               <property name="enable-search">False</property>
                               <property name="headers-visible">False</property>
                               <child internal-child="selection">
@@ -52,7 +54,7 @@
                                     <property name="fixed-width">500</property>
                                     <child>
                                        <object class="GtkCellRendererText" id="cellrenderertext1">
-                                          <property name="height">26</property>
+                                          <property name="height">50</property>
                                        </object>
                                        <attributes>
                                           <attribute name="text">0</attribute>

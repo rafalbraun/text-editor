@@ -20,23 +20,10 @@ typedef struct _UserData {
 
 } UserData;
 
-
-GtkWindow* get_window(UserData* userdata) {
-	return GTK_WINDOW(userdata->window);
-}
-GtkTreeView* get_treeview(UserData* userdata) {
-	return GTK_TREE_VIEW(userdata->treeview);
-}
-GtkNotebook* get_notebook(UserData* userdata) {
-	return GTK_NOTEBOOK(userdata->notebook);
-}
-GtkSourceBuffer* get_buffer(UserData* userdata) {
-	return GTK_SOURCE_BUFFER(userdata->buffer);
-}
-
-t_node** get_list(UserData* userdata) {
-	return &userdata->head;
-}
+GtkWindow* 			get_window   (UserData* userdata) {return GTK_WINDOW(userdata->window);}
+GtkTreeView* 		get_treeview (UserData* userdata) {return GTK_TREE_VIEW(userdata->treeview);}
+GtkNotebook* 		get_notebook (UserData* userdata) {return GTK_NOTEBOOK(userdata->notebook);}
+GtkSourceBuffer* 	get_buffer   (UserData* userdata) {return GTK_SOURCE_BUFFER(userdata->buffer);}
 
 static gchar*
 get_text_from_eventbox(GtkWidget* widget) {

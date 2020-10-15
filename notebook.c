@@ -11,9 +11,10 @@
 //t_node *head;
 //t_pair *map_ptr;
 
-const gchar* separator = "\n";
-gchar* relative_path[128];
-gchar* absolute_path[128];
+static t_node   *head;
+const gchar     *separator = "\n";
+gchar           *relative_path[128];
+gchar           *absolute_path[128];
 
 gchar* open_files() {
     int max=0;
@@ -35,7 +36,7 @@ int index_of(gchar* basename) {
 
 static void
 close_file(gpointer userdata, gchar* title) {
-    t_node** head = get_list(userdata);
+    //t_node** head = get_list(userdata);
     gchar* filepath;
     int index;
 
@@ -44,7 +45,7 @@ close_file(gpointer userdata, gchar* title) {
     absolute_path[index] = "";
     relative_path[index] = "";
 
-    index = l_delete_value(head, filepath);
+    index = l_delete_value(&head, filepath);
     gtk_notebook_remove_page (get_notebook(userdata), index);
 }
 
@@ -105,10 +106,10 @@ open_file (gpointer userdata, gchar* filepath) {
     GtkWidget       *textview;
     GtkWidget       *label;
     gchar           *title;
-    GtkNotebook* notebook = get_notebook(userdata);
+    GtkNotebook     *notebook = get_notebook(userdata);
 
-    t_node** head = get_list(userdata);
-    int index = l_append(head, filepath);
+    //t_node** head = get_list(userdata);
+    int index = l_append(&head, filepath);
     if (index != -1) {
         gtk_notebook_set_current_page (notebook, index);
         g_print("[INFO] switching to file %s under index %d \n", filepath, index);
@@ -127,7 +128,7 @@ open_file (gpointer userdata, gchar* filepath) {
         return;
     }
 
-    index = l_index_of(head, filepath);
+    index = l_index_of(&head, filepath);
     gchar* basename = g_path_get_basename(filepath);
 
     title = (index_of(basename) == -1) ? basename : filepath;
