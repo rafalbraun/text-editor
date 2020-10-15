@@ -49,12 +49,7 @@ read_file(gchar* filename) {
 }
 
 void add_to_list(GObject* widget, 
-    gchar *str0, 
-    gchar *str1, 
-    gchar* str2, 
-    gchar* str3, 
-    gchar* str4,
-    gchar* str5) 
+    gchar *str0, gchar *str1, gchar* str2, gchar* str3, gchar* str4, gchar* str5) 
 {
   GtkTreeView *treeview = NULL;
   GtkTreeModel *model = NULL;
@@ -66,6 +61,8 @@ void add_to_list(GObject* widget,
   liststore = GTK_LIST_STORE(model);
 
   gtk_list_store_append(liststore, &iter);
+
+  // NULL on two last ones because they are not for show, they are start/end indicators for highlight
   gtk_list_store_set(liststore, &iter, 0, str0, 1, str1, 2, str2, 3, str3, 4, str4, -1, str5, -1);
 }
 
@@ -84,16 +81,9 @@ void clear_list(GObject* widget) {
 gboolean 
 _main_loop (gpointer treeview)
 {
-  char** lines;
-  char** line;
-  char*  contents;
-  int    bytes;
-  gchar* filename;
-  gchar* occurrence;
-  gchar* linenum;
-  gchar* start;
-  gchar* end;
-  gchar* filepath;
+  gchar     **lines, **line;
+  gchar     *contents, *filename, *occurrence, *linenum, *start, *end, *filepath;
+  int       bytes;
 
   bytes = read (stdout_fd, buffer, BUFFER_SIZE);
   buffer[bytes-1] = '\0';
@@ -102,11 +92,12 @@ _main_loop (gpointer treeview)
     lines = g_strsplit(buffer, "\n", -1);
     for (int i=0 ; i<g_strv_length(lines); i++) {
       line = g_strsplit(lines[i], "\x1C", 0);
-      filepath = line[0];
-      linenum = line[1];
-      start = line[2];
-      end = line[3];
-      occurrence = line[4];
+      filepath    = line[0];
+      linenum     = line[1];
+      start       = line[2];
+      end         = line[3];
+      occurrence  = line[4];
+
       filename = extract_filename(filepath);
       add_to_list(treeview, occurrence, filename, linenum, start, end, filepath);
       g_strfreev(line);
@@ -233,7 +224,7 @@ row_activated (GtkTreeView       *tree_view,
                GtkTreePath       *path,
                GtkTreeViewColumn *column,
                gpointer           user_data) {
-  g_print("row activated \n");
+    g_print("row activated \n");
 }
 
 gchar* escape_ampersands(gchar* str) {

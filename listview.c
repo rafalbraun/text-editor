@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 
 #define BUFFER_SIZE 50000
+#define SIZE 1024
 
 enum {
 
@@ -14,8 +15,7 @@ enum {
 int stdout_fd = -1;
 char buffer [BUFFER_SIZE];
 guint gLimit = 2;
-
-
+gchar entry_buffer[SIZE];
 
 void add_to_list(GtkWidget *list, const gchar *str) {
     
@@ -41,43 +41,14 @@ _main_loop (gpointer treeview)
     buffer[bytes-1] = '\0';
 
     if (bytes > 0) {
-        //g_print("%s \n", buffer);
         lines = g_strsplit(buffer, "\n", -1);
-        //g_print("lines[0] :: %s\n", lines[0]);
 
         for (int i=0 ; i<g_strv_length(lines); i++) {
-          //line = g_strsplit(lines[i], "\x1C", 0);
-          //g_print("line[%d] %s \n", i, lines[i]);
-          //add_to_list(treeview, line[i]);
-          //g_print("%s", lines[i]);
-
-          //add_to_list(treeview, "Aaaaaaaaa");
           add_to_list(treeview, lines[i]);
-          //g_strfreev(line);
         }
 
         g_strfreev(lines);
     }
-
-    /*
-
-  if (bytes > 0) {
-    lines = g_strsplit(buffer, "\n", -1);
-    g_print("line: %s\n", lines);
-
-    for (int i=0 ; i<g_strv_length(lines); i++) {
-      g_print("%s \n", line[i]);
-      line = g_strsplit(lines[i], "\x1C", 0);
-      start     = line[0];
-      end       = line[1];
-      filepath  = line[2];
-      add_to_list(treeview, filepath);
-      g_strfreev(line);
-    }
-    g_strfreev(lines);
-  }
-    */
-
     memset(buffer, 0, sizeof(buffer));
 
     return TRUE;
@@ -88,12 +59,10 @@ int search_process(gchar* needle) {
   GPid child_pid;
   int status;
 
-  g_print("searching %s\n", needle);
-
   memset (argv, 0, 15 * sizeof (char *));
-  argv[0] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/find_files";
+  argv[0] = "./find_files";
   argv[1] = "/usr/include";
-  argv[2] = "gtksource"; //needle;
+  argv[2] = needle;
   status = g_spawn_async_with_pipes (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, &stdout_fd, NULL, NULL);
 
   if (!status) {
@@ -108,8 +77,6 @@ int search_process(gchar* needle) {
     g_print("[FAILED] 3 out fd is -1 \n");
     return 1;
   }
-
-  g_print("search process finished\n");
 
   return 0;
 }
@@ -129,7 +96,9 @@ void init_list(GtkWidget *listview) {
 
   gtk_tree_view_set_model(GTK_TREE_VIEW(listview), GTK_TREE_MODEL(store));
 
-  //g_object_unref(store);
+  gtk_tree_view_set_enable_search(GTK_TREE_VIEW(listview), FALSE);
+
+  g_object_unref(store);
 }
 
 void clear_list(GtkWidget* listview) {
@@ -147,18 +116,61 @@ void clear_list(GtkWidget* listview) {
 
 gboolean
 key_pressed(GtkWidget *entry, GtkWidget* listview) {
-    //g_print("key pressed : %s \n", gtk_entry_get_text(GTK_ENTRY(entry)));
     clear_list(listview);
 
     gchar* needle = (gchar*)gtk_entry_get_text(GTK_ENTRY(entry));
 
     if (strlen(needle) > gLimit) {
-        //g_print("%s \n", needle);
         search_process(needle);
     }
 
+    return FALSE;
+}
+
+// https://stackoverflow.com/questions/36920396/gtk-treeview-add-key-press-event-signal
+// https://stackoverflow.com/questions/45899746/difference-between-connect-and-connect-after-in-pygtk
+gboolean
+key_pressed_listview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) {
+    gchar c = (gchar)event->keyval;
+    guint len;
+
+    const gchar *phrase = gtk_entry_get_text(userdata);
+    len = strlen(phrase);
+    snprintf(entry_buffer, SIZE, "%s%c", phrase, c);
+    gtk_entry_set_text(userdata, entry_buffer);
+
+    //gtk_entry_set_position(userdata, 0);
+    //g_object_set_property (G_OBJECT (userdata), "cursor-position", 0);
+
+    //g_print("char: %c \n", c);
+    //if (g_ascii_isprint(c)) {
+    //    g_print("is alnum \n");
+        gtk_entry_grab_focus_without_selecting(GTK_ENTRY(userdata));
+    //    return TRUE;
+    //}
 
     return FALSE;
+}
+
+void
+row_activated (GtkTreeView       *treeview,
+               GtkTreePath       *path,
+               GtkTreeViewColumn *column,
+               gpointer           user_data) {
+    GtkTreeSelection *selection; 
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    gchar *value;
+
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+
+    if (gtk_tree_selection_get_selected(
+        GTK_TREE_SELECTION(selection), &model, &iter)) {
+
+        gtk_tree_model_get(model, &iter, LIST_ITEM, &value,  -1);
+        g_print("%s\n", value);
+        g_free(value);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -181,13 +193,12 @@ int main(int argc, char *argv[]) {
   gtk_window_set_title(GTK_WINDOW(window), "List view");
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(window), 10);
-  gtk_window_set_default_size(GTK_WINDOW(window), 270, 250);
+  gtk_window_set_default_size(GTK_WINDOW(window), 800, 1000);
 
   gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(listview), FALSE);
 
-  //vbox = gtk_vbox_new(FALSE, 0);
   vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-  entry = gtk_entry_new();
+  entry = gtk_search_entry_new(); //gtk_entry_new();
   scroll = gtk_scrolled_window_new(NULL, NULL);
 
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (listview));
@@ -198,7 +209,9 @@ int main(int argc, char *argv[]) {
   gtk_container_add(GTK_CONTAINER(window), vbox);
 
   g_signal_connect (G_OBJECT (entry), "changed", G_CALLBACK (key_pressed), listview);
+  g_signal_connect (G_OBJECT (listview), "row-activated", G_CALLBACK (row_activated), NULL);
   g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+  //g_signal_connect_after (G_OBJECT (listview), "key-press-event", G_CALLBACK (key_pressed_listview), entry);
 
   gtk_widget_show_all(window);
 
