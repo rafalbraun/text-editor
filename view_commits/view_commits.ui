@@ -54,7 +54,7 @@
                                     <property name="fixed-width">500</property>
                                     <child>
                                        <object class="GtkCellRendererText" id="cellrenderertext1">
-                                          <property name="height">50</property>
+                                          <property name="height">44</property>
                                        </object>
                                        <attributes>
                                           <attribute name="text">0</attribute>
