@@ -46,11 +46,11 @@ git_get_head(git_repository *repo) {
     return NULL;
 }
 
-void add_to_list(GtkListStore *liststore, const gchar *str) {
+void add_to_list(GtkListStore *liststore, const gchar *str0, const guint num1) {
   GtkTreeIter iter;
 
   gtk_list_store_append(liststore, &iter);
-  gtk_list_store_set(liststore, &iter, 0, str, -1);
+  gtk_list_store_set(liststore, &iter, 0, str0, 1, num1, -1);
 }
 
 void visit(git_commit *commit, GtkListStore* liststore, int* level)
@@ -73,16 +73,17 @@ void visit(git_commit *commit, GtkListStore* liststore, int* level)
   cmtter   = git_commit_committer(commit);
   time     = git_commit_time(commit);
 
-  message[strlen(message)] = '\0';
+  message[strlen(message)-1] = '\0';
   s_time = ctime(&time);
   s_time[strlen(s_time)-1] = '\0';
+  //index = g_strdup_printf("%d", *level);
 
   //snprintf(buffer, SIZE, "%s :: %s", oidstr, git_commit_message(c));
   //snprintf(buffer, SIZE, "%s", git_commit_message(commit));
   //printf("%s %s\n", message, s_time);
   //printf("%s %s\n", git_commit_message(commit), ctime(&time));
   snprintf(buffer, SIZE, "%s \n [HEAD~%d] %s", s_time, *level, message);
-  add_to_list (GTK_LIST_STORE(liststore), buffer);
+  add_to_list (GTK_LIST_STORE(liststore), buffer, *level);
 
 
   //printf("%s %s \n", oidstr, ctime(&time));
@@ -162,6 +163,30 @@ git_init(GtkListStore* liststore) {
     return level;
 }
 
+void
+row_activated (GtkTreeView       *treeview,
+               GtkTreePath       *path,
+               GtkTreeViewColumn *column,
+               gpointer           user_data) {
+    GtkTreeSelection *selection; 
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    gchar *value;
+    guint index;
+
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+
+    if (gtk_tree_selection_get_selected(
+        GTK_TREE_SELECTION(selection), &model, &iter)) {
+
+        gtk_tree_model_get(model, &iter, 0, &value,  -1);
+        gtk_tree_model_get(model, &iter, 1, &index,  -1);
+
+        g_print("%s :: %d \n", value, index);
+        g_free(value);
+    }
+}
+
 /**
  * git commands:
  * 
@@ -178,6 +203,7 @@ main (int argc, char *argv[])
   GtkBuilder *builder;
   GObject *window;
   GObject *liststore;
+  GObject *treeview;
   GError *error = NULL;
   int commits_num;
 
@@ -198,6 +224,9 @@ main (int argc, char *argv[])
 
   liststore = gtk_builder_get_object (builder, "liststore");
   commits_num = git_init (GTK_LIST_STORE(liststore));
+
+  treeview = gtk_builder_get_object (builder, "treeview");
+  g_signal_connect (G_OBJECT (treeview), "row-activated", G_CALLBACK (row_activated), NULL);
 
   /*
   button = gtk_builder_get_object (builder, "button1");
