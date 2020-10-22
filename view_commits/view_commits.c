@@ -22,8 +22,32 @@ print_hello (GtkWidget *widget,
 // https://github.com/libgit2/libgit2/tree/master/examples
 // https://stackoverflow.com/questions/17914375/listing-all-commits-in-a-branch-using-libgit2
 // https://libgit2.org/docs/guides/101-samples/
-// https://libgit2.org/libgit2/ex/HEAD/general.html
 // https://www.chromium.org/developers/fast-intro-to-git-internals
+// https://maryrosecook.com/blog/post/git-from-the-inside-out
+// https://www.techiedelight.com/find-differences-between-two-commits-git/
+// https://www.chromium.org/developers/fast-intro-to-git-internals
+// https://libgit2.org/libgit2/ex/HEAD/general.html
+// https://stackoverflow.com/questions/27672722/libgit2-commit-example
+// https://www.w3docs.com/snippets/git/how-to-list-all-the-files-in-a-commit.html
+// https://stackoverflow.com/questions/677436/how-do-i-get-the-git-commit-count
+
+gchar* launch_command(gchar* command) {
+    gchar* fname = "/tmp/clipboard";
+    gchar *contents;
+    gsize len;
+    GError *err = NULL;
+
+    // "git show HEAD~%d:%s > %s \n"
+    gchar* tmp = g_strdup_printf("%s > %s", command, fname);
+    system(tmp);
+
+    if (g_file_get_contents(fname, &contents, &len, &err) == FALSE) {
+        g_error("error reading %s: %s", fname, err->message);
+        return NULL;
+    }
+
+    return contents;
+}
 
 static git_commit*
 git_get_head(git_repository *repo) {
@@ -109,11 +133,18 @@ void visit(git_commit *commit, GtkListStore* liststore, int* level, gchar* filen
 // https://ben.straub.cc/2013/10/02/revwalk/
 static int 
 git_init(GtkListStore* liststore) {
-    git_libgit2_init();
+    //git_libgit2_init();
+    gchar* result;
+    gchar* command;
+    gchar* hash;
+    gchar* message;
+    gchar* date;
+    gchar buffer[SIZE];
 
+/*
     git_repository *repo = NULL;
     int error = git_repository_open(&repo, REPO);
-    int level = 0;
+    //int level = 0;
 
     if (error < 0) {
         //const git_error *e = git_error_last();
@@ -121,9 +152,31 @@ git_init(GtkListStore* liststore) {
         printf("Error %d/%d: %s\n", error, e->klass, e->message);
         exit(error);
     }
+*/
+    //gchar* filename = g_strdup("Makefile");
 
-    gchar* filename = g_strdup("Makefile");
+    result = launch_command ("git rev-list --no-merges --count HEAD");
+    gint result_int = g_ascii_strtoll (result, NULL, 10);
 
+    for (int i=0; i<result_int; i++) {
+        command = g_strdup_printf("git rev-parse HEAD~%d", i);
+        hash = launch_command (command);
+        hash[40] = '\0';
+
+        command = g_strdup_printf("git log --format=%B -n 1 HEAD~%d", i);
+        message = launch_command (command);
+
+        command = g_strdup_printf("git log --format=%%ai -n 1 HEAD~%d", i);
+        date = launch_command (command);
+        date[25] = '\0';
+
+        snprintf(buffer, SIZE, "%s \n [HEAD~%d] %s", date, i, message);
+        add_to_list (GTK_LIST_STORE(liststore), buffer, i, "README.md");
+    }
+
+
+
+    /*
     git_commit * commit = git_get_head(repo);
     visit (commit, liststore, &level, filename);
     git_commit_free (commit);
@@ -137,33 +190,16 @@ git_init(GtkListStore* liststore) {
     error = git_revparse_single(&obj, repo, "HEAD^{tree}");
     git_tree *tree = (git_tree *)obj;
 
-/*
-    size_t count = git_tree_entrycount(tree);
-    g_print ("count %d \n", count);
-
-    for (int i=0; i<count; i++) {
-        const git_tree_entry *entry = git_tree_entry_byindex(tree, i);
-        //const char *name = git_tree_entry_name(entry);
-        //g_print("entry: %s \n", entry);
-        git_otype objtype = git_tree_entry_type(entry);
-        g_print("%d -> %d \n", i, objtype);
-    }
-
-    g_print("GIT_OBJ_COMMIT:  %d \n", GIT_OBJ_COMMIT);
-    g_print("GIT_OBJ_TREE:    %d \n", GIT_OBJ_TREE);
-*/
-
-
     git_tree_entry *entry = NULL;
     error = git_tree_entry_bypath(&entry, tree, "notebook.c");
-    git_tree_entry_free(entry); /* caller has to free this one */
+    git_tree_entry_free(entry);
 
     const char *name = git_tree_entry_name(entry);
     g_print("name <%s> \n", name);
+    */
 
 
-
-    return level;
+    return result_int;
 }
 
 void on_changed(GtkTreeSelection *selection, gpointer sourcebuffer) {
@@ -184,10 +220,7 @@ row_activated (GtkTreeView       *treeview,
     guint index;
     gsize len;
     GError *err = NULL;
-
-    //selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-    //selection = GTK_TREE_SELECTION(widget);
-
+    /*
     if (gtk_tree_selection_get_selected(
         GTK_TREE_SELECTION(selection), &model, &iter)) {
 
@@ -210,7 +243,7 @@ row_activated (GtkTreeView       *treeview,
 
 
         g_free(value);
-    }
+    }*/
 }
 
 /**
@@ -225,6 +258,8 @@ row_activated (GtkTreeView       *treeview,
  * https://stackoverflow.com/questions/11657295/count-the-number-of-commits-on-a-git-branch
  * git rev-list --no-merges --count HEAD ^master
  *
+ * https://stackoverflow.com/questions/3357280/print-commit-message-of-a-given-commit-in-git/8295220
+ * git log --format=%B -n 1  92a43c761cfc749d7fe8239a3362468de4dd58b2
  */
 int
 main (int argc, char *argv[])
@@ -255,6 +290,7 @@ main (int argc, char *argv[])
 
   liststore = gtk_builder_get_object (builder, "liststore");
   commits_num = git_init (GTK_LIST_STORE(liststore));
+  g_print("commits_num %d", commits_num);
 
   textbuffer = gtk_builder_get_object (builder, "textbuffer");
   treeview = gtk_builder_get_object (builder, "treeview");
