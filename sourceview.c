@@ -14,6 +14,8 @@ guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
     manager = gtk_source_language_manager_get_default ();
     content_type = g_content_type_guess (filepath, NULL, 0, &result_uncertain);
     if (result_uncertain) {
+        //g_print("no lang recognized \n");
+        gtk_source_buffer_set_highlight_syntax (buffer, FALSE);
         g_free (content_type);
         return;
     }
@@ -22,6 +24,7 @@ guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
     if (lang != NULL) {
         g_print("lang %s recognized in file %s \n", gtk_source_language_get_name(lang), filepath);
         gtk_source_buffer_set_language (buffer, lang);
+        gtk_source_buffer_set_highlight_syntax (buffer, TRUE);
         g_free (content_type);
     }
 }
@@ -51,13 +54,15 @@ sourceview_new(GtkSourceBuffer* buffer) {
     /* change font */
     GtkCssProvider *provider = gtk_css_provider_new ();
     gtk_css_provider_load_from_data (provider,
-                                     "textview { font-family: Monospace; font-size: 12pt; }",
+                                     "textview { font-family: Monospace; font-size: 11pt; }",
                                      -1,
                                      NULL);
     gtk_style_context_add_provider (gtk_widget_get_style_context (sourceview),
                                     GTK_STYLE_PROVIDER (provider),
                                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     g_object_unref (provider);
+
+    gtk_source_view_set_tab_width (GTK_SOURCE_VIEW(sourceview), 4);
 
     return scroll;
 }

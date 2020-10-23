@@ -129,7 +129,24 @@ g_basename(char *filepath) {
 }
 */
 //#include "map.c"
+static GtkWidget* subwindow;
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+static void show_subwindow(GtkButton *widget, gpointer   user_data) {
+    subwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
+    GtkWidget *button;
+    button = gtk_button_new_with_label("Button");
+    gtk_container_add(GTK_CONTAINER(subwindow), button);
+
+    gtk_widget_show_all(subwindow);
+    g_signal_connect(G_OBJECT(subwindow), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(print_hello), NULL);
+}
 
 // https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
@@ -148,7 +165,8 @@ main (int argc, char *argv[])
     //gchar* filepath = "/home/rafal/IdeaProjects/vamos-0.8.2-x86_64";
     //gchar* filepath = "/home/rafal/IdeaProjects/vdrift";
     //gchar* filepath = "/home/rafal/IdeaProjects";
-    gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
+    //gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
+    gchar* filepath = "/home/rafal/go/src/wykop.pl";
 
     // init code
     gtk_init (&argc, &argv);
@@ -183,8 +201,8 @@ main (int argc, char *argv[])
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);
     g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)userdata);
 
-    // button = gtk_builder_get_object (builder, "filenew");
-    // g_signal_connect (button, "activate", G_CALLBACK (print_hello), NULL);
+    button = gtk_builder_get_object (builder, "filenew");
+    g_signal_connect (button, "activate", G_CALLBACK (show_subwindow), NULL);
 
     button = gtk_builder_get_object (builder, "editcut");
     g_signal_connect (button, "activate", G_CALLBACK (list_tabs), NULL);
