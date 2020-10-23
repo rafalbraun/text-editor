@@ -159,7 +159,7 @@ int count_lines(gchar* contents, int len) {
     return count;
 }
 
-void on_changed(GtkTreeSelection *widget, gpointer textbufferscroll) {
+void on_changed_full_search(GtkTreeSelection *widget, gpointer textbufferscroll) {
     GObject *textbuffer, *textview;
     GtkTextIter start_iter, end_iter;
     GtkTreeIter iter;
@@ -278,14 +278,14 @@ GObject* full_search_window_new() {
 
   // Connect signal handlers to the constructed widgets. 
   window = gtk_builder_get_object (builder, "window");
-  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+  //g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
   treeview = gtk_builder_get_object(builder, "treeview1");
   g_signal_connect(treeview, "row-activated", G_CALLBACK(row_activated), NULL);
 
   textbufferscroll = gtk_builder_get_object (builder, "textbufferscroll");
   selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-  g_signal_connect(selection, "changed", G_CALLBACK(on_changed), textbufferscroll);
+  g_signal_connect(selection, "changed", G_CALLBACK(on_changed_full_search), textbufferscroll);
 
   adjustment = (GObject*)gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(textbufferscroll));
   g_signal_connect(adjustment, "changed", G_CALLBACK(adjustment_changed), NULL);

@@ -41,6 +41,8 @@ show_error(GtkWindow* window, gchar* message) {
 #include "notebook.c"
 #include "callback.c"
 
+#include "full_search.c"
+
 // TODO -- check if user installed xclip
 // TODO -- check if I can cut some code from xclip to get rid of dependency
 
@@ -111,6 +113,15 @@ open_files_from_last_session(gpointer userdata) {
     }
 }
 
+static void
+print_hello (GtkMenuItem *menuitem,
+             gpointer   data)
+{
+  //g_print ("Hello World\n");
+  GObject *window;
+  window = full_search_window_new();
+}
+
 /*
 gchar *
 g_basename(char *filepath) {
@@ -172,6 +183,11 @@ main (int argc, char *argv[])
     g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);
     g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)userdata);
+
+
+    button = gtk_builder_get_object (builder, "filenew");
+    g_signal_connect (button, "activate", G_CALLBACK (print_hello), NULL);
+
     open_files_from_last_session (userdata);
 
     gtk_main ();
