@@ -9,6 +9,8 @@
 #define REPO "/home/rafal/IdeaProjects/gtksourceview-my-ide/application"
 #define SIZE 1024
 
+gchar* filename = "Makefile";
+
 gchar* launch_command(gchar* command) {
     gchar* fname = "/tmp/clipboard";
     gchar *contents;
@@ -66,10 +68,35 @@ git_init(GtkListStore* liststore) {
         ago[strlen(ago)-1] = '\0';
 
         snprintf(buffer, SIZE, "%s (%s) \n [HEAD~%d] %s", date, ago, i, message);
-        add_to_list (GTK_LIST_STORE(liststore), buffer, i, "Makefile");
+        add_to_list (GTK_LIST_STORE(liststore), buffer, i, filename);
     }
 
     return result_int;
+}
+
+static void
+guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
+    GtkSourceLanguageManager *manager;
+    GtkSourceLanguage *lang = NULL;
+    gboolean result_uncertain;
+    gchar *content_type;
+
+    manager = gtk_source_language_manager_get_default ();
+    content_type = g_content_type_guess (filepath, NULL, 0, &result_uncertain);
+    if (result_uncertain) {
+        //g_print("no lang recognized \n");
+        gtk_source_buffer_set_highlight_syntax (buffer, FALSE);
+        g_free (content_type);
+        return;
+    }
+
+    lang = gtk_source_language_manager_guess_language (manager, filepath, content_type);
+    if (lang != NULL) {
+        g_print("lang %s recognized in file %s \n", gtk_source_language_get_name(lang), filepath);
+        gtk_source_buffer_set_language (buffer, lang);
+        gtk_source_buffer_set_highlight_syntax (buffer, TRUE);
+        g_free (content_type);
+    }
 }
 
 void on_changed(GtkTreeSelection *selection, gpointer sourcebuffer) {
@@ -90,7 +117,7 @@ void on_changed(GtkTreeSelection *selection, gpointer sourcebuffer) {
         gtk_tree_model_get(model, &iter, 1, &index,  -1);
         gtk_tree_model_get(model, &iter, 2, &fname,  -1);
 
-        gchar* tmp_filename = "/tmp/clipboard";
+        gchar* tmp_filename = "/tmp/tmp";
         command = g_strdup_printf("git show HEAD~%d:%s > %s \n", index, fname, tmp_filename);
         system(command);
         //g_print(command);
@@ -102,6 +129,7 @@ void on_changed(GtkTreeSelection *selection, gpointer sourcebuffer) {
 
         //g_print ("%s :: %d :: %s \n", value, index, fname);
         gtk_text_buffer_set_text (sourcebuffer, contents, len);
+        guess_language (sourcebuffer, filename);
 
         g_free(value);
     }

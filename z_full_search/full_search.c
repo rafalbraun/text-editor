@@ -278,7 +278,7 @@ GObject* full_search_window_new() {
 
   // Connect signal handlers to the constructed widgets. 
   window = gtk_builder_get_object (builder, "window");
-  //g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
   treeview = gtk_builder_get_object(builder, "treeview1");
   g_signal_connect(treeview, "row-activated", G_CALLBACK(row_activated), NULL);

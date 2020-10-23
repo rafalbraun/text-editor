@@ -123,7 +123,7 @@ load_file(gpointer userdata, guint pagenum) {
 
 static void
 save_file(gchar* path, gchar* contents) {
-
+    
 }
 
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source

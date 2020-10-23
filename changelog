@@ -24,9 +24,11 @@ Status   		:: in development
 Features:
 	o settings window
 	o find & replace bars
+	o status bar
 	o code all lacking menus
 	o local file history
 	o terminal
+	o treeview context menu -> formatting source code files
 
 -------------------------------------
 
