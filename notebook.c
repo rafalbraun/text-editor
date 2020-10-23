@@ -165,3 +165,11 @@ switch_page (GtkNotebook *notebook,
     gtk_notebook_get_current_page(get_notebook(userdata));
     load_file(userdata, page_src);
 }
+
+void list_tabs() {
+    int i=0;
+    while (absolute_path[i]) {
+        g_print("%d :: %s -> %s \n", i, relative_path[i], absolute_path[i]);
+        i++;
+    }
+}
