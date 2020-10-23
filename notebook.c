@@ -16,9 +16,14 @@ const gchar     *separator = "\n";
 gchar           *relative_path[128];
 gchar           *absolute_path[128];
 
-gchar* open_files() {
-    int max=0;
+int get_max() {
+    int max = 0;
     while (absolute_path[max]) {max++;}
+    return max;
+}
+
+gchar* open_files() {
+    int max = get_max();
     absolute_path[max+1] = NULL;
     return g_strjoinv(separator, (gchar**)&absolute_path);
 }
@@ -42,11 +47,20 @@ close_file(gpointer userdata, gchar* title) {
 
     index = index_of(title);
     filepath = absolute_path[index];
-    absolute_path[index] = "";
-    relative_path[index] = "";
+    //absolute_path[index] = "";
+    //relative_path[index] = "";
 
     index = l_delete_value(&head, filepath);
     gtk_notebook_remove_page (get_notebook(userdata), index);
+
+    // przepisać na niższe indexy relative_path i absolute_path
+    int max = get_max();
+    for (int i=index; i<max; i++) {
+        absolute_path[i] = absolute_path[i+1];
+        relative_path[i] = relative_path[i+1];
+    }
+    absolute_path[max] = NULL;
+    relative_path[max] = NULL;
 }
 
 static gboolean
