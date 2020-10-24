@@ -35,10 +35,14 @@ popup_menu_copy_file(GtkWidget *menuitem, gpointer treeview) {
 
 void
 popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
-    GtkWidget *menu, *menuitem;
+    //GtkWidget *menu, *menuitem;
+    GtkMenu* menu;
 
-    menu = gtk_menu_new();
+    menu = get_treeview_menu(userdata);
 
+    //menu = gtk_menu_new();
+
+    /*
     menuitem = gtk_menu_item_new_with_label("Rename");
     g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
@@ -66,8 +70,9 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
     menuitem = gtk_menu_item_new_with_label("Git");
     g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+    */
 
-    gtk_widget_show_all(menu);
+    gtk_widget_show_all(GTK_WIDGET(menu));
     gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent * ) event);
 }
 

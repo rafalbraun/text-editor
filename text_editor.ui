@@ -14,6 +14,33 @@
          <row><col id="0" translatable="yes">develop</col></row>
       </data>
    </object>
+   <object class="GtkMenu" id="treeview_context_menu">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <child>
+                                 <object id="rename" class="GtkImageMenuItem">
+                                    <property name="label">Rename</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object id="copy" class="GtkImageMenuItem">
+                                    <property name="label">Copy</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object id="past" class="GtkImageMenuItem">
+                                    <property name="label">Past</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+
+
+   </object>
    <object id="window" class="GtkWindow">
       <property name="visible">True</property>
       <property name="title">Text Editor</property>

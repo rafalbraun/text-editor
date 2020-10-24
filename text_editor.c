@@ -190,12 +190,13 @@ main (int argc, char *argv[])
     userdata->treeview  = treeview  = gtk_builder_get_object (builder, "treeview");
     userdata->treestore = treestore = gtk_builder_get_object (builder, "treestore");
     userdata->notebook  = notebook  = gtk_builder_get_object (builder, "notebook");
+    userdata->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
 
     fill_treestore_new(GTK_TREE_STORE(treestore), filepath);
     expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
-    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (on_main_quit), (gpointer)userdata);
+    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), (gpointer)userdata);
     g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_window), NULL);
     g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);
