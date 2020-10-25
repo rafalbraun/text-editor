@@ -68,7 +68,7 @@
                                  </object>
                               </child>
    </object>
-<!--
+
                            <object class="GtkMenu" id="submenu">
                               <property name="visible">True</property>
                               <property name="can_focus">False</property>
@@ -383,7 +383,7 @@
                               </child>
 
                            </object>
--->
+
 
    <object id="window" class="GtkWindow">
       <property name="visible">True</property>
@@ -412,13 +412,86 @@
                               <property name="can_focus">False</property>
                               <child>
                                  <object id="filenew" class="GtkImageMenuItem">
-                                    <property name="label">gtk-new</property>
+                                    <property name="label">New _File</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="use_stock">True</property>
                                  </object>
                               </child>
+                              <child>
+                                 <object id="fileopen" class="GtkImageMenuItem">
+                                    <property name="label">Open File</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="use_stock">True</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object id="filesave" class="GtkImageMenuItem">
+                                    <property name="label">Save File</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="use_stock">True</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object id="filesaveas" class="GtkImageMenuItem">
+                                    <property name="label">Save As ...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="use_stock">True</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object id="fileclose" class="GtkImageMenuItem">
+                                    <property name="label">Close File</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="use_stock">True</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object id="filecloseall" class="GtkImageMenuItem">
+                                    <property name="label">Close All Files</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="use_stock">True</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object id="quit" class="GtkImageMenuItem">
+                                    <property name="label">Quit</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="use_stock">True</property>
+                                 </object>
+                              </child>
+
                            </object>
                         </child>
                      </object>
@@ -483,6 +556,7 @@
                                     <property name="label">Syntax</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
+                                    <property name="submenu">submenu</property>
                                  </object>
                               </child>
                            </object>

@@ -149,6 +149,7 @@ static void show_subwindow(GtkButton *widget, gpointer   user_data) {
 }
 
 static void set_syntax_submenu(GtkMenuItem* menuitem) {
+
     GtkWidget *fileMenu;
     GtkWidget *item;
     GtkSourceLanguageManager *manager;
@@ -165,8 +166,6 @@ static void set_syntax_submenu(GtkMenuItem* menuitem) {
         item = gtk_check_menu_item_new_with_label(lang_name);
         gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), item);
     }
-
-
 
 /*
   GtkWidget *quitMi;
@@ -247,8 +246,8 @@ main (int argc, char *argv[])
     button = gtk_builder_get_object (builder, "editcut");
     g_signal_connect (button, "activate", G_CALLBACK (show_langs), NULL);
 
-    GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
-    set_syntax_submenu(GTK_MENU_ITEM(syntax_menuitem));
+    //GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
+    //set_syntax_submenu(GTK_MENU_ITEM(syntax_menuitem));
 
     open_files_from_last_session (userdata);
 
