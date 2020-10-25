@@ -170,7 +170,7 @@ open_file (gpointer userdata, gchar* filepath) {
     gtk_container_add(GTK_CONTAINER(eventbox), label);
 
     textview = sourceview_new(GTK_SOURCE_BUFFER(get_buffer(userdata)));
-    guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
+    //guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
 
     int pagenum = gtk_notebook_append_page (notebook, textview, eventbox);
     gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);

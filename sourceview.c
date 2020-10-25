@@ -29,6 +29,19 @@ guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
     }
 }
 
+static void show_langs() {
+    GtkSourceLanguageManager *manager;
+    const gchar * const * lang_ids;
+
+    manager = gtk_source_language_manager_get_default ();
+    lang_ids = gtk_source_language_manager_get_language_ids (manager);
+
+    for (int i=0; *(lang_ids+i); i++) {
+        g_print("%d -> %s \n", i, *(lang_ids+i));
+    }
+
+}
+
 void clear_buffer(GtkSourceBuffer* buffer) {
     GtkTextIter iter_start, iter_end;
 

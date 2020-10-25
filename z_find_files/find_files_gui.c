@@ -215,7 +215,7 @@ int main(int argc, char *argv[]) {
 
   gtk_widget_show_all(window);
 
-  g_timeout_add (400, (GSourceFunc) _main_loop, listview);
+  g_timeout_add (100, (GSourceFunc) _main_loop, listview);
 
   gtk_main();
 

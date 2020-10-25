@@ -14,6 +14,7 @@
          <row><col id="0" translatable="yes">develop</col></row>
       </data>
    </object>
+
    <object class="GtkMenu" id="treeview_context_menu">
                               <property name="visible">True</property>
                               <property name="can_focus">False</property>
@@ -32,15 +33,358 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="past" class="GtkImageMenuItem">
-                                    <property name="label">Past</property>
+                                 <object id="paste" class="GtkImageMenuItem">
+                                    <property name="label">Paste</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object id="history" class="GtkImageMenuItem">
+                                    <property name="label">Local History</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object id="formatter" class="GtkImageMenuItem">
+                                    <property name="label">File Formatter</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object id="filter" class="GtkImageMenuItem">
+                                    <property name="label">Filter</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object id="git" class="GtkImageMenuItem">
+                                    <property name="label">Git</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+   </object>
+<!--
+                           <object class="GtkMenu" id="submenu">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">ActionScript</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">AppleScript</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">ASP</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Batch File</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Bourne Again Shell (bash)</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">C</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">C#</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">C++</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Clojure</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">CSS</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">D</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Diff</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Erlang</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Git Formats</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Go</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Graphviz (DOT)</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Groovy</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Haskell</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">HTML</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Java</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">JavaScript</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">LaTeX</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Lisp</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Lua</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Makefile</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Markdown</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">MATLAB</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Objective-C</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">OCaml</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Pascal</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Perl</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">PHP</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Plain Text</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="active">True</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Python</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">R</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Rails</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Regular Expression</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Ruby</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Rust</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">Scala</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">SQL</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">R</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">XML</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">YML</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                  </object>
                               </child>
 
+                           </object>
+-->
 
-   </object>
    <object id="window" class="GtkWindow">
       <property name="visible">True</property>
       <property name="title">Text Editor</property>
@@ -79,6 +423,7 @@
                         </child>
                      </object>
                   </child>
+
                   <child>
                     <object class="GtkMenuItem" id="edititem">
                       <property name="visible">True</property>
@@ -120,6 +465,54 @@
                       </child>
                     </object>
                   </child>
+
+
+
+
+                  <child>
+                     <object class="GtkMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">View</property>
+                        <child type="submenu">
+                           <object class="GtkMenu">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <child>
+                                 <object class="GtkImageMenuItem" id="syntax">
+                                    <property name="label">Syntax</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
+                     </object>
+                  </child>
+
+
+
+                  <child>
+                     <object class="GtkMenuItem" id="helpitem">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Help</property>
+                        <child type="submenu">
+                           <object class="GtkMenu">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <child>
+                                 <object id="about" class="GtkImageMenuItem">
+                                    <property name="label">About</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
+                     </object>
+                  </child>
+
                </object>
                <packing>
                   <property name="expand">False</property>
