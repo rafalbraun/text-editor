@@ -97,7 +97,7 @@ load_file(gpointer userdata, guint pagenum) {
     gchar *title, *filepath;
     int index;
 
-    //g_print("[INFO] attempt to load file on pagenum %d \n", pagenum);
+    g_print("[INFO] attempt to load file on pagenum %d \n", pagenum);
     //list_tabs();
 
     child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
@@ -106,7 +106,7 @@ load_file(gpointer userdata, guint pagenum) {
     index = get_index(title);
     filepath = absolute_path[index];
 
-    //g_print("[INFO] loading file %s on index %d \n", filepath, index);
+    g_print("[INFO] loading file %s on index %d \n", filepath, index);
 
     gchar *text;
     gsize len;
@@ -140,11 +140,11 @@ open_file (gpointer userdata, gchar* filepath) {
     int index = l_append(&head, filepath);
     if (index != -1) {
         gtk_notebook_set_current_page (notebook, index);
-        //g_print("[INFO] switching to file %s under index %d \n", filepath, index);
+        g_print("[INFO] switching to file %s under index %d \n", filepath, index);
         return;
     }
 
-    //g_print("[INFO] opening file %s \n", filepath);
+    g_print("[INFO] opening file %s \n", filepath);
 
     gchar *text;
     gsize len;
@@ -193,7 +193,7 @@ switch_page (GtkNotebook *notebook,
              gpointer     userdata) {
     
     gint pagesrc = gtk_notebook_get_current_page(get_notebook(userdata));
-    //printf("page: %d -> %d\n", pagesrc, pagedst);
+    printf("page: %d -> %d\n", pagesrc, pagedst);
     if (absolute_path[pagedst]) {
         load_file(userdata, pagedst);
     } else {

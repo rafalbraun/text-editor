@@ -240,10 +240,10 @@ main (int argc, char *argv[])
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);
     g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)userdata);
 
-    button = gtk_builder_get_object (builder, "filenew");
+    button = gtk_builder_get_object (builder, "file_new");
     g_signal_connect (button, "activate", G_CALLBACK (show_subwindow), NULL);
 
-    button = gtk_builder_get_object (builder, "editcut");
+    button = gtk_builder_get_object (builder, "edit_cut");
     g_signal_connect (button, "activate", G_CALLBACK (show_langs), NULL);
 
     //GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
