@@ -3,19 +3,33 @@
   <object class="GtkListStore" id="liststore">
     <columns>
        <column type="gchararray" />
-       <column type="guint" />
-       <column type="gchararray" />
     </columns>
-    <!--
       <data>
         <row>
-          <col id="0" translatable="yes">[Sun Oct 11 19:44:22 2020 +0200] tabs restore</col>
+          <col id="0" translatable="yes">Appearance/Behavior</col>
         </row>
         <row>
-          <col id="0" translatable="yes">[Sun Oct 11 18:53:32 2020 +0200] saving files on quit</col>
+          <col id="0" translatable="yes">Keymap</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Editor</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Version Control</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Build/Execution/Deployment</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Languages/Frameworks</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Tools</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Other Settings</col>
         </row>
       </data>
-    -->
   </object>
   <object id="window" class="GtkWindow">
     <property name="visible">True</property>
@@ -65,34 +79,6 @@
                                     </child>
                                  </object>
                               </child>
-                              <child>
-                                 <object class="GtkTreeViewColumn" id="treeviewcolumn1">
-                                    <property name="title" translatable="yes">index</property>
-                                    <property name="visible">False</property>
-                                    <child>
-                                       <object class="GtkCellRendererText" id="cellrenderertext1">
-                                       </object>
-                                       <attributes>
-                                          <attribute name="text">1</attribute>
-                                       </attributes>
-                                    </child>
-                                 </object>
-                              </child>
-
-                              <child>
-                                 <object class="GtkTreeViewColumn" id="treeviewcolumn2">
-                                    <property name="title" translatable="yes">fname</property>
-                                    <property name="visible">False</property>
-                                    <child>
-                                       <object class="GtkCellRendererText" id="cellrenderertext2">
-                                       </object>
-                                       <attributes>
-                                          <attribute name="text">2</attribute>
-                                       </attributes>
-                                    </child>
-                                 </object>
-                              </child>
-
                            </object>
 
                         </child>
@@ -101,26 +87,11 @@
 
               </child>
                   <child>
-                     <object class="GtkScrolledWindow" id="textbufferscroll">
+                     <object class="GtkFrame">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="shadow_type">in</property>
-                        <child>
-                           <object class="GtkSourceBuffer" id="textbuffer">
-                              <property name="highlight-syntax">True</property>
-                           </object>
-                           <object class="GtkSourceView" id="sourceview">
-                              <property name="highlight-current-line">True</property>
-                              <property name="show-right-margin">True</property>
-                              <property name="show-line-numbers">True</property>
-                              <property name="tab_width">4</property>
-                              <property name="auto_indent">True</property>
-                              <property name="visible">True</property>
-                              <property name="buffer">textbuffer</property>
-                              <property name="editable">False</property>
-                              <property name="monospace">True</property>
-                           </object>
-                        </child>
+                        <property name="label">Frame</property>
                      </object>
                   </child>
             </object>

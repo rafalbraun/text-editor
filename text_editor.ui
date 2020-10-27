@@ -34,10 +34,17 @@
                               </child>
                               <child>
                                  <object class="GtkCheckMenuItem">
-                                    <property name="label">All Files</property>
+                                    <property name="label">Exclude Executables</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="active">True</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkCheckMenuItem">
+                                    <property name="label">All Files</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                  </object>
                               </child>
                           </object>
@@ -146,6 +153,26 @@
                               <property name="visible">True</property>
                               <property name="can_focus">False</property>
                               <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Expand</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Expand All</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
                                  <object id="new" class="GtkImageMenuItem">
                                     <property name="label">New</property>
                                     <property name="visible">True</property>
@@ -206,6 +233,13 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="submenu">filter_submenu</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object id="markas" class="GtkImageMenuItem">
+                                    <property name="label">Mark File As ...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                  </object>
                               </child>
                               <child>
@@ -760,7 +794,7 @@
 
 
                   <child>
-                     <object class="GtkMenuItem">
+                     <object class="GtkMenuItem" id="syntax">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">View</property>
@@ -769,11 +803,66 @@
                               <property name="visible">True</property>
                               <property name="can_focus">False</property>
                               <child>
-                                 <object class="GtkImageMenuItem" id="syntax">
+                                 <object class="GtkImageMenuItem" id="syntax_syntax">
                                     <property name="label">Syntax</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="submenu">submenu</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object class="GtkImageMenuItem" id="syntax_intendation">
+                                    <property name="label">Intendation</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object class="GtkImageMenuItem" id="syntax_lineend">
+                                    <property name="label">Line Ending</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+
+                              <child>
+                                 <object class="GtkImageMenuItem" id="syntax_wordwrap">
+                                    <property name="label">Word Wrap</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+
+
+
+                           </object>
+                        </child>
+                     </object>
+                  </child>
+
+                  <child>
+                     <object class="GtkMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Project</property>
+                        <child type="submenu">
+                           <object class="GtkMenu">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Session</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                  </object>
                               </child>
                            </object>

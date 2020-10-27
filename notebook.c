@@ -97,8 +97,8 @@ load_file(gpointer userdata, guint pagenum) {
     gchar *title, *filepath;
     int index;
 
-    g_print("[INFO] attempt to load file on pagenum %d \n", pagenum);
-    list_tabs();
+    //g_print("[INFO] attempt to load file on pagenum %d \n", pagenum);
+    //list_tabs();
 
     child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
     eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
@@ -106,7 +106,7 @@ load_file(gpointer userdata, guint pagenum) {
     index = get_index(title);
     filepath = absolute_path[index];
 
-    g_print("[INFO] loading file %s on index %d \n", filepath, index);
+    //g_print("[INFO] loading file %s on index %d \n", filepath, index);
 
     gchar *text;
     gsize len;
@@ -136,7 +136,7 @@ open_file (gpointer userdata, gchar* filepath) {
     gchar           *title;
     GtkNotebook     *notebook = get_notebook(userdata);
 
-    g_print("[INFO] opening file %s \n", filepath);
+    //g_print("[INFO] opening file %s \n", filepath);
 
     // sprawdzanie czy nie jest binarny musi być tutaj ponieważ jeśli byłoby po l_append to wrzucany byłby w listę pod indexem NULL (bo nie zapisywalibyśmy nazwy pliku w liście - wywalałoby się)
     gchar *text;
@@ -155,7 +155,7 @@ open_file (gpointer userdata, gchar* filepath) {
     int index = l_append(&head, filepath);
     if (index != -1) {
         gtk_notebook_set_current_page (notebook, index);
-        g_print("[INFO] switching to file %s under index %d \n", filepath, index);
+        //g_print("[INFO] switching to file %s under index %d \n", filepath, index);
         return;
     }
 

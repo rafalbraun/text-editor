@@ -186,6 +186,11 @@ static void set_syntax_submenu(GtkMenuItem* menuitem) {
   gtk_widget_show_all(GTK_WIDGET(menuitem));
 }
 
+static void 
+file_new_cb () {
+    
+}
+
 // https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
 main (int argc, char *argv[])
@@ -230,6 +235,11 @@ main (int argc, char *argv[])
     userdata->notebook  = notebook  = gtk_builder_get_object (builder, "notebook");
     userdata->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
     
+  GtkWidget* action_widget = gtk_button_new_from_icon_name ("list-add-symbolic", GTK_ICON_SIZE_BUTTON);
+  g_signal_connect (action_widget, "clicked", G_CALLBACK (print_hello), notebook);
+  gtk_notebook_set_action_widget (GTK_NOTEBOOK (notebook), action_widget, GTK_PACK_END);
+  gtk_widget_show(action_widget);
+
     fill_treestore_new(GTK_TREE_STORE(treestore), filepath);
     expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
@@ -248,6 +258,10 @@ main (int argc, char *argv[])
 
     //GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
     //set_syntax_submenu(GTK_MENU_ITEM(syntax_menuitem));
+
+
+
+
 
     open_files_from_last_session (userdata);
 

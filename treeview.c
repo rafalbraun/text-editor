@@ -35,42 +35,9 @@ popup_menu_copy_file(GtkWidget *menuitem, gpointer treeview) {
 
 void
 popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
-    //GtkWidget *menu, *menuitem;
     GtkMenu* menu;
 
     menu = get_treeview_menu(userdata);
-
-    //menu = gtk_menu_new();
-
-    /*
-    menuitem = gtk_menu_item_new_with_label("Rename");
-    g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-    menuitem = gtk_menu_item_new_with_label("Copy");
-    g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-    menuitem = gtk_menu_item_new_with_label("Paste");
-    g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-    menuitem = gtk_menu_item_new_with_label("Local History");
-    g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-    menuitem = gtk_menu_item_new_with_label("Format File");
-    g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-    menuitem = gtk_menu_item_new_with_label("Filter");
-    g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-    menuitem = gtk_menu_item_new_with_label("Git");
-    g_signal_connect(menuitem, "activate", (GCallback) popup_menu_copy_file, treeview);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-    */
 
     gtk_widget_show_all(GTK_WIDGET(menu));
     gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent * ) event);
@@ -83,15 +50,27 @@ on_changed(GtkWidget * widget, gpointer statusbar) {
     GtkTreeModel * model;
     gchar * value;
 
-    if (gtk_tree_selection_get_selected(
-            GTK_TREE_SELECTION(widget), & model, & iter)) {
+    if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(widget), & model, & iter)) {
 
         gtk_tree_model_get(model, & iter, COLUMN, & value, -1);
         gtk_statusbar_push(GTK_STATUSBAR(statusbar),
-            gtk_statusbar_get_context_id(GTK_STATUSBAR(statusbar),
-                value), value);
+            gtk_statusbar_get_context_id(GTK_STATUSBAR(statusbar), value), value);
         g_free(value);
     }
+}
+
+int is_text_file(gchar* filepath) {
+    gchar *text;
+    gsize len;
+    GError *err = NULL;
+
+    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
+        return 0;
+    }
+    if (!g_utf8_validate (text, len, NULL)) {
+        return 0;
+    }
+    return 1;
 }
 
 void
@@ -111,8 +90,8 @@ fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter topl
         }
 
         if (entry -> d_type == DT_DIR) {
-            gchar path[SIZE];
 
+            gchar path[SIZE];
             if (g_strcmp0(entry -> d_name, ".") == 0 || g_strcmp0(entry -> d_name, "..") == 0) {
                 continue;
             }
@@ -124,8 +103,19 @@ fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter topl
 
             fill_treestore(path, treestore, child);
         } else {
-            gtk_tree_store_append(treestore, &child, &toplevel);
-            gtk_tree_store_set(treestore, &child, COLUMN, entry -> d_name, -1);
+
+            struct stat sb;
+            gchar path[SIZE];
+            snprintf(path, sizeof(path), "%s/%s", pathname, entry -> d_name); // create name of subdirectory
+            //g_print("[INFO] adding file %s \n", path);
+
+            //if (is_text_file(path)) {
+            if (stat(path, &sb) == 0 && sb.st_mode & S_IXUSR) {
+                continue;
+            } else {
+                gtk_tree_store_append(treestore, &child, &toplevel);
+                gtk_tree_store_set(treestore, &child, COLUMN, entry->d_name, -1);
+            }
         }
     }
     closedir(dir);
