@@ -256,6 +256,20 @@ void set_langs_dir(GtkSourceBuffer* buffer) {
 int
 main (int argc, char *argv[])
 {
+
+    GtkSourceLanguageManager *manager = gtk_source_language_manager_new ();
+    gchar **lang_dirs;
+    lang_dirs = g_new0 (gchar *, 6);
+    lang_dirs[0] = "/home/rafal/.local/share/gtksourceview-4/language-specs ";
+    lang_dirs[1] = "/home/rafal/.local/share/flatpak/exports/share/gtksourceview-4/language-specs ";
+    lang_dirs[2] = "/var/lib/flatpak/exports/share/gtksourceview-4/language-specs ";
+    lang_dirs[3] = "/usr/local/share/gtksourceview-4/language-specs ";
+    lang_dirs[4] = "/usr/share/gtksourceview-4/language-specs";
+    lang_dirs[5] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/langs";
+    gtk_source_language_manager_set_search_path(manager, lang_dirs);
+
+
+
     GtkBuilder *builder;
     GObject *buffer;
     GObject *window;
@@ -296,20 +310,39 @@ main (int argc, char *argv[])
     userdata->notebook  = notebook  = gtk_builder_get_object (builder, "notebook");
     userdata->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
     
-    set_scheme(GTK_SOURCE_BUFFER(buffer));
+    //set_scheme(GTK_SOURCE_BUFFER(buffer));
 
 
     const gchar * const * lang_ids;
-    GtkSourceLanguageManager *manager;
-    manager = gtk_source_language_manager_get_default ();
 
     lang_ids = gtk_source_language_manager_get_language_ids (manager);
     for (int i=0; *(lang_ids+i); i++) {
         g_print("%d -> %s \n", i, *(lang_ids+i));
     }
 
-    gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[11]));
+    /*
+    const gchar * const * path = gtk_source_language_manager_get_search_path(manager);
+    int i = 0;
+    while (path[i]) {
+        g_print("%s \n", path[i++]);
+    }*/
+
+
+    gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[23]));
     gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER(buffer), TRUE);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
