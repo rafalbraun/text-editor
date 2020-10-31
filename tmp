@@ -34,12 +34,6 @@
 
 
 
-||| poprawne wyrażenie na wołanie funkcji !!!!! --->
-(?!\b(if|while|for)\b)\b\w+(?=\s*(\(([^)]+)\)|\(\))(\)|;))
-
-
-
-
 
 ||| poprawne wyrażenie na deklaracje funkcji !!!!! --->
 (?!\b(if|while|for)\b)\b\w+(?=\s*(\(([^)]+)\)|\(\))\s{)

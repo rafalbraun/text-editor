@@ -130,6 +130,7 @@
   <style name="def:note"                    foreground="blue" background="yellow" bold="true"/>
   <style name="def:underlined"              italic="true" underline="single"/>
   <style name="def:function"                foreground="green"/>
+  <style name="def:call"                    foreground="blue"/>
 
   <!-- Heading styles, uncomment to enable -->
   <!--

@@ -182,7 +182,7 @@ void l_print(struct node **head)
 		current = current->next;
 	}
 }
-
+/*
 #if !LIST
 
 char _30[] = "30";
@@ -218,3 +218,4 @@ int main() {
 }
 
 #endif
+*/

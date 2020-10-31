@@ -52,6 +52,7 @@
     <style id="signal-name"       name="Signal name"           map-to="def:constant"/>
     <style id="error"             name="Error"                 map-to="def:error"/>
     <style id="function"          name="Function"              map-to="def:function"/>
+    <style id="call"              name="Call"                  map-to="def:call"/>
   </styles>
 
   <definitions>
@@ -254,6 +255,9 @@
     <context id="functions" style-ref="function">
       <match extended="true">
 	(?!\b(if|while|for)\b)\b\w+(?=\s*(\(([^)]+)\)|\(\))\s+{)
+
+
+
 	<!--
 	(?!\b(if|while|for)\b)\b\w+(?=\s*\(.*?\)\s{)
 	-->
@@ -280,6 +284,12 @@
 	<!--
         (?![a-z])[^\:,>,\.]([a-z,A-Z]+[_][a-z,A-Z]+)+[(]
 	-->
+      </match>
+    </context>
+
+    <context id="calls" style-ref="call">
+      <match extended="true">
+	(?!\b(if|while|for)\b)\b\w+(?=\s*\()
       </match>
     </context>
 
@@ -374,6 +384,7 @@
         <context ref="standard-streams"/>
         <context ref="signals"/>
 	<context ref="functions"/>
+	<context ref="calls"/>
       </include>
     </context>
 
