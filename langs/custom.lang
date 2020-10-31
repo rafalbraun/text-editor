@@ -249,103 +249,30 @@
       <keyword>g(u)int</keyword>
       <keyword>gboolean</keyword>
       <keyword>gsize</keyword>
-
-<keyword>GtkWidget</keyword>
-<keyword>GtkSourceBuffer</keyword>
-<keyword>GtkTextIter</keyword>
-<keyword>GtkSourceLanguage</keyword>
-<keyword>GtkSourceLanguageManager</keyword>
-<keyword>GtkTreeIter</keyword>
-<keyword>GtkTreeModel</keyword>
-<keyword>GtkBuilder</keyword>
-<keyword>GObject</keyword>
-<keyword>GtkTreeSelection</keyword>
-<keyword>GError</keyword>
-
-<keyword>GtkLabel</keyword>
-<keyword>GtkAccelLabel</keyword>
-<keyword>GtkImage</keyword>
-<keyword>GtkTextView</keyword>
-<keyword>GtkTreeView</keyword>
-<keyword>GtkIconView</keyword>
-<keyword>GtkProgressBar</keyword>
-<keyword>GtkLevelBar</keyword>
-<keyword>GtkSpinner</keyword>
-<keyword>GtkMenu</keyword>
-<keyword>GtkCalendar</keyword>
-<keyword>GtkSeparator</keyword>
-<keyword>GtkDrawingArea</keyword>
-<keyword>GtkGLArea</keyword>
-<keyword>GtkInfoBar</keyword>
-<keyword>GtkButton</keyword>
-<keyword>GtkEntry</keyword>
-<keyword>GtkSearchEntry</keyword>
-<keyword>GtkSpinButton</keyword>
-<keyword>GtkToggleButton</keyword>
-<keyword>GtkCheckButton</keyword>
-<keyword>GtkRadioButton</keyword>
-<keyword>GtkMenuButton</keyword>
-<keyword>GtkLockButton</keyword>
-<keyword>GtkSwitch</keyword>
-<keyword>GtkModelButton</keyword>
-<keyword>GtkStackSwitcher</keyword>
-<keyword>GtkStackSidebar</keyword>
-<keyword>GtkComboBox</keyword>
-<keyword>GtkComboBoxText</keyword>
-<keyword>GtkFileChooserButton</keyword>
-<keyword>GtkColorButton</keyword>
-<keyword>GtkFontButton</keyword>
-<keyword>GtkLinkButton</keyword>
-<keyword>GtkScaleButton</keyword>
-<keyword>GtkVolumeButton</keyword>
-<keyword>GtkAppChooserButton</keyword>
-<keyword>GtkScale</keyword>
-<keyword>GtkScrollbar</keyword>
-<keyword>GtkBox</keyword>
-<keyword>GtkGrid</keyword>
-<keyword>GtkNotebook</keyword>
-<keyword>GtkFrame</keyword>
-<keyword>GtkAspectFrame</keyword>
-<keyword>GtkListBox</keyword>
-<keyword>GtkFlowBox</keyword>
-<keyword>GtkOverlay</keyword>
-<keyword>GtkMenuBar</keyword>
-<keyword>GtkToolbar</keyword>
-<keyword>GtkToolPalette</keyword>
-<keyword>GtkPaned</keyword>
-<keyword>GtkButtonBox</keyword>
-<keyword>GtkLayout</keyword>
-<keyword>GtkFixed</keyword>
-<keyword>GtkEventBox</keyword>
-<keyword>GtkExpander</keyword>
-<keyword>GtkViewport</keyword>
-<keyword>GtkScrolledWindow</keyword>
-<keyword>GtkAlignment</keyword>
-<keyword>GtkRevealer</keyword>
-<keyword>GtkSearchBar</keyword>
-<keyword>GtkHeaderBar</keyword>
-<keyword>GtkStack</keyword>
-<keyword>GtkPopover</keyword>
-<keyword>GtkPopoverMenu</keyword>
-<keyword>GtkActionBar</keyword>
-<keyword>GtkWindow</keyword>
-<keyword>GtkOffscreenWindow</keyword>
-<keyword>GtkApplicationWindow</keyword>
-<keyword>GtkDialog</keyword>
-<keyword>GtkAboutDialog</keyword>
-<keyword>GtkFileChooserDialog</keyword>
-<keyword>GtkColorChooserDialog</keyword>
-<keyword>GtkFontChooserDialog</keyword>
-<keyword>GtkMessageDialog</keyword>
-<keyword>GtkRecentChooserDialog</keyword>
-<keyword>GtkAssistant</keyword>
-<keyword>GtkAppChooserDialog</keyword>
-
     </context>
 
     <context id="functions" style-ref="function">
       <match extended="true">
+	(?!\b(if|while|for)\b)\b\w+(?=\s*(\(([^)]+)\)|\(\))\s+{)
+	<!--
+	(?!\b(if|while|for)\b)\b\w+(?=\s*\(.*?\)\s{)
+	-->
+
+
+
+
+	<!--
+	(?!\b(if|while|for)\b)\b\w+\s*\(.*?\)\s{
+	-->
+
+	<!--
+	(?&lt;=\w\s|\n)(?!\b(if|while|for)\b)\b\w+(?=\s*\()
+	-->
+
+	<!--
 	(?!\b(if|while|for)\b)\b\w+(?=\s*\()
+	-->
+
 
 	<!--
 	^([\w\*]+( )*?){2,}\(([^!@#$+%^;]+?)\)(?!\s*;)	

@@ -188,10 +188,7 @@ open_file (gpointer userdata, gchar* filepath) {
 }
 
 void
-switch_page (GtkNotebook *notebook,
-             GtkWidget   *page,
-             guint        pagedst,
-             gpointer     userdata) {
+switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata) {
     
     gint pagesrc = gtk_notebook_get_current_page(get_notebook(userdata));
     printf("page: %d -> %d\n", pagesrc, pagedst);
