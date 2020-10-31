@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ This file is part of GtkSourceView
+
+ Copyright (C) 2006-2007 GtkSourceView team
+ Author: Yevgen Muntyan <muntyan@tamu.edu>
+
+ GtkSourceView is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ GtkSourceView is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<style-scheme id="custom" _name="Custom" version="1.0">
+  <author>GtkSourceView team</author>
+  <_description>Classic color scheme</_description>
+
+  <!-- The scheme tries to look like the default GVim scheme,
+       since it is also what the hardwired GtkSourceView 1 color
+       scheme did -->
+
+  <!-- Palette -->
+  <!--
+  <color name="white"      value="#FFFFFF"/>
+  <color name="blue"       value="#0000FF"/>
+  <color name="magenta"    value="#FF00FF"/>
+  <color name="violet"     value="#6A5ACD"/>
+  <color name="cyan"       value="#008A8C"/>
+  <color name="gray"       value="#BEBEBE"/>
+  <color name="green"      value="#2E8B57"/>
+  <color name="bordeaux"   value="#A52A2A"/>
+  <color name="red"        value="#FF0000"/>
+  <color name="yellow"     value="#FFFF00"/>
+  <color name="purple"     value="#A020F0"/>
+  -->
+
+  <!-- Monokai :: https://github.com/gerardroche/sublime-monokai-free -->
+  <color name="bg0"        value="#272822"/>
+  <color name="bg1"        value="#3e3d32"/>
+  <color name="bg2"        value="#75715e"/>
+  <color name="fg1"        value="#cfcfc2"/>
+  <color name="fg0"        value="#f8f8f2"/>
+
+  <color name="yellow"     value="#e6db74"/>
+  <color name="orange"     value="#fd971f"/>
+  <color name="red"        value="#f92672"/>
+  <color name="magenta"    value="#fd5ff0"/>
+  <color name="violet"     value="#ae81ff"/>
+  <color name="blue"       value="#66d9ef"/>
+  <color name="cyan"       value="#a1efe4"/>
+  <color name="green"      value="#a6e22e"/>
+
+
+  <!-- Global Settings -->
+  <!--
+  <style name="current-line"                background="#eeeeec"/>
+  <style name="current-line-number"         background="#eeeeec"/>
+  <style name="draw-spaces"                 foreground="#babdb6"/>
+  <style name="background-pattern"          background="#f3f3f3"/>
+  -->
+	<style name="background-pattern"          background="bg2"/>
+	<style name="text"                        foreground="fg0" background="bg0"/>
+  	<style name="selection"                   foreground="fg1" background="bg1"/>
+  	<style name="cursor"                      foreground="fg0"/>
+
+  <!-- Bracket Matching -->
+  <style name="bracket-match"               foreground="white" background="gray"/>
+  <style name="bracket-mismatch"            foreground="white" background="red"/>
+
+  <!-- Right Margin -->
+  <style name="right-margin"                foreground="#000000" background="#000000"/>
+
+  <!-- Search Matching -->
+  <style name="search-match"                background="fg0" foreground="bg0"/>
+
+  <!-- Comments -->
+  <!--
+  <style name="def:comment"                 foreground="blue"/>
+  <style name="def:shebang"                 foreground="blue" bold="true"/>
+  <style name="def:doc-comment-element"     italic="true"/>
+  -->
+  <style name="def:comment"                 foreground="bg2"/>
+
+  <!-- Constants -->
+  <style name="def:constant"                foreground="violet"/>
+  <style name="def:special-char"            foreground="violet"/>
+  <style name="def:special-constant"        foreground="violet"/>
+
+  <!-- Identifiers -->
+  <style name="def:identifier"              foreground="red"/>
+
+  <!-- Statements -->
+  <style name="def:statement"               foreground="bordeaux" bold="true"/>
+
+  <!-- Types -->
+  <style name="def:type"                    foreground="blue"/>
+
+  <!-- String -->
+  <style name="def:string"                    foreground="yellow"/>
+  <style name="def:character"                    foreground="yellow"/>
+
+
+  <!-- Keyword -->
+  <style name="def:keyword"                 foreground="red"/>
+
+
+
+
+  <!-- Number -->
+  <style name="def:floating-point"          foreground="violet"/>
+  <style name="def:decimal"                 foreground="violet"/>
+  <style name="def:octal"                   foreground="violet"/>
+  <style name="def:hexadecimal"             foreground="violet"/>
+  <style name="def:stbooleanring"           foreground="violet"/>
+
+  <!-- Others -->
+  <style name="def:preprocessor"            foreground="purple"/>
+  <style name="def:error"                   background="red" bold="true"/>
+  <style name="def:warning"                 background="yellow"/>
+  <style name="def:note"                    foreground="blue" background="yellow" bold="true"/>
+  <style name="def:underlined"              italic="true" underline="single"/>
+  <style name="def:function"                foreground="green"/>
+
+  <!-- Heading styles, uncomment to enable -->
+  <!--
+  <style name="def:heading0"                scale="5.0"/>
+  <style name="def:heading1"                scale="2.5"/>
+  <style name="def:heading2"                scale="2.0"/>
+  <style name="def:heading3"                scale="1.7"/>
+  <style name="def:heading4"                scale="1.5"/>
+  <style name="def:heading5"                scale="1.3"/>
+  <style name="def:heading6"                scale="1.2"/>
+  -->
+
+
+</style-scheme>
+
+
+
+
+
+

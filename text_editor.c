@@ -191,13 +191,11 @@ file_new_cb () {
     
 }
 
-void list_schemes() {
-    GtkSourceLanguageManager *lm;
-    GtkSourceStyleSchemeManager *sm;
+void list_schemes(GtkSourceStyleSchemeManager *sm) {
     GtkSourceStyleScheme *style_scheme = NULL;
     const gchar * const * schemes;
 
-    sm = gtk_source_style_scheme_manager_get_default ();
+    //sm = gtk_source_style_scheme_manager_get_default ();
     schemes = gtk_source_style_scheme_manager_get_scheme_ids (sm);
     g_print ("Available style schemes:\n");
     while (*schemes != NULL)
@@ -227,14 +225,14 @@ void list_schemes() {
     g_print("\n");
 }
 
-void set_scheme(GtkSourceBuffer* buffer) {
+void set_scheme(GtkSourceBuffer* buffer, GtkSourceStyleSchemeManager *sm) {
     GtkSourceStyleScheme *style_scheme = NULL;
-    GtkSourceStyleSchemeManager *sm;
+    //GtkSourceStyleSchemeManager *sm;
     const gchar * const * schemes;
 
-    sm = gtk_source_style_scheme_manager_get_default ();
+    //sm = gtk_source_style_scheme_manager_get_default ();
     schemes = gtk_source_style_scheme_manager_get_scheme_ids (sm);
-    schemes+=3;
+    schemes+=4;
     style_scheme = gtk_source_style_scheme_manager_get_scheme (sm, *schemes);
     gtk_source_buffer_set_style_scheme (buffer, style_scheme);
 }
@@ -266,7 +264,42 @@ main (int argc, char *argv[])
     lang_dirs[3] = "/usr/local/share/gtksourceview-4/language-specs ";
     lang_dirs[4] = "/usr/share/gtksourceview-4/language-specs";
     lang_dirs[5] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/langs";
+    lang_dirs[6] = NULL;
     gtk_source_language_manager_set_search_path(manager, lang_dirs);
+
+    /*
+    GtkSourceStyleSchemeManager *sm = gtk_source_style_scheme_manager_get_default ();
+    const gchar * const * search_path = gtk_source_style_scheme_manager_get_search_path(sm);
+    int i=0;
+    while (search_path[i]) {
+        g_print("%s \n", search_path[i++]);
+    }
+    */
+
+    GtkSourceStyleSchemeManager *sm = gtk_source_style_scheme_manager_new ();
+    gchar **scheme_dirs;
+    scheme_dirs = g_new0 (gchar *, 6);
+    scheme_dirs[0] = "/home/rafal/.local/share/gtksourceview-4/styles ";
+    scheme_dirs[1] = "/home/rafal/.local/share/flatpak/exports/share/gtksourceview-4/styles ";
+    scheme_dirs[2] = "/var/lib/flatpak/exports/share/gtksourceview-4/styles ";
+    scheme_dirs[3] = "/usr/local/share/gtksourceview-4/styles ";
+    scheme_dirs[4] = "/usr/share/gtksourceview-4/styles";
+    scheme_dirs[5] = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/schemes";
+    scheme_dirs[6] = NULL;
+    gtk_source_style_scheme_manager_set_search_path(sm, scheme_dirs);
+
+
+
+    const gchar * const * schemes = gtk_source_style_scheme_manager_get_scheme_ids (sm);
+    for (int i=0; *(schemes+i); i++) {
+        g_print("%d -> %s \n", i, *(schemes+i));
+    }
+
+
+
+
+    //list_schemes(sm);
+
 
 
 
@@ -310,24 +343,14 @@ main (int argc, char *argv[])
     userdata->notebook  = notebook  = gtk_builder_get_object (builder, "notebook");
     userdata->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
     
-    //set_scheme(GTK_SOURCE_BUFFER(buffer));
+    set_scheme(GTK_SOURCE_BUFFER(buffer), sm);
 
 
     const gchar * const * lang_ids;
-
     lang_ids = gtk_source_language_manager_get_language_ids (manager);
-    for (int i=0; *(lang_ids+i); i++) {
-        g_print("%d -> %s \n", i, *(lang_ids+i));
-    }
-
-    /*
-    const gchar * const * path = gtk_source_language_manager_get_search_path(manager);
-    int i = 0;
-    while (path[i]) {
-        g_print("%s \n", path[i++]);
-    }*/
-
-
+    //for (int i=0; *(lang_ids+i); i++) {
+    //    g_print("%d -> %s \n", i, *(lang_ids+i));
+    //}
     gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[23]));
     gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER(buffer), TRUE);
 
