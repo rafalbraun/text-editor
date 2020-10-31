@@ -296,11 +296,24 @@ main (int argc, char *argv[])
     userdata->notebook  = notebook  = gtk_builder_get_object (builder, "notebook");
     userdata->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
     
-
-
-
-
     set_scheme(GTK_SOURCE_BUFFER(buffer));
+
+
+    const gchar * const * lang_ids;
+    GtkSourceLanguageManager *manager;
+    manager = gtk_source_language_manager_get_default ();
+
+    lang_ids = gtk_source_language_manager_get_language_ids (manager);
+    for (int i=0; *(lang_ids+i); i++) {
+        g_print("%d -> %s \n", i, *(lang_ids+i));
+    }
+
+    gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[11]));
+    gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER(buffer), TRUE);
+
+
+
+
 
 
 

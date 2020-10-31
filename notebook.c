@@ -116,7 +116,7 @@ load_file(gpointer userdata, guint pagenum) {
     }
 
     gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
-    guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
+    //guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
 
     g_free(text);
 }
