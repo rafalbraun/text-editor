@@ -50,6 +50,43 @@ void clear_buffer(GtkSourceBuffer* buffer) {
     gtk_text_buffer_delete ( GTK_TEXT_BUFFER( buffer ), &iter_start, &iter_end );
 }
 
+gchar* extract_word(gchar* line, gint offset) {
+    gint left, right, i, j;
+    gchar buffer[1024];
+
+    for (i = offset; i!=0; i--) {
+        if ((line[i] == '\n')) {
+            left = i;
+            break;
+        }
+        if ( (line[i] == ' ') || (line[i] == '[') || (line[i] == ']') || (line[i] == '*') || (line[i] == '(') || (line[i] == ')') || (line[i] == '=') || (line[i] == ';') || (line[i] == '{') || (line[i] == '}') || (line[i] == '+') || (line[i] == '-') || (line[i] == '&') || (line[i] == ',') || (line[i] == '.') || (line[i] == '/') ) {
+            left = i+1;
+            break;
+        }
+    }
+    for (i = offset; i!=strlen(line); i++) {
+        if ((line[i] == '\n')) {
+            right = i;
+            break;
+        }
+        if ( (line[i] == ' ') || (line[i] == '[') || (line[i] == ']') || (line[i] == '*') || (line[i] == '(') || (line[i] == ')') || (line[i] == '=') || (line[i] == ';') || (line[i] == '{') || (line[i] == '}') || (line[i] == '+') || (line[i] == '-') || (line[i] == '&') || (line[i] == ',') || (line[i] == '.') || (line[i] == '/') ) {
+            right = i;
+            break;
+        }
+    }
+    for (j=0, i = left; i < right; i++, j++) {
+        buffer[j] = line[i];
+    }
+    buffer[j] = '\0';
+    g_print("buffer [%s] \n", buffer);
+
+    /*
+    GtkTextTagTable* table = gtk_text_buffer_get_tag_table (buffer);
+    GtkTextTag* ttag = gtk_text_tag_table_lookup (table, "blue");
+    gtk_text_buffer_apply_tag (buffer, ttag,  &match_start, &match_end);
+    */
+}
+
 // http://www.bravegnu.org/gtktext/x498.html
 static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data) {
     gint window_x, window_y;
@@ -87,6 +124,7 @@ static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_dat
 
         if (msg) {
             g_print("OK: %d : %s \n", strlen(msg), msg);
+            extract_word(msg, col);
         } else {
             g_print("BAD\n");
         }
@@ -127,6 +165,8 @@ sourceview_new(GtkSourceBuffer* buffer) {
     gtk_source_view_set_tab_width (GTK_SOURCE_VIEW(sourceview), 4);
 
     g_signal_connect (G_OBJECT (sourceview), "motion-notify-event",G_CALLBACK (mouse_moved), sourceview);
+
+    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "blue",  "background", "#66D9EF", NULL); 
 
     return scroll;
 }
