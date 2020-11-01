@@ -50,16 +50,36 @@ void clear_buffer(GtkSourceBuffer* buffer) {
     gtk_text_buffer_delete ( GTK_TEXT_BUFFER( buffer ), &iter_start, &iter_end );
 }
 
-gchar* extract_word(gchar* line, gint offset) {
+gboolean is_valid_string(gchar* line) {
+    for (int i=0; i!=strlen(line); i++) {
+        gunichar c = line[i];
+        if (c == '_') {
+            continue;
+        }
+        if (c == '.') {
+            continue;
+        }
+        if (g_unichar_isalpha(c) == FALSE) {
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+GtkTextIter start, end;
+int active = 0;
+
+gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* sourcebuff) {
     gint left, right, i, j;
     gchar buffer[1024];
+    gchar* match;
 
     for (i = offset; i!=0; i--) {
         if ((line[i] == '\n')) {
             left = i;
             break;
         }
-        if ( (line[i] == ' ') || (line[i] == '[') || (line[i] == ']') || (line[i] == '*') || (line[i] == '(') || (line[i] == ')') || (line[i] == '=') || (line[i] == ';') || (line[i] == '{') || (line[i] == '}') || (line[i] == '+') || (line[i] == '-') || (line[i] == '&') || (line[i] == ',') || (line[i] == '.') || (line[i] == '/') ) {
+        if ( (line[i] == ' ') || (line[i] == '[') || (line[i] == ']') || (line[i] == '*') || (line[i] == '(') || (line[i] == ')') || (line[i] == '=') || (line[i] == ';') || (line[i] == '{') || (line[i] == '}') || (line[i] == '+') || (line[i] == '-') || (line[i] == '&') || (line[i] == ',') || (line[i] == '/') || (line[i] == '>') || (line[i] == '<') ) {
             left = i+1;
             break;
         }
@@ -69,22 +89,47 @@ gchar* extract_word(gchar* line, gint offset) {
             right = i;
             break;
         }
-        if ( (line[i] == ' ') || (line[i] == '[') || (line[i] == ']') || (line[i] == '*') || (line[i] == '(') || (line[i] == ')') || (line[i] == '=') || (line[i] == ';') || (line[i] == '{') || (line[i] == '}') || (line[i] == '+') || (line[i] == '-') || (line[i] == '&') || (line[i] == ',') || (line[i] == '.') || (line[i] == '/') ) {
+        if ( (line[i] == ' ') || (line[i] == '[') || (line[i] == ']') || (line[i] == '*') || (line[i] == '(') || (line[i] == ')') || (line[i] == '=') || (line[i] == ';') || (line[i] == '{') || (line[i] == '}') || (line[i] == '+') || (line[i] == '-') || (line[i] == '&') || (line[i] == ',') || (line[i] == '/') || (line[i] == '>') || (line[i] == '<') ) {
             right = i;
             break;
         }
     }
     for (j=0, i = left; i < right; i++, j++) {
-        buffer[j] = line[i];
+       buffer[j] = line[i];
     }
     buffer[j] = '\0';
-    g_print("buffer [%s] \n", buffer);
+    g_print("buffer (%d:%d) [%s] \n", left, right, buffer);
+
+    if (active) {
+        gtk_text_buffer_remove_tag_by_name (GTK_TEXT_BUFFER(sourcebuff), "blue", &start, &end);
+        gtk_text_buffer_remove_tag_by_name (GTK_TEXT_BUFFER(sourcebuff), "black", &start, &end);
+        gtk_text_buffer_remove_tag_by_name (GTK_TEXT_BUFFER(sourcebuff), "italic", &start, &end);
+    }
+
+    start = *iter;
+    end = *iter;
+    gtk_text_iter_set_line_index (&start, left);
+    gtk_text_iter_set_line_index (&end, right);
+    match = gtk_text_iter_get_text (&start, &end);
+    g_print("match: %s \n", match);
 
     /*
-    GtkTextTagTable* table = gtk_text_buffer_get_tag_table (buffer);
-    GtkTextTag* ttag = gtk_text_tag_table_lookup (table, "blue");
-    gtk_text_buffer_apply_tag (buffer, ttag,  &match_start, &match_end);
+    gtk_text_iter_backward_chars (&start, i-left);
+    gtk_text_iter_forward_chars (&end, right-i);
+    match = gtk_text_iter_get_text (&start, &end);
+    g_print("match: %s \n", match);
     */
+
+    if (is_valid_string(match)) {
+        GtkTextTagTable* table = gtk_text_buffer_get_tag_table (GTK_TEXT_BUFFER(sourcebuff));
+        GtkTextTag* tag1 = gtk_text_tag_table_lookup (table, "blue");
+        GtkTextTag* tag2 = gtk_text_tag_table_lookup (table, "black");
+        GtkTextTag* tag3 = gtk_text_tag_table_lookup (table, "italic");
+        gtk_text_buffer_apply_tag (GTK_TEXT_BUFFER(sourcebuff), tag1,  &start, &end);
+        gtk_text_buffer_apply_tag (GTK_TEXT_BUFFER(sourcebuff), tag2,  &start, &end);
+        gtk_text_buffer_apply_tag (GTK_TEXT_BUFFER(sourcebuff), tag3,  &start, &end);
+        active = 1;
+    }
 }
 
 // http://www.bravegnu.org/gtktext/x498.html
@@ -124,7 +169,7 @@ static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_dat
 
         if (msg) {
             g_print("OK: %d : %s \n", strlen(msg), msg);
-            extract_word(msg, col);
+            extract_word(msg, col, &iter, buffer);
         } else {
             g_print("BAD\n");
         }
@@ -166,7 +211,9 @@ sourceview_new(GtkSourceBuffer* buffer) {
 
     g_signal_connect (G_OBJECT (sourceview), "motion-notify-event",G_CALLBACK (mouse_moved), sourceview);
 
-    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "blue",  "background", "#66D9EF", NULL); 
+    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "blue",  "background", "white", NULL); 
+    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "black",  "foreground", "black", NULL); 
+    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "italic",  "style", PANGO_STYLE_ITALIC, NULL); 
 
     return scroll;
 }
