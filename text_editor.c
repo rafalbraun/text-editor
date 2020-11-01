@@ -317,8 +317,10 @@ main (int argc, char *argv[])
     //gchar* filepath = "/home/rafal/IdeaProjects/vamos-0.8.2-x86_64";
     //gchar* filepath = "/home/rafal/IdeaProjects/vdrift";
     //gchar* filepath = "/home/rafal/IdeaProjects";
-    gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
+    //gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
     //gchar* filepath = "/home/rafal/go/src/wykop.pl";
+    gchar* filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
+
 
     // init code
     gtk_init (&argc, &argv);

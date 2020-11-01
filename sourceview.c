@@ -54,7 +54,7 @@ void clear_buffer(GtkSourceBuffer* buffer) {
 static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data) {
     gint window_x, window_y;
     gint buffer_x, buffer_y;
-    GtkTextIter iter;
+    GtkTextIter iter, start, end;
     gchar *msg;
     gint row, col;
 
@@ -67,9 +67,8 @@ static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_dat
         //printf("Coordinates: (%u,%u)\n", window_x, window_y);
         
         gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW(user_data), GTK_TEXT_WINDOW_TEXT, window_x, window_y, &buffer_x, &buffer_y);
-        //gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW(user_data), &iter, (guint)e->x,(guint)e->y);
 
-        printf("Coordinates: (%u,%u) -> (%u,%u)  ", window_x, window_y, buffer_x, buffer_y);
+        //printf("Coordinates: (%u,%u) -> (%u,%u)  ", window_x, window_y, buffer_x, buffer_y);
 
         gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW(user_data), &iter, buffer_x, buffer_y);
 
@@ -78,6 +77,23 @@ static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_dat
 
         msg = g_strdup_printf("Col: %d Ln: %d \n", col+1, row+1);
         g_print(msg);
+        //g_print("\n");
+
+
+        GtkTextBuffer* buffer = GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(user_data)));
+        gtk_text_buffer_get_iter_at_line (buffer, &start, row);
+        gtk_text_buffer_get_iter_at_line (buffer, &end, row+1);
+        msg = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+
+        if (msg) {
+            g_print("OK: %d : %s \n", strlen(msg), msg);
+        } else {
+            g_print("BAD\n");
+        }
+
+        /*
+        g_print(g_strescape(msg, NULL));
+        */
 
         g_free(msg);
     }
