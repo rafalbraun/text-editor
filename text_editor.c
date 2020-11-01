@@ -20,6 +20,7 @@
 gchar* open_files();
 static void open_file (gpointer userdata, gchar* filepath);
 
+
 void 
 show_error(GtkWindow* window, gchar* message) {
   
@@ -342,7 +343,7 @@ main (int argc, char *argv[])
     userdata->treestore = treestore = gtk_builder_get_object (builder, "treestore");
     userdata->notebook  = notebook  = gtk_builder_get_object (builder, "notebook");
     userdata->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
-    
+
     set_scheme(GTK_SOURCE_BUFFER(buffer), sm);
 
 

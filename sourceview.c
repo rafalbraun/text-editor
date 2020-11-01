@@ -50,6 +50,39 @@ void clear_buffer(GtkSourceBuffer* buffer) {
     gtk_text_buffer_delete ( GTK_TEXT_BUFFER( buffer ), &iter_start, &iter_end );
 }
 
+// http://www.bravegnu.org/gtktext/x498.html
+static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data) {
+    gint window_x, window_y;
+    gint buffer_x, buffer_y;
+    GtkTextIter iter;
+    gchar *msg;
+    gint row, col;
+
+    if (event->type==GDK_MOTION_NOTIFY) {
+        GdkEventMotion* e=(GdkEventMotion*)event;
+
+        window_x = (guint)e->x;
+        window_y = (guint)e->y;
+
+        //printf("Coordinates: (%u,%u)\n", window_x, window_y);
+        
+        gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW(user_data), GTK_TEXT_WINDOW_TEXT, window_x, window_y, &buffer_x, &buffer_y);
+        //gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW(user_data), &iter, (guint)e->x,(guint)e->y);
+
+        printf("Coordinates: (%u,%u) -> (%u,%u)  ", window_x, window_y, buffer_x, buffer_y);
+
+        gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW(user_data), &iter, buffer_x, buffer_y);
+
+        row = gtk_text_iter_get_line(&iter);
+        col = gtk_text_iter_get_line_offset(&iter);
+
+        msg = g_strdup_printf("Col: %d Ln: %d \n", col+1, row+1);
+        g_print(msg);
+
+        g_free(msg);
+    }
+}
+
 GtkWidget*
 sourceview_new(GtkSourceBuffer* buffer) {
     GtkWidget *scroll, *sourceview;
@@ -76,6 +109,8 @@ sourceview_new(GtkSourceBuffer* buffer) {
     g_object_unref (provider);
 
     gtk_source_view_set_tab_width (GTK_SOURCE_VIEW(sourceview), 4);
+
+    g_signal_connect (G_OBJECT (sourceview), "motion-notify-event",G_CALLBACK (mouse_moved), sourceview);
 
     return scroll;
 }
