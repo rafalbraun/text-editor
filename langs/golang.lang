@@ -21,7 +21,7 @@
  along with this library; if not, see <http://www.gnu.org/licenses/>.
 
 -->
-<language id="custom" name="Custom" version="2.0" _section="Source">
+<language id="golang" name="Golang" version="2.0" _section="Source">
   <metadata>
     <property name="mimetypes">text/x-c;text/x-csrc;image/x-xpixmap</property>
     <property name="globs">*.c</property>
@@ -51,7 +51,8 @@
     <style id="standard-stream"   name="Standard stream"       map-to="def:constant"/>
     <style id="signal-name"       name="Signal name"           map-to="def:constant"/>
     <style id="error"             name="Error"                 map-to="def:error"/>
-    <style id="function"          name="Function"              map-to="def:function"/>
+    <style id="function1"          name="Function"              map-to="def:function"/>
+    <style id="function2"          name="Function"              map-to="def:function"/>
     <style id="call"              name="Call"                  map-to="def:call"/>
   </styles>
 
@@ -252,49 +253,21 @@
       <keyword>gsize</keyword>
     </context>
 
-	<!--
-	nawiasy:
-	\(([^)]+)\)|\(\)
-	-->
-
-    <context id="functions" style-ref="function">
+    <context id="functions1" style-ref="function1">
       <match extended="true">
-	(?!\b(if|while|for)\b)\b\w+(?=\s*(\(([^)]+)\)|\(\))\s+{)
+	(?&lt;=func\s)\w+
+      </match>
+    </context>
 
-
-
-	<!--
-	(?!\b(if|while|for)\b)\b\w+(?=\s*\(.*?\)\s{)
-	-->
-
-
-
-
-	<!--
-	(?!\b(if|while|for)\b)\b\w+\s*\(.*?\)\s{
-	-->
-
-	<!--
-	(?&lt;=\w\s|\n)(?!\b(if|while|for)\b)\b\w+(?=\s*\()
-	-->
-
-	<!--
-	(?!\b(if|while|for)\b)\b\w+(?=\s*\()
-	-->
-
-
-	<!--
-	^([\w\*]+( )*?){2,}\(([^!@#$+%^;]+?)\)(?!\s*;)	
-	-->
-	<!--
-        (?![a-z])[^\:,>,\.]([a-z,A-Z]+[_][a-z,A-Z]+)+[(]
-	-->
+    <context id="functions2" style-ref="function2">
+      <match extended="true">
+	(?&lt;=\)\s)\w+(?=\()
       </match>
     </context>
 
     <context id="calls" style-ref="call">
       <match extended="true">
-	(?!\b(if|while|for)\b)\b\w+(?=\s*\()
+	(?!\b(if|while|for|range)\b)\b\w+(?=\s*\()
       </match>
     </context>
 
@@ -363,7 +336,7 @@
     </context>
 
     <!--Main context-->
-    <context id="custom" class="no-spell-check">
+    <context id="golang" class="no-spell-check">
       <include>
         <context ref="gtk-doc:inline-docs-section"/>
         <context ref="def:c-like-comment" style-ref="comment"/>
@@ -388,7 +361,8 @@
         <context ref="common-defines"/>
         <context ref="standard-streams"/>
         <context ref="signals"/>
-	<context ref="functions"/>
+	<context ref="functions1"/>
+	<context ref="functions2"/>
 	<context ref="calls"/>
       </include>
     </context>

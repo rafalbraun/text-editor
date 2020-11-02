@@ -114,13 +114,12 @@ fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter topl
             snprintf(path, sizeof(path), "%s/%s", pathname, entry -> d_name); // create name of subdirectory
             //g_print("[INFO] adding file %s \n", path);
 
-            //if (is_text_file(path)) {
-            if (stat(path, &sb) == 0 && sb.st_mode & S_IXUSR) {
-                continue;
-            } else {
+            //if (stat(path, &sb) == 0 && sb.st_mode & S_IXUSR) {
+            //    continue;
+            //} else {
                 gtk_tree_store_append(treestore, &child, &toplevel);
                 gtk_tree_store_set(treestore, &child, COLUMN, entry->d_name, -1);
-            }
+            //}
         }
     }
     closedir(dir);

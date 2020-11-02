@@ -226,7 +226,7 @@ void list_schemes(GtkSourceStyleSchemeManager *sm) {
     g_print("\n");
 }
 
-void set_scheme(GtkSourceBuffer* buffer, GtkSourceStyleSchemeManager *sm) {
+void set_scheme(GtkSourceBuffer* buffer, GtkSourceStyleSchemeManager *sm) { 
     GtkSourceStyleScheme *style_scheme = NULL;
     //GtkSourceStyleSchemeManager *sm;
     const gchar * const * schemes;
@@ -318,8 +318,8 @@ main (int argc, char *argv[])
     //gchar* filepath = "/home/rafal/IdeaProjects/vdrift";
     //gchar* filepath = "/home/rafal/IdeaProjects";
     //gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
-    //gchar* filepath = "/home/rafal/go/src/wykop.pl";
-    gchar* filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
+    gchar* filepath = "/home/rafal/go/src/wykop.pl";
+    //gchar* filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
 
 
     // init code
@@ -346,20 +346,27 @@ main (int argc, char *argv[])
     userdata->notebook  = notebook  = gtk_builder_get_object (builder, "notebook");
     userdata->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
 
+    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "blue",  "background", "white", NULL); 
+    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "black",  "foreground", "black", NULL); 
+    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "italic",  "style", PANGO_STYLE_ITALIC, NULL); 
+    gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(buffer), "underline",  "underline", PANGO_UNDERLINE_SINGLE, NULL); 
+
     set_scheme(GTK_SOURCE_BUFFER(buffer), sm);
 
 
     const gchar * const * lang_ids;
     lang_ids = gtk_source_language_manager_get_language_ids (manager);
-    //for (int i=0; *(lang_ids+i); i++) {
+    // for (int i=0; *(lang_ids+i); i++) {
     //    g_print("%d -> %s \n", i, *(lang_ids+i));
-    //}
-    gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[23]));
+    // }
+    gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[44]));
     gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER(buffer), TRUE);
 
-
-
-
+/*
+golang function::
+    (?<=func\s)\w+
+    (?<=\)\s)\w+(?=\()
+*/
 
 
 
