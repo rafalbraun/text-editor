@@ -20,6 +20,8 @@ typedef struct _UserData {
 
 	t_node			*head;
 
+	gint untitled_files_in_buffer_max;
+
 } UserData;
 
 GtkWindow* 			get_window   (UserData* userdata) {return GTK_WINDOW(userdata->window);}

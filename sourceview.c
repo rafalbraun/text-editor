@@ -234,7 +234,7 @@ sourceview_new(GtkSourceBuffer* buffer) {
 
     return scroll;
 }
-
+/*
 #if !SOURCEVIEW
 
 int main( int argc, char *argv[] ) {
@@ -269,3 +269,4 @@ int main( int argc, char *argv[] ) {
 }
 
 #endif
+*/

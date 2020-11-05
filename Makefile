@@ -2,7 +2,7 @@ CC=gcc
 GTK=`pkg-config --cflags --libs gtk+-3.0 gtksourceview-4`
 GLIB=`pkg-config --cflags --libs glib-2.0`
 ##PROGRAMS=text_editor treeview sourceview
-PROGRAMS=text_editor treeview mouse
+PROGRAMS=text_editor treeview mouse sourceview
 
 all: $(PROGRAMS)
 
@@ -11,6 +11,9 @@ text_editor: text_editor.c treeview.c notebook.c callback.c sourceview.c list.c
 
 treeview: test_treeview.c
 	$(CC) $(GLIB) test_treeview.c $(GTK) -o treeview
+
+sourceview: test_sourceview.c
+	$(CC) $(GLIB) test_sourceview.c $(GTK) -o sourceview
 
 mouse: mouse.c
 	$(CC) $(GLIB) mouse.c $(GTK) -o mouse

@@ -20,7 +20,6 @@
 gchar* open_files();
 static void open_file (gpointer userdata, gchar* filepath);
 
-
 void 
 show_error(GtkWindow* window, gchar* message) {
   
@@ -50,7 +49,7 @@ show_error(GtkWindow* window, gchar* message) {
 // https://wiki.ubuntu.com/ClipboardPersistence
 void
 on_main_quit (GtkWidget *widget, gpointer userdata) {
-
+/*
     GdkScreen *screen = gdk_screen_get_default();
     GdkDisplay *display = gdk_display_get_default();
     GtkClipboard *clipboard = gtk_clipboard_get_for_display(display, GDK_SELECTION_CLIPBOARD);
@@ -58,7 +57,6 @@ on_main_quit (GtkWidget *widget, gpointer userdata) {
     gchar* filename = "/tmp/clipboard";
     gchar* command  = g_strconcat("xclip -sel clip < ", filename, NULL);
     gchar* contents = gtk_clipboard_wait_for_text(clipboard);
-    GError *err = NULL;
 
     int fd = g_mkstemp(filename);
     if (fd != -1) {
@@ -71,19 +69,17 @@ on_main_quit (GtkWidget *widget, gpointer userdata) {
     // to print clipboard contents:
     // $ xclip -selection clipboard -o
     system (command);
-
-    /*
+*/
     // save sessions
     // https://stackoverflow.com/questions/28533553/what-is-the-default-mode-for-open-calls-with-o-creat-and-how-to-properly-set-i
-    //fd = g_open("~session-info", O_WRONLY | O_CREAT | O_TRUNC, 0640);
-    fd = g_open("~session-info", O_RDONLY);
-    g_close (fd, &err);
-    */
-    contents = open_files();
+    //fd = g_open("~session-info", O_RDONLY);
+    //g_close (fd, &err);
+    GError *err = NULL;
+    gchar* contents = open_files();
     //g_print("%s\n", contents);
 
     //GError *err = NULL;
-    err = NULL;
+    //err = NULL;
     //g_file_set_contents ("~session-info", contents, strlen(contents), &err);
     g_file_set_contents (((UserData*)userdata)->session_info, contents, strlen(contents), &err);
     g_free(contents);
@@ -251,6 +247,47 @@ void set_langs_dir(GtkSourceBuffer* buffer) {
     }
 
 }
+
+UserData* cast_to_ud (gpointer userdata) {
+    return (UserData*)userdata;
+}
+
+void new_file_cb (GtkButton *widget, gpointer userdata) {
+    gchar buffer[64];
+    gchar* fname;
+    g_print("%d \n", cast_to_ud (userdata)->untitled_files_in_buffer_max);
+    sprintf(buffer, "/tmp/Untitled %d", cast_to_ud (userdata)->untitled_files_in_buffer_max++);
+    fname = g_strdup(buffer);
+    g_creat (fname, S_IREAD|S_IWRITE);
+    open_file (userdata, fname);
+}
+
+int stdout_fd = -1;
+void full_search_cb (GtkButton *widget, gpointer userdata) {
+  char *argv [15];
+  GPid child_pid;
+  int status;
+  gchar* needle = "filepath";
+
+  g_print("searching %s\n", needle);
+
+  memset (argv, 0, 15 * sizeof (char *));
+  argv[0] = "./full_search";
+  argv[1] =  ".";
+  argv[2] = needle;
+  status = g_spawn_async_with_pipes (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, &stdout_fd, NULL, NULL);
+
+  if (!status) {
+    g_print("[FAILED] 1 Failed to run %s: %d \n", argv [0], status);
+  }
+  if (child_pid == 0) {
+    g_print("[FAILED] 2 child pid not returned \n");
+  }
+  if (stdout_fd == -1) {
+    g_print("[FAILED] 3 out fd is -1 \n");
+  }
+}
+
 // https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
 main (int argc, char *argv[])
@@ -362,14 +399,6 @@ main (int argc, char *argv[])
     gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[44]));
     gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER(buffer), TRUE);
 
-/*
-golang function::
-    (?<=func\s)\w+
-    (?<=\)\s)\w+(?=\()
-*/
-
-
-
 
 
 
@@ -394,18 +423,21 @@ golang function::
     expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
-    //g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (on_main_quit), (gpointer)userdata);
-    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), (gpointer)userdata);
+    //g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), (gpointer)userdata);
+    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (on_main_quit), (gpointer)userdata);
     g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_window), NULL);
     g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);
     g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)userdata);
 
     button = gtk_builder_get_object (builder, "file_new");
-    g_signal_connect (button, "activate", G_CALLBACK (show_subwindow), NULL);
+    g_signal_connect (button, "activate", G_CALLBACK (new_file_cb), userdata);
 
     button = gtk_builder_get_object (builder, "edit_cut");
     g_signal_connect (button, "activate", G_CALLBACK (show_langs), NULL);
+
+    button = gtk_builder_get_object (builder, "edit_fullsearch");
+    g_signal_connect (button, "activate", G_CALLBACK (full_search_cb), NULL);
 
     //GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
     //set_syntax_submenu(GTK_MENU_ITEM(syntax_menuitem));

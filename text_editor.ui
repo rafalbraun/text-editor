@@ -790,6 +790,26 @@
                     </object>
                   </child>
 
+                  <child>
+                     <object class="GtkMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">View</property>
+                        <child type="submenu">
+                           <object class="GtkMenu">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <child>
+                                 <object id="edit_fullsearch" class="GtkImageMenuItem">
+                                    <property name="label">Full Search</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
+                     </object>
+                  </child>
 
 
 
