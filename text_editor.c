@@ -286,11 +286,31 @@ gboolean key_pressed_notebook (GtkWidget *notebook, GdkEventKey *event, gpointer
     g_timer_reset (timer);
 }
 
+gboolean is_saved = FALSE;
+
 gboolean _check_timeout_since_last_keypress (gpointer userdata) {
-    
+
+    gchar* fname;
+    GDateTime *time_val;
+    gchar* iso8601_string;
+
+    gdouble time_elapsed = g_timer_elapsed (timer, NULL);
+
     g_print ("Timer: %lf , is active %d \n", 
-        g_timer_elapsed (timer, NULL), 
+        time_elapsed, 
         g_timer_is_active (timer) );
+
+    if (time_elapsed > 5.0 && is_saved == FALSE) {
+
+        time_val = g_date_time_new_now_local ();
+        iso8601_string = g_date_time_format_iso8601 (time_val);
+
+        //g_print ("saving file ...\n");
+        is_saved = TRUE;
+
+        fname = g_strdup_printf ("./filename_%s", iso8601_string);
+        g_creat (fname, S_IREAD|S_IWRITE);
+    }
 
     /**
         co 400 ms sprawdzaj timer i jeśli ma nabite 5 sekund (przy każdym keypress/przełączeniu karty jest reset timera) to zapisujemy plik
@@ -458,7 +478,7 @@ main (int argc, char *argv[])
     timer = g_timer_new ();
     g_timer_start (timer);
 
-    g_timeout_add (40,
+    g_timeout_add (80,
            (GSourceFunc) _check_timeout_since_last_keypress,
            userdata);
 

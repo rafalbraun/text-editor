@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkListStore" id="liststore">
+    <columns>
+       <column type="gchararray" />
+    </columns>
+      <data>
+        <row>
+          <col id="0" translatable="yes">Appearance/Behavior</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Keymap</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Editor</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Version Control</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Build/Execution/Deployment</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Languages/Frameworks</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Tools</col>
+        </row>
+        <row>
+          <col id="0" translatable="yes">Other Settings</col>
+        </row>
+      </data>
+  </object>
+  <object id="window" class="GtkWindow">
+    <property name="visible">True</property>
+    <property name="title">Grid</property>
+    <property name="border-width">0</property>
+    <property name="default-width">1200</property>
+    <property name="default-height">800</property>
+    <child>
+       <object class="GtkBox">
+          <property name="visible">True</property>
+          <property name="can_focus">False</property>
+          <property name="orientation">vertical</property>
+          <child>
+            <object class="GtkPaned" id="paned">
+              <property name="visible">True</property>
+              <property name="orientation">horizontal</property>
+              <property name="position">400</property>
+              <child>
+
+                     <object class="GtkScrolledWindow">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+
+                           <object class="GtkTreeView" id="treeview">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="model">liststore</property>
+                              <property name="enable-search">False</property>
+                              <property name="headers-visible">False</property>
+                              <property name="activate-on-single-click">True</property>
+                              <child internal-child="selection">
+                                 <object class="GtkTreeSelection" id="treeview-selection" />
+                              </child>
+                              <child>
+                                 <object class="GtkTreeViewColumn" id="treeviewcolumn0">
+                                    <property name="title" translatable="yes">commit</property>
+                                    <property name="fixed-width">500</property>
+                                    <child>
+                                       <object class="GtkCellRendererText" id="cellrenderertext0">
+                                          <property name="height">24</property>
+                                       </object>
+                                       <attributes>
+                                          <attribute name="text">0</attribute>
+                                       </attributes>
+                                    </child>
+                                 </object>
+                              </child>
+                           </object>
+
+                        </child>
+                     </object>
+
+
+              </child>
+                  <child>
+                     <object class="GtkFrame">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <property name="label">Frame</property>
+                     </object>
+                  </child>
+            </object>
+               <packing>
+                  <property name="expand">True</property>
+                  <property name="fill">True</property>
+                  <property name="position">2</property>
+               </packing>
+          </child>
+       </object>
+    </child>
+  </object>
+</interface>
