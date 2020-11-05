@@ -262,20 +262,15 @@ void new_file_cb (GtkButton *widget, gpointer userdata) {
     open_file (userdata, fname);
 }
 
-int stdout_fd = -1;
 void full_search_cb (GtkButton *widget, gpointer userdata) {
   char *argv [15];
-  GPid child_pid;
   int status;
-  gchar* needle = "filepath";
-
-  g_print("searching %s\n", needle);
+  GPid child_pid;
 
   memset (argv, 0, 15 * sizeof (char *));
   argv[0] = "./full_search";
   argv[1] =  ".";
-  argv[2] = needle;
-  status = g_spawn_async_with_pipes (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, &stdout_fd, NULL, NULL);
+  status = g_spawn_async_with_pipes (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, &child_pid, NULL, NULL, NULL, NULL);
 
   if (!status) {
     g_print("[FAILED] 1 Failed to run %s: %d \n", argv [0], status);
@@ -283,16 +278,33 @@ void full_search_cb (GtkButton *widget, gpointer userdata) {
   if (child_pid == 0) {
     g_print("[FAILED] 2 child pid not returned \n");
   }
-  if (stdout_fd == -1) {
-    g_print("[FAILED] 3 out fd is -1 \n");
-  }
+}
+
+GTimer *timer;
+
+gboolean key_pressed_notebook (GtkWidget *notebook, GdkEventKey *event, gpointer userdata) {
+    g_timer_reset (timer);
+}
+
+gboolean _check_timeout_since_last_keypress (gpointer userdata) {
+    
+    g_print ("Timer: %lf , is active %d \n", 
+        g_timer_elapsed (timer, NULL), 
+        g_timer_is_active (timer) );
+
+    /**
+        co 400 ms sprawdzaj timer i jeśli ma nabite 5 sekund (przy każdym keypress/przełączeniu karty jest reset timera) to zapisujemy plik
+        
+        przy przełączeniu karty powinniśmy sprawdzać czy plik różni się od tego co mamy w ostatniej wersji i jeśli tak to pomijamy a jeśli zmieniło się to zapisujemy
+
+    */
+    return TRUE;
 }
 
 // https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
 main (int argc, char *argv[])
 {
-
     GtkSourceLanguageManager *manager = gtk_source_language_manager_new ();
     gchar **lang_dirs;
     lang_dirs = g_new0 (gchar *, 6);
@@ -429,6 +441,7 @@ main (int argc, char *argv[])
     g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer)userdata);
     g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer)userdata);
+    g_signal_connect (G_OBJECT (notebook), "key-press-event", G_CALLBACK (key_pressed_notebook), NULL);
 
     button = gtk_builder_get_object (builder, "file_new");
     g_signal_connect (button, "activate", G_CALLBACK (new_file_cb), userdata);
@@ -442,9 +455,12 @@ main (int argc, char *argv[])
     //GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
     //set_syntax_submenu(GTK_MENU_ITEM(syntax_menuitem));
 
+    timer = g_timer_new ();
+    g_timer_start (timer);
 
-
-
+    g_timeout_add (40,
+           (GSourceFunc) _check_timeout_since_last_keypress,
+           userdata);
 
     open_files_from_last_session (userdata);
 
