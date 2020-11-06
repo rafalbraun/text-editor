@@ -1,9 +1,43 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
+                //g_printerr("%s\n",
+                //       gdk_keyval_name (event->keyval));
+
 gboolean
-key_pressed_treeview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) {
-  return FALSE;
+key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata) 
+{
+    GtkTreeModel     *tree_model;
+    GtkTreeSelection *selection;
+    GtkTreePath      *treepath;
+    GtkTreeIter       parent;
+    GList            *rows;
+
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+
+    if (gtk_tree_selection_count_selected_rows (selection) == 1) 
+    {
+        if (event->keyval == GDK_KEY_Return) 
+        {
+            tree_model = gtk_tree_view_get_model (GTK_TREE_VIEW(treeview));
+            gtk_tree_selection_get_selected (selection, &tree_model, &parent);
+
+            if (gtk_tree_model_iter_has_child (tree_model, &parent)) 
+            {
+                gtk_tree_selection_select_path (selection, treepath);
+                rows = gtk_tree_selection_get_selected_rows (selection, &tree_model);
+                treepath = (GtkTreePath*) g_list_first (rows)->data;
+
+                if (gtk_tree_view_row_expanded (GTK_TREE_VIEW(treeview), treepath)) {
+                    gtk_tree_view_collapse_row (GTK_TREE_VIEW(treeview), treepath);
+                } else {
+                    gtk_tree_view_expand_row (GTK_TREE_VIEW(treeview), treepath, FALSE);
+                }
+            }
+        }
+    }
+
+    return FALSE;
 }
 
 gboolean

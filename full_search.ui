@@ -144,6 +144,10 @@
                                     <child>
                                        <object class="GtkCellRendererText" id="cellrenderertext1">
                                           <property name="height">26</property>
+                                          <property name="family">Monospace</property>
+                                          <property name="single-paragraph-mode">TRUE</property>
+                                          <property name="scale-set">FALSE</property>
+                                          <property name="stretch">PANGO_STRETCH_ULTRA_CONDENSED</property>
                                        </object>
                                        <attributes>
                                           <attribute name="text">0</attribute>

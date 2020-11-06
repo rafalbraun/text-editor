@@ -5,35 +5,23 @@
        <column type="gchararray" />
     </columns>
       <data>
-        <row>
-          <col id="0" translatable="yes">Appearance/Behavior</col>
-        </row>
-        <row>
-          <col id="0" translatable="yes">Keymap</col>
-        </row>
-        <row>
-          <col id="0" translatable="yes">Editor</col>
-        </row>
-        <row>
-          <col id="0" translatable="yes">Version Control</col>
-        </row>
-        <row>
-          <col id="0" translatable="yes">Build/Execution/Deployment</col>
-        </row>
-        <row>
-          <col id="0" translatable="yes">Languages/Frameworks</col>
-        </row>
-        <row>
-          <col id="0" translatable="yes">Tools</col>
-        </row>
-        <row>
-          <col id="0" translatable="yes">Other Settings</col>
-        </row>
+
+<!--
+<row><col id="0" translatable="yes">2020-11-05::23:08</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:09</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:10</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:11</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:12</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:13</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:14</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:15</col></row>
+-->
+
       </data>
   </object>
   <object id="window" class="GtkWindow">
     <property name="visible">True</property>
-    <property name="title">Grid</property>
+    <property name="title">File History</property>
     <property name="border-width">0</property>
     <property name="default-width">1200</property>
     <property name="default-height">800</property>
@@ -72,6 +60,7 @@
                                     <child>
                                        <object class="GtkCellRendererText" id="cellrenderertext0">
                                           <property name="height">24</property>
+                                          <property name="family">Monospace</property>
                                        </object>
                                        <attributes>
                                           <attribute name="text">0</attribute>
@@ -85,6 +74,42 @@
                      </object>
 
 
+
+              </child>
+                  <child>
+                     <object class="GtkScrolledWindow" id="textbufferscroll">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                           <object class="GtkSourceBuffer" id="textbuffer">
+                              <property name="highlight-syntax">True</property>
+                           </object>
+                           <object class="GtkSourceView" id="sourceview">
+                              <property name="highlight-current-line">True</property>
+                              <property name="show-right-margin">True</property>
+                              <property name="show-line-numbers">True</property>
+                              <property name="tab_width">4</property>
+                              <property name="auto_indent">True</property>
+                              <property name="visible">True</property>
+                              <property name="buffer">textbuffer</property>
+                              <property name="editable">False</property>
+                              <property name="monospace">True</property>
+                           </object>
+                        </child>
+                     </object>
+                  </child>
+            </object>
+               <packing>
+                  <property name="expand">True</property>
+                  <property name="fill">True</property>
+                  <property name="position">2</property>
+               </packing>
+          </child>
+
+
+
+<!--
               </child>
                   <child>
                      <object class="GtkFrame">
@@ -101,7 +126,20 @@
                   <property name="position">2</property>
                </packing>
           </child>
+-->
+
        </object>
     </child>
   </object>
 </interface>
+
+<!--
+2020-11-05::23:08
+2020-11-05::23:09
+2020-11-05::23:10
+2020-11-05::23:11
+2020-11-05::23:12
+2020-11-05::23:13
+2020-11-05::23:14
+2020-11-05::23:15
+-->
