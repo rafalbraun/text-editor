@@ -38,15 +38,41 @@ popup_menu_copy_file(GtkWidget *menuitem, gpointer treeview) {
 
 void
 popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
+    GtkTreeModel     *tree_model;
+    GtkTreeSelection *selection;
+    GtkTreePath      *treepath;
+    GtkTreeIter       parent;
+    GList            *rows;
+    GtkMenu          *menu;
 
-    GtkMenu* menu;
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
-    menu = get_treeview_menu(userdata);
+    if (gtk_tree_selection_count_selected_rows (selection) == 1) {
+
+        tree_model = gtk_tree_view_get_model (GTK_TREE_VIEW(treeview));
+        gtk_tree_selection_get_selected (selection, &tree_model, &parent);
+
+        if (gtk_tree_model_iter_has_child (tree_model, &parent)) 
+        {
+            gtk_tree_selection_select_path (selection, treepath);
+            rows = gtk_tree_selection_get_selected_rows (selection, &tree_model);
+            treepath = (GtkTreePath*) g_list_first (rows)->data;
+
+            if (gtk_tree_view_row_expanded (GTK_TREE_VIEW(treeview), treepath)) {
+                menu = get_treeview_menu_collapse(userdata);
+            } else {
+                menu = get_treeview_menu_expand(userdata);
+            }
+        } else {
+            menu = get_treeview_menu(userdata);
+        }
+    }
 
     gtk_widget_show_all(GTK_WIDGET(menu));
     gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent * ) event);
 
 }
+
 
 void
 on_changed(GtkWidget * widget, gpointer statusbar) {

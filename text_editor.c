@@ -447,8 +447,9 @@ main (int argc, char *argv[])
   userdata->treeview = treeview = gtk_builder_get_object (builder, "treeview");
   userdata->treestore = treestore = gtk_builder_get_object (builder, "treestore");
   userdata->notebook = notebook = gtk_builder_get_object (builder, "notebook");
-  userdata->treeview_menu =
-    gtk_builder_get_object (builder, "treeview_context_menu");
+  userdata->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
+  userdata->treeview_menu_expand = gtk_builder_get_object (builder, "treeview_context_menu_expand");
+  userdata->treeview_menu_collapse = gtk_builder_get_object (builder, "treeview_context_menu_collapse");
 
   gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), "blue", "background",
 			      "white", NULL);

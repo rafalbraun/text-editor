@@ -149,7 +149,7 @@
 
                           </object>
 
-   <object class="GtkMenu" id="treeview_context_menu">
+   <object class="GtkMenu" id="treeview_context_menu_expand">
                               <property name="visible">True</property>
                               <property name="can_focus">False</property>
                               <child>
@@ -173,7 +173,7 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="new" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">New</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -186,21 +186,234 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="cut" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Cut</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                  </object>
                               </child>
                               <child>
-                                 <object id="copy" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Copy</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                  </object>
                               </child>
                               <child>
-                                 <object id="paste" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Paste</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Filter</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Mark Directory As ...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Rename</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Delete ...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Show in Files</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Open in Terminal</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+   </object>
+
+
+   <object class="GtkMenu" id="treeview_context_menu_collapse">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Collapse</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">New</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Cut</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Copy</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Paste</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Filter</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Mark Directory As ...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Rename</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Delete ...</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Show in Files</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Open in Terminal</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+   </object>
+
+
+   <object class="GtkMenu" id="treeview_context_menu">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">New</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkSeparatorMenuItem">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Cut</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
+                                    <property name="label">Copy</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
+                              <child>
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Paste</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -220,7 +433,7 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="formatter" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">File Formatter</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -228,7 +441,7 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="filter" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Filter</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -236,7 +449,7 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="markas" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Mark File As ...</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -249,14 +462,14 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="rename" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Rename</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                  </object>
                               </child>
                               <child>
-                                 <object id="delete" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Delete ...</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -290,7 +503,7 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="history" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Local History</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -303,7 +516,7 @@
                                  </object>
                               </child>
                               <child>
-                                 <object id="git" class="GtkImageMenuItem">
+                                 <object class="GtkImageMenuItem">
                                     <property name="label">Git</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>

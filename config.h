@@ -15,6 +15,8 @@ typedef struct _UserData {
 	GObject*		treestore;
 
 	GObject* 		treeview_menu;
+	GObject* 		treeview_menu_collapse;
+	GObject* 		treeview_menu_expand;
 
 	gchar*			session_info;
 
@@ -29,6 +31,8 @@ GtkTreeView* 		get_treeview (UserData* userdata) {return GTK_TREE_VIEW(userdata-
 GtkNotebook* 		get_notebook (UserData* userdata) {return GTK_NOTEBOOK(userdata->notebook);}
 GtkSourceBuffer* 	get_buffer   (UserData* userdata) {return GTK_SOURCE_BUFFER(userdata->buffer);}
 GtkMenu*            get_treeview_menu   (UserData* userdata) {return GTK_MENU(userdata->treeview_menu);}
+GtkMenu*            get_treeview_menu_expand   (UserData* userdata) {return GTK_MENU(userdata->treeview_menu_expand);}
+GtkMenu*            get_treeview_menu_collapse   (UserData* userdata) {return GTK_MENU(userdata->treeview_menu_collapse);}
 
 static gchar*
 get_text_from_eventbox(GtkWidget* widget) {
