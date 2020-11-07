@@ -232,20 +232,6 @@ list_schemes (GtkSourceStyleSchemeManager * sm)
 }
 
 void
-set_scheme (GtkSourceBuffer * buffer, GtkSourceStyleSchemeManager * sm)
-{
-  GtkSourceStyleScheme *style_scheme = NULL;
-  //GtkSourceStyleSchemeManager *sm;
-  const gchar *const *schemes;
-
-  //sm = gtk_source_style_scheme_manager_get_default ();
-  schemes = gtk_source_style_scheme_manager_get_scheme_ids (sm);
-  schemes += 4;
-  style_scheme = gtk_source_style_scheme_manager_get_scheme (sm, *schemes);
-  gtk_source_buffer_set_style_scheme (buffer, style_scheme);
-}
-
-void
 set_langs_dir (GtkSourceBuffer * buffer)
 {
   GtkSourceLanguageManager *manager;
@@ -350,10 +336,7 @@ _check_timeout_since_last_keypress (gpointer userdata)
   return TRUE;
 }
 
-// https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
-int
-main (int argc, char *argv[])
-{
+void set_language(GObject* buffer) {
   GtkSourceLanguageManager *manager = gtk_source_language_manager_new ();
   gchar **lang_dirs;
   lang_dirs = g_new0 (gchar *, 6);
@@ -367,15 +350,21 @@ main (int argc, char *argv[])
   lang_dirs[6] = NULL;
   gtk_source_language_manager_set_search_path (manager, lang_dirs);
 
-  /*
-     GtkSourceStyleSchemeManager *sm = gtk_source_style_scheme_manager_get_default ();
-     const gchar * const * search_path = gtk_source_style_scheme_manager_get_search_path(sm);
-     int i=0;
-     while (search_path[i]) {
-     g_print("%s \n", search_path[i++]);
-     }
-   */
+  const gchar *const *lang_ids;
+  lang_ids = gtk_source_language_manager_get_language_ids (manager);
+  // for (int i=0; *(lang_ids+i); i++) {
+  //    g_print("%d -> %s \n", i, *(lang_ids+i));
+  // }
+  gtk_source_buffer_set_language (GTK_SOURCE_BUFFER (buffer),
+                  gtk_source_language_manager_get_language (manager,
+                                        lang_ids
+                                        [23]));
+  //gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[44]));
+  gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER (buffer), TRUE);
 
+}
+
+void set_buffer_scheme (GObject* buffer) {
   GtkSourceStyleSchemeManager *sm = gtk_source_style_scheme_manager_new ();
   gchar **scheme_dirs;
   scheme_dirs = g_new0 (gchar *, 6);
@@ -389,6 +378,36 @@ main (int argc, char *argv[])
     "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/schemes";
   scheme_dirs[6] = NULL;
   gtk_source_style_scheme_manager_set_search_path (sm, scheme_dirs);
+
+//  set_scheme (GTK_SOURCE_BUFFER (buffer), sm);
+//set_scheme (GtkSourceBuffer * buffer, GtkSourceStyleSchemeManager * sm)
+
+  GtkSourceStyleScheme *style_scheme = NULL;
+  //GtkSourceStyleSchemeManager *sm;
+  const gchar *const *schemes;
+
+  //sm = gtk_source_style_scheme_manager_get_default ();
+  schemes = gtk_source_style_scheme_manager_get_scheme_ids (sm);
+  schemes += 4;
+  style_scheme = gtk_source_style_scheme_manager_get_scheme (sm, *schemes);
+  gtk_source_buffer_set_style_scheme (GTK_SOURCE_BUFFER(buffer), style_scheme);
+
+}
+
+// https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
+int
+main (int argc, char *argv[])
+{
+
+  /*
+     GtkSourceStyleSchemeManager *sm = gtk_source_style_scheme_manager_get_default ();
+     const gchar * const * search_path = gtk_source_style_scheme_manager_get_search_path(sm);
+     int i=0;
+     while (search_path[i]) {
+     g_print("%s \n", search_path[i++]);
+     }
+   */
+
 
 
   /*
@@ -460,20 +479,9 @@ main (int argc, char *argv[])
   gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), "underline", "underline",
 			      PANGO_UNDERLINE_SINGLE, NULL);
 
-  set_scheme (GTK_SOURCE_BUFFER (buffer), sm);
+    set_language (buffer);
 
-
-  const gchar *const *lang_ids;
-  lang_ids = gtk_source_language_manager_get_language_ids (manager);
-  // for (int i=0; *(lang_ids+i); i++) {
-  //    g_print("%d -> %s \n", i, *(lang_ids+i));
-  // }
-  gtk_source_buffer_set_language (GTK_SOURCE_BUFFER (buffer),
-				  gtk_source_language_manager_get_language (manager,
-									    lang_ids
-									    [23]));
-  //gtk_source_buffer_set_language (GTK_SOURCE_BUFFER(buffer), gtk_source_language_manager_get_language(manager, lang_ids[44]));
-  gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER (buffer), TRUE);
+    set_buffer_scheme (buffer);
 
 
 
