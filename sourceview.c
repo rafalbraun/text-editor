@@ -203,7 +203,8 @@ static gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
 }
 
 GtkWidget*
-sourceview_new(GtkSourceBuffer* buffer) {
+sourceview_new(GtkSourceBuffer* buffer) 
+{
     GtkWidget *scroll, *sourceview;
 
     scroll = gtk_scrolled_window_new (NULL, NULL);

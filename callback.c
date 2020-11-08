@@ -53,7 +53,7 @@ key_pressed_window(GtkWidget *widget, GdkEventKey *event, gpointer userdata) {
     return FALSE;
 }
 
-gboolean 
+gboolean
 on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
   GtkTreeSelection *selection;
   GtkTreeIter       child, parent;

@@ -128,7 +128,7 @@ save_file(gchar* path, gchar* contents) {
 
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
-static void
+void
 open_file (gpointer userdata, gchar* filepath) {
     GtkWidget       *eventbox;
     GtkWidget       *textview;
