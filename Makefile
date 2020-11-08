@@ -2,7 +2,7 @@ CC=gcc
 GTK=`pkg-config --cflags --libs gtk+-3.0 gtksourceview-4`
 GLIB=`pkg-config --cflags --libs glib-2.0`
 ##PROGRAMS=text_editor treeview sourceview
-PROGRAMS=text_editor treeview sourceview glib_regex full_search ## mouse
+PROGRAMS=text_editor treeview sourceview glib_regex full_search find_files find_files_gui ## mouse
 
 all: $(PROGRAMS)
 
@@ -23,6 +23,12 @@ glib_regex: glib_regex.c
 
 mouse: mouse.c
 	$(CC) $(GLIB) mouse.c $(GTK) -o mouse
+
+find_files: find_files.c
+	$(CC) $(GLIB) find_files.c $(GTK) -o find_files
+
+find_files_gui: find_files_gui.c
+	$(CC) $(GLIB) find_files_gui.c $(GTK) -o find_files_gui
 
 #%: %.c
 #	$(CC) $(GLIB) -o $@ $^ $(GTK)

@@ -21,6 +21,7 @@ gchar *open_files ();
 static void open_file (gpointer userdata, gchar * filepath);
 
 void full_search_cb (GtkWidget * widget, gpointer userdata);
+void find_files_cb (GtkWidget * widget, gpointer userdata);
 
 void
 show_error (GtkWindow * window, gchar * message)
@@ -283,12 +284,34 @@ full_search_cb (GtkWidget * widget, gpointer userdata)
 			      &child_pid, NULL, NULL, NULL, NULL);
 
   if (!status) {
-    g_print ("[FAILED] 1 Failed to run %s: %d \n", argv[0], status);
+    g_print ("[FAILED][%s] 1 Failed to run %s: %d \n", g_get_application_name (), argv[0], status);
   }
   if (child_pid == 0) {
-    g_print ("[FAILED] 2 child pid not returned \n");
+    g_print ("[FAILED][%s] 2 child pid not returned \n", g_get_application_name ());
   }
 }
+
+void
+find_files_cb (GtkWidget * widget, gpointer userdata)
+{
+  char *argv[15];
+  int status;
+  GPid child_pid;
+
+  memset (argv, 0, 15 * sizeof (char *));
+  argv[0] = "./find_files_gui";
+
+  status = g_spawn_async_with_pipes (NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL,
+                  &child_pid, NULL, NULL, NULL, NULL);
+
+  if (!status) {
+    g_print ("[FAILED][%s] 1 Failed to run %s: %d \n", g_get_application_name (), argv[0], status);
+  }
+  if (child_pid == 0) {
+    g_print ("[FAILED][%s] 2 child pid not returned \n", g_get_application_name ());
+  }
+}
+
 
 GTimer *timer;
 gboolean is_saved = FALSE;
@@ -534,6 +557,9 @@ main (int argc, char *argv[])
 
   button = gtk_builder_get_object (builder, "edit_fullsearch");
   g_signal_connect (button, "activate", G_CALLBACK (full_search_cb), NULL);
+
+  button = gtk_builder_get_object (builder, "edit_findfiles");
+  g_signal_connect (button, "activate", G_CALLBACK (find_files_cb), NULL);
 
   //GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
   //set_syntax_submenu(GTK_MENU_ITEM(syntax_menuitem));

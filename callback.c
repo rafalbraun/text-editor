@@ -46,6 +46,10 @@ key_pressed_window(GtkWidget *widget, GdkEventKey *event, gpointer userdata) {
         g_print("ctrl + shift + f \n");
         full_search_cb (widget, userdata);
     }
+    if (event->state & GDK_CONTROL_MASK && event->keyval == 'N') {
+        g_print("ctrl + shift + n \n");
+        find_files_cb (widget, userdata);
+    }
     return FALSE;
 }
 

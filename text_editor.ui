@@ -1066,7 +1066,13 @@
                                     <property name="can_focus">False</property>
                                  </object>
                               </child>
-
+                              <child>
+                                 <object id="edit_findfiles" class="GtkImageMenuItem">
+                                    <property name="label">Find Files</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                 </object>
+                              </child>
 
                            </object>
                         </child>
