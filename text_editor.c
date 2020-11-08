@@ -20,6 +20,8 @@
 gchar *open_files ();
 static void open_file (gpointer userdata, gchar * filepath);
 
+void full_search_cb (GtkWidget * widget, gpointer userdata);
+
 void
 show_error (GtkWindow * window, gchar * message)
 {
@@ -267,7 +269,7 @@ new_file_cb (GtkButton * widget, gpointer userdata)
 }
 
 void
-full_search_cb (GtkButton * widget, gpointer userdata)
+full_search_cb (GtkWidget * widget, gpointer userdata)
 {
   char *argv[15];
   int status;

@@ -41,9 +41,10 @@ key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata)
 }
 
 gboolean
-key_pressed_window(GtkWidget *notebook, GdkEventKey *event, gpointer userdata) {
+key_pressed_window(GtkWidget *widget, GdkEventKey *event, gpointer userdata) {
     if (event->state & GDK_CONTROL_MASK && event->keyval == 'F') {
         g_print("ctrl + shift + f \n");
+        full_search_cb (widget, userdata);
     }
     return FALSE;
 }
