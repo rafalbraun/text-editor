@@ -53,10 +53,11 @@ main (int argc, char *argv[])
     GObject *treestore;
     GObject *notebook;
     GError *error = NULL;
-    gpointer userdata;
+    UserData* userdata;
 
     // Init GTK
     gtk_init (&argc, &argv);
+    ud_init (&userdata);
 
     // Construct a GtkBuilder instance and load our UI description
     builder = gtk_builder_new ();
@@ -66,11 +67,12 @@ main (int argc, char *argv[])
         return 1;
     }
 
+/*
     userdata = g_new0 (UserData, 1);
     cast_to_ud(userdata)->head = NULL;
     cast_to_ud(userdata)->session_info = "~session-info";
     cast_to_ud(userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
-
+*/
     // Connect signal handlers to the constructed widgets
     cast_to_ud(userdata)->window = window = gtk_builder_get_object (builder, "window");
     cast_to_ud(userdata)->buffer = buffer = gtk_builder_get_object (builder, "sourcebuffer");
