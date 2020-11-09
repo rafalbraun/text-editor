@@ -42,11 +42,18 @@ main (int argc, char *argv[])
     cast_to_ud(userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
 */
     // Connect signal handlers to the constructed widgets
-    cast_to_ud(userdata)->window = window = gtk_builder_get_object (builder, "window");
-    cast_to_ud(userdata)->buffer = buffer = gtk_builder_get_object (builder, "sourcebuffer");
-    cast_to_ud(userdata)->treeview = treeview = gtk_builder_get_object (builder, "treeview");
-    cast_to_ud(userdata)->treestore = treestore = gtk_builder_get_object (builder, "treestore");
-    cast_to_ud(userdata)->notebook = notebook = gtk_builder_get_object (builder, "notebook");
+    window = gtk_builder_get_object (builder, "window");
+    buffer = gtk_builder_get_object (builder, "sourcebuffer");
+    treeview = gtk_builder_get_object (builder, "treeview");
+    treestore = gtk_builder_get_object (builder, "treestore");
+    notebook = gtk_builder_get_object (builder, "notebook");
+
+    cast_to_ud(userdata)->window = window;
+    cast_to_ud(userdata)->buffer = buffer;
+    cast_to_ud(userdata)->treeview = treeview;
+    cast_to_ud(userdata)->treestore = treestore;
+    cast_to_ud(userdata)->notebook = notebook
+
     cast_to_ud(userdata)->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
     cast_to_ud(userdata)->treeview_menu_expand = gtk_builder_get_object (builder, "treeview_context_menu_expand");
     cast_to_ud(userdata)->treeview_menu_collapse = gtk_builder_get_object (builder, "treeview_context_menu_collapse");
