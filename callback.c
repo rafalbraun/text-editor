@@ -1,8 +1,15 @@
-#include <gtksourceview/gtksource.h>
-#include <gtk/gtk.h>
+#define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
+#define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
-                //g_printerr("%s\n",
-                //       gdk_keyval_name (event->keyval));
+
+#include "notebook.h"
+#include "treeview.h"
+#include "callback.h"
+
+#define COLUMN 0
+
+//g_printerr("%s\n",
+//       gdk_keyval_name (event->keyval));
 
 gboolean
 key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata) 

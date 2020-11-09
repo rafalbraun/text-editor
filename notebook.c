@@ -1,20 +1,10 @@
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
-#include <stdio.h>
-
-#include <gtksourceview/gtksource.h>
-#include <gtk/gtk.h>
-
-#include <glib/gstdio.h>
-
-//t_node *head;
-//t_pair *map_ptr;
-
-static t_node   *head;
-const gchar     *separator = "\n";
-gchar           *relative_path[128];
-gchar           *absolute_path[128];
+#include "list.h"
+#include "config.h"
+#include "notebook.h"
+#include "sourceview.h"
 
 int get_max() {
     int max = 0;
@@ -46,7 +36,7 @@ gchar* open_files() {
     return g_strjoinv(separator, (gchar**)&absolute_path);
 }
 
-static void
+void
 close_file(gpointer userdata, gchar* title) {
     //t_node** head = get_list(userdata);
     gchar* filepath;
@@ -70,7 +60,7 @@ close_file(gpointer userdata, gchar* title) {
     relative_path[max] = NULL;
 }
 
-static gboolean
+ gboolean
 notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
     gchar* title = get_text_from_eventbox(widget);
 
@@ -88,7 +78,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
     }
 }
 
-static void
+ void
 load_file(gpointer userdata, guint pagenum) {
     GtkWidget *eventbox, *child;
     GtkSourceView *textview;
@@ -121,7 +111,7 @@ load_file(gpointer userdata, guint pagenum) {
     g_free(text);
 }
 
-static void
+ void
 save_file(gchar* path, gchar* contents) {
     
 }

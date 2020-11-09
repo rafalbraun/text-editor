@@ -1,17 +1,9 @@
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
-#include <gtk/gtk.h>
-
-#include <sys/stat.h>
-#include <fcntl.h>
-
-#define SIZE 1000
-
-enum {
-    COLUMN = 0,
-    NUM_COLS
-};
+#include "list.h"
+#include "config.h"
+#include "treeview.h"
 
 gchar* 
 get_selection(GtkWidget * treeview) {
@@ -151,7 +143,7 @@ fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter topl
     closedir(dir);
 }
 
-static void
+ void
 fill_treestore_new(GtkTreeStore * treestore,
     const char * pathname) {
     GtkTreeIter toplevel;

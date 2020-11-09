@@ -15,3 +15,4 @@ listview
 find_files
 mouse
 history/history
+*.o

@@ -1,10 +1,9 @@
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
-#include <gtksourceview/gtksource.h>
-#include <gtk/gtk.h>
+#include "sourceview.h"
 
-static void
+ void
 guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
     GtkSourceLanguageManager *manager;
     GtkSourceLanguage *lang = NULL;
@@ -29,7 +28,7 @@ guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
     }
 }
 
-static void show_langs() {
+ void show_langs() {
     GtkSourceLanguageManager *manager;
     const gchar * const * lang_ids;
 
@@ -66,8 +65,6 @@ gboolean is_valid_string(gchar* line) {
     return TRUE;
 }
 
-GtkTextIter start, end;
-int active = 0;
 
 gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* sourcebuff, GtkWidget* scroll) {
     gint left, right, i, j;
@@ -152,7 +149,7 @@ gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* 
 }
 
 // http://www.bravegnu.org/gtktext/x498.html
-static gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll) {
+ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll) {
     gint window_x, window_y;
     gint buffer_x, buffer_y;
     GtkTextIter iter, start, end;
