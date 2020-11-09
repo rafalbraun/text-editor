@@ -12,13 +12,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-/*
-gchar *open_files ();
-void open_file (gpointer userdata, gchar * filepath);
-void full_search_cb (GtkWidget * widget, gpointer userdata);
-void find_files_cb (GtkWidget * widget, gpointer userdata);
-*/
-
 void
 on_main_quit (GtkWidget * widget, gpointer userdata);
 
@@ -51,6 +44,5 @@ find_files_cb (GtkWidget * widget, gpointer userdata);
 
 gboolean
 key_pressed_notebook (GtkWidget * notebook, GdkEventKey * event, gpointer userdata);
-
 
 #endif

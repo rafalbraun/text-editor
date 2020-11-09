@@ -10,7 +10,7 @@
 //GTimer *timer;
 //gboolean is_saved = FALSE;
 
-t_node   	*head;
+t_node   		*head;
 const gchar     *separator;
 gchar           *relative_path[128];
 gchar           *absolute_path[128];

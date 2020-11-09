@@ -84,32 +84,33 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
     }
 }
 
-void
-load_file(gpointer userdata, guint pagenum) 
-{
+gchar* 
+get_filename_from_page_number (gpointer userdata, int pagenum) {
     GtkWidget *eventbox, *child;
-    GtkSourceView *textview;
-    GtkScrolledWindow *scroll;
-    GtkLabel  *label;
     gchar *title, *filepath;
     int index;
-
-    //g_print("[INFO] attempt to load file on pagenum %d \n", pagenum);
-    //list_tabs();
 
     child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
     eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
     title = get_text_from_eventbox(eventbox);
     index = get_index(title);
+
     filepath = absolute_path[index];
 
-    //g_print("[INFO] loading file %s on index %d \n", filepath, index);
+    return filepath;
+}
+
+// https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
+void
+load_file(gpointer userdata, guint pagenum) 
+{
+    gchar* filepath = get_filename_from_page_number (userdata, pagenum);
 
     gchar *text;
     gsize len;
     GError *err = NULL;
     if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
-        g_error("error reading %s: %s", title, err->message);
+        g_error("error reading %s: %s", filepath, err->message);
     }
 
     gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
@@ -118,14 +119,18 @@ load_file(gpointer userdata, guint pagenum)
     g_free(text);
 }
 
+
 void
 save_file (const gchar* filename, const gchar* contents) 
 {
     int status;
-    int mode = 0666;
-    gssize length = strlen(contents);
+    gssize length;
     GError *err = NULL;
-    GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_NONE;
+
+    /*
+    int mode = 0666;
+    //GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_NONE;
+    GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_CONSISTENT;
     
     status = g_file_set_contents_full (filename,
                                        contents,
@@ -133,6 +138,13 @@ save_file (const gchar* filename, const gchar* contents)
                                        flags,
                                        mode,
                                        &err);
+    */
+
+    length = strlen(contents);
+    status = g_file_set_contents (filename, contents, length, &err);
+
+    g_print("length:   %d \n", length);
+    g_print("contents: %s \n", contents);
 
     if (status == FALSE) {
         g_error("[ERROR] Error saving %s: %s", filename, err->message);
@@ -140,16 +152,30 @@ save_file (const gchar* filename, const gchar* contents)
 }
 
 void save_file_default (gpointer userdata) {
-    /*
-    gint pagenum;
+    gint page_num;
+    gchar* filepath;
+    GtkWidget* scroll;
+    GList *children;
+    GtkTextView* text_view;
+    GtkTextBuffer* buffer;
+    gchar* contents;
+    GtkTextIter start, end;
 
-    pagenum = gtk_notebook_get_current_page (get_notebook (userdata));
-    child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
-    eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
-    title = get_text_from_eventbox(eventbox);
-    index = get_index(title);
-    filepath = absolute_path[index];
-    */
+    page_num = gtk_notebook_get_current_page (get_notebook (userdata));
+    scroll = gtk_notebook_get_nth_page (get_notebook (userdata), page_num);
+    children = gtk_container_get_children (GTK_CONTAINER(scroll));
+    text_view = (GtkTextView*) g_list_first (children)->data;
+    buffer = gtk_text_view_get_buffer (text_view);
+    gtk_text_buffer_get_bounds (buffer, &start, &end);
+
+    //g_print("%d\n", gtk_text_iter_get_offset (&start));
+    //g_print("%d\n", gtk_text_iter_get_offset (&end));
+
+    contents = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+    filepath = get_filename_from_page_number (userdata, page_num);
+    save_file (filepath, contents);
+
+    g_print ("file saved \n");
 }
 
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source

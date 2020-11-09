@@ -28,6 +28,9 @@ close_file(gpointer userdata, gchar* title);
 gboolean
 notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata);
 
+gchar* 
+get_filename_from_page_number (gpointer userdata, int pagenum);
+
 void
 load_file(gpointer userdata, guint pagenum);
 
