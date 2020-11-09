@@ -6,13 +6,15 @@
 #include "notebook.h"
 #include "sourceview.h"
 
-int get_max() {
+int get_max() 
+{
     int max = 0;
     while (absolute_path[max]) {max++;}
     return max;
 }
 
-void list_tabs() {
+void list_tabs() 
+{
     int i=0;
     while (absolute_path[i]) {
         g_print("%d :: %s -> %s \n", i, relative_path[i], absolute_path[i]);
@@ -21,7 +23,8 @@ void list_tabs() {
     g_print("[INFO] max: %d \n", get_max());
 }
 
-int get_index(gchar* basename) {
+int get_index(gchar* basename) 
+{
     for (int i=0; absolute_path[i]; i++) {
         if (strcmp(relative_path[i], basename) == 0) {
             return i;
@@ -30,14 +33,16 @@ int get_index(gchar* basename) {
     return -1;
 }
 
-gchar* open_files() {
+gchar* open_files() 
+{
     int max = get_max();
     absolute_path[max+1] = NULL;
     return g_strjoinv(separator, (gchar**)&absolute_path);
 }
 
 void
-close_file(gpointer userdata, gchar* title) {
+close_file(gpointer userdata, gchar* title) 
+{
     //t_node** head = get_list(userdata);
     gchar* filepath;
     int index;
@@ -60,8 +65,9 @@ close_file(gpointer userdata, gchar* title) {
     relative_path[max] = NULL;
 }
 
- gboolean
-notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
+gboolean
+notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) 
+{
     gchar* title = get_text_from_eventbox(widget);
 
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1) {
@@ -78,8 +84,9 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
     }
 }
 
- void
-load_file(gpointer userdata, guint pagenum) {
+void
+load_file(gpointer userdata, guint pagenum) 
+{
     GtkWidget *eventbox, *child;
     GtkSourceView *textview;
     GtkScrolledWindow *scroll;
@@ -111,15 +118,45 @@ load_file(gpointer userdata, guint pagenum) {
     g_free(text);
 }
 
- void
-save_file(gchar* path, gchar* contents) {
+void
+save_file (const gchar* filename, const gchar* contents) 
+{
+    int status;
+    int mode = 0666;
+    gssize length = strlen(contents);
+    GError *err = NULL;
+    GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_NONE;
     
+    status = g_file_set_contents_full (filename,
+                                       contents,
+                                       length,
+                                       flags,
+                                       mode,
+                                       &err);
+
+    if (status == FALSE) {
+        g_error("[ERROR] Error saving %s: %s", filename, err->message);
+    }
+}
+
+void save_file_default (gpointer userdata) {
+    /*
+    gint pagenum;
+
+    pagenum = gtk_notebook_get_current_page (get_notebook (userdata));
+    child = gtk_notebook_get_nth_page(get_notebook(userdata), pagenum);
+    eventbox = gtk_notebook_get_tab_label(get_notebook(userdata), child);
+    title = get_text_from_eventbox(eventbox);
+    index = get_index(title);
+    filepath = absolute_path[index];
+    */
 }
 
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 void
-open_file (gpointer userdata, gchar* filepath) {
+open_file (gpointer userdata, gchar* filepath) 
+{
     GtkWidget       *eventbox;
     GtkWidget       *textview;
     GtkWidget       *label;
@@ -178,10 +215,11 @@ open_file (gpointer userdata, gchar* filepath) {
 }
 
 void
-switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata) {
+switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata) 
+{
     
     gint pagesrc = gtk_notebook_get_current_page(get_notebook(userdata));
-    printf("page: %d -> %d\n", pagesrc, pagedst);
+    //printf("page: %d -> %d\n", pagesrc, pagedst);
     if (absolute_path[pagedst]) {
         load_file(userdata, pagedst);
     } else {

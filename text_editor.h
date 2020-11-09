@@ -28,4 +28,29 @@ new_file_cb (GtkButton * widget, gpointer userdata);
 void
 open_files_from_last_session (gpointer userdata);
 
+void
+set_language(GObject* buffer);
+
+void
+set_buffer_scheme (GObject* buffer);
+
+void
+set_syntax_submenu (GtkMenuItem * menuitem);
+
+void
+list_schemes (GtkSourceStyleSchemeManager * sm);
+
+void
+set_langs_dir (GtkSourceBuffer * buffer);
+
+void
+full_search_cb (GtkWidget * widget, gpointer userdata);
+
+void
+find_files_cb (GtkWidget * widget, gpointer userdata);
+
+gboolean
+key_pressed_notebook (GtkWidget * notebook, GdkEventKey * event, gpointer userdata);
+
+
 #endif

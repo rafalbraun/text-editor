@@ -25,14 +25,17 @@ gchar* open_files();
 void
 close_file(gpointer userdata, gchar* title);
 
- gboolean
+gboolean
 notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata);
 
- void
+void
 load_file(gpointer userdata, guint pagenum);
 
- void
-save_file(gchar* path, gchar* contents);
+void
+save_file (const gchar* filename, const gchar* contents);
+
+void
+save_file_default ();
 
 void
 open_file (gpointer userdata, gchar* filepath);

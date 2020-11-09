@@ -21,9 +21,6 @@ gchar*
 get_selection(GtkWidget * treeview);
 
 void
-popup_menu_copy_file(GtkWidget *menuitem, gpointer treeview);
-
-void
 popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
 
 void

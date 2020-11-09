@@ -18,26 +18,25 @@ gchar           *absolute_path[128];
 
 typedef struct _UserData
 {
-	/* main window data */
+    /* main window data */
 
-	t_node			*head;
+    t_node		*head;
 
-	GObject* 		window;					// main app window
-	GObject*		treeview;				// directory navigation in treeview on the left side of window
-	GObject*		notebook;				// notebook with file contents and tabs in the center of window
-	GObject*		buffer;					// buffer for file contents
-	gchar*			font;					// font name as char array
-	gchar*			homedir;				// directory that app is opened in
-	GObject*		treestore;
+    GObject* 	window;
+    GObject*	treeview;
+    GObject*	notebook;
+    GObject*	buffer;
+    GObject*	treestore;
+    GObject* 	treeview_menu;
+    GObject* 	treeview_menu_collapse;
+    GObject* 	treeview_menu_expand;
 
-	GObject* 		treeview_menu;
-	GObject* 		treeview_menu_collapse;
-	GObject* 		treeview_menu_expand;
+    gchar*		font;
+    gchar*		homedir;
+    gchar*		session_info;
+    gchar* 		filepath;
 
-	gchar*			session_info;
-	gchar* 			filepath;
-
-	gint untitled_files_in_buffer_max;
+    gint untitled_files_in_buffer_max;
 
 } UserData;
 
@@ -47,40 +46,29 @@ cast_to_ud (gpointer userdata);
 void
 ud_init (UserData** userdata);
 
-GtkWindow* get_window (UserData* userdata);
-GtkTreeView* get_treeview (UserData* userdata);
-GtkNotebook* get_notebook (UserData* userdata);
-GtkSourceBuffer* get_buffer (UserData* userdata);
-GtkMenu* get_treeview_menu (UserData* userdata);
-GtkMenu* get_treeview_menu_expand (UserData* userdata);
-GtkMenu* get_treeview_menu_collapse (UserData* userdata);
+GtkWindow* 
+get_window (UserData* userdata);
+
+GtkTreeView* 
+get_treeview (UserData* userdata);
+
+GtkNotebook* 
+get_notebook (UserData* userdata);
+
+GtkSourceBuffer* 
+get_buffer (UserData* userdata);
+
+GtkMenu* 
+get_treeview_menu (UserData* userdata);
+
+GtkMenu* 
+get_treeview_menu_expand (UserData* userdata);
+
+GtkMenu* 
+get_treeview_menu_collapse (UserData* userdata);
 
 gchar*
 get_text_from_eventbox(GtkWidget* widget);
-
-void
-set_language(GObject* buffer);
-
-void
-set_buffer_scheme (GObject* buffer);
-
-static void
-set_syntax_submenu (GtkMenuItem * menuitem);
-
-void
-list_schemes (GtkSourceStyleSchemeManager * sm);
-
-void
-set_langs_dir (GtkSourceBuffer * buffer);
-
-void
-full_search_cb (GtkWidget * widget, gpointer userdata);
-
-void
-find_files_cb (GtkWidget * widget, gpointer userdata);
-
-gboolean
-key_pressed_notebook (GtkWidget * notebook, GdkEventKey * event, gpointer userdata);
 
 void
 show_error (GtkWindow * window, gchar * message);
