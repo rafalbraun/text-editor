@@ -90,29 +90,92 @@ int is_text_file(gchar* filepath) {
     return 1;
 }
 
-void
-fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter toplevel) {
-    DIR * dir;
+int count_files_dirent(const gchar* filepath) {
+    int file_count = 0;
+    DIR * dirp;
     struct dirent * entry;
-    GtkTreeIter child;
 
-    if (!(dir = opendir(pathname))) {
+    dirp = opendir(filepath); /* There should be error handling after this */
+    while ((entry = readdir(dirp)) != NULL) {
+        //if (entry->d_type == DT_REG) { /* If the entry is a regular file */
+             file_count++;
+        //}
+    }
+    closedir(dirp);
+
+    return file_count;
+}
+
+//int cmpfunc (const void * a, const void * b) {
+    //return ( *(int*)a - *(int*)b );
+//}
+
+int cmpfunc (const void *a, const void *b) {
+    struct dirent *orderA = (struct dirent *)a;
+    struct dirent *orderB = (struct dirent *)b;
+    //g_print ("%s \n", orderA->d_name);
+
+    return strcmp(orderA->d_name, orderB->d_name);
+}
+
+void
+fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter toplevel) {
+    DIR             *dir;
+    GtkTreeIter      child;
+    struct dirent   *entry;
+    struct dirent   *entries;
+    //struct dirent  entries[100];
+
+    if (!(dir = opendir(filepath))) {
         return;
     }
 
+    int count = count_files_dirent(filepath);
+    entries = g_new0 (struct dirent, count);
+    
+    int i=0;
     while ((entry = readdir(dir)) != NULL) {
+        entries[i++] = *entry;
+    }
 
+    qsort(entries, count, sizeof(struct dirent), cmpfunc);
+
+    //g_print ("%d \n", count);
+    for (int i=0; i<count; i++) {
+        entry = &(entries[i]);
+        if (entry->d_type == DT_DIR) {
+            g_print ("[DT_DIR] %s \n", entry->d_name);
+        }
+        if (entry->d_type == DT_REG) {
+            g_print ("[DT_REG] %s \n", entry->d_name);
+        }
+    }
+
+    /*
+    t_node *tmp_head;
+    while ((entry = readdir(dir)) != NULL) {
+        // entries[i++] = entry->d_name;
+        if (entry->d_type == DT_DIR) {
+            l_append (&tmp_head, entry->d_name);
+            g_print ("[DT_DIR] %s \n", entry->d_name);
+        }
+        if (entry->d_type == DT_REG) {
+            l_append (&tmp_head, entry->d_name);
+            g_print ("[DT_REG] %s \n", entry->d_name);
+        }
+
+    }*/
+
+    /*
+    while ((entry = readdir(dir)) != NULL) {
         if (entry -> d_name[0] == '.') {
             continue;
         }
-
         if (entry -> d_type == DT_DIR) {
-
             gchar path[SIZE];
             if (g_strcmp0(entry -> d_name, ".") == 0 || g_strcmp0(entry -> d_name, "..") == 0) {
                 continue;
             }
-
             snprintf(path, sizeof(path), "%s/%s", pathname, entry -> d_name); // create name of subdirectory
 
             gtk_tree_store_append(treestore, &child, &toplevel);
@@ -120,7 +183,6 @@ fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter topl
 
             fill_treestore(path, treestore, child);
         } else {
-
             struct stat sb;
             gchar path[SIZE];
             snprintf(path, sizeof(path), "%s/%s", pathname, entry -> d_name); // create name of subdirectory
@@ -134,10 +196,11 @@ fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter topl
             //}
         }
     }
+    */
     closedir(dir);
 }
 
- void
+void
 fill_treestore_new(GtkTreeStore * treestore,
     const char * pathname) {
     GtkTreeIter toplevel;

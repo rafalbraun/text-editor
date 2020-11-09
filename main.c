@@ -52,7 +52,7 @@ main (int argc, char *argv[])
     cast_to_ud(userdata)->buffer = buffer;
     cast_to_ud(userdata)->treeview = treeview;
     cast_to_ud(userdata)->treestore = treestore;
-    cast_to_ud(userdata)->notebook = notebook
+    cast_to_ud(userdata)->notebook = notebook;
 
     cast_to_ud(userdata)->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
     cast_to_ud(userdata)->treeview_menu_expand = gtk_builder_get_object (builder, "treeview_context_menu_expand");
