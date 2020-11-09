@@ -163,8 +163,8 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
 }
 
 void
-fill_treestore_new(GtkTreeStore * treestore,
-    const char * pathname) {
+fill_treestore_new(GtkTreeStore * treestore, const char * pathname) {
+    
     GtkTreeIter toplevel;
 
     gtk_tree_store_append(treestore, & toplevel, NULL);
@@ -172,7 +172,7 @@ fill_treestore_new(GtkTreeStore * treestore,
 
     fill_treestore(pathname, treestore, toplevel);
 }
-
+/*
 GtkTreeModel *
 create_and_fill_model(const char * pathname) {
     GtkTreeIter toplevel;
@@ -188,7 +188,7 @@ create_and_fill_model(const char * pathname) {
 
     return GTK_TREE_MODEL(treestore);
 }
-
+*/
 void expand_top_node(GObject * treeview) {
     GtkTreePath * treepath;
 
@@ -196,7 +196,7 @@ void expand_top_node(GObject * treeview) {
     treepath = gtk_tree_path_new_from_string("0");
     gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
 }
-
+/*
 void
 create_view_and_model(gchar * filepath, GtkWidget * treeview) {
     GtkCellRenderer * renderer;
@@ -217,7 +217,7 @@ create_view_and_model(gchar * filepath, GtkWidget * treeview) {
     gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), model);
     g_object_unref(model);
 
-    /* Expand top tree node */
+    // Expand top tree node
     treepath = gtk_tree_path_new_from_string("0");
     gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
-}
+}*/
