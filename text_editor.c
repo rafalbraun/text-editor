@@ -2,6 +2,11 @@
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
 #include "list.h"
+#include "config.h"
+#include "sourceview.h"
+#include "treeview.h"
+#include "notebook.h"
+#include "callback.h"
 #include "text_editor.h"
 
 // on quit save clipboard to xclip: https://wiki.ubuntu.com/ClipboardPersistence

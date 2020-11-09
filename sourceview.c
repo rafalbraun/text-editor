@@ -3,8 +3,9 @@
 
 #include "sourceview.h"
 
- void
-guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
+void
+guess_language(GtkSourceBuffer* buffer, gchar* filepath) 
+{
     GtkSourceLanguageManager *manager;
     GtkSourceLanguage *lang = NULL;
     gboolean result_uncertain;
@@ -28,7 +29,8 @@ guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
     }
 }
 
- void show_langs() {
+void show_langs() 
+{
     GtkSourceLanguageManager *manager;
     const gchar * const * lang_ids;
 
@@ -41,7 +43,8 @@ guess_language(GtkSourceBuffer* buffer, gchar* filepath) {
 
 }
 
-void clear_buffer(GtkSourceBuffer* buffer) {
+void clear_buffer(GtkSourceBuffer* buffer) 
+{
     GtkTextIter iter_start, iter_end;
 
     gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &iter_start);
@@ -49,7 +52,8 @@ void clear_buffer(GtkSourceBuffer* buffer) {
     gtk_text_buffer_delete ( GTK_TEXT_BUFFER( buffer ), &iter_start, &iter_end );
 }
 
-gboolean is_valid_string(gchar* line) {
+gboolean is_valid_string(gchar* line) 
+{
     for (int i=0; i!=strlen(line); i++) {
         gunichar c = line[i];
         if (c == '_') {
@@ -66,7 +70,8 @@ gboolean is_valid_string(gchar* line) {
 }
 
 
-gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* sourcebuff, GtkWidget* scroll) {
+gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* sourcebuff, GtkWidget* scroll) 
+{
     gint left, right, i, j;
     gchar buffer[1024];
     gchar* match;
@@ -149,7 +154,8 @@ gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* 
 }
 
 // http://www.bravegnu.org/gtktext/x498.html
- gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll) {
+gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll) 
+{
     gint window_x, window_y;
     gint buffer_x, buffer_y;
     GtkTextIter iter, start, end;

@@ -7,8 +7,6 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
-#include "list.h"
-#include "config.h"
 
 gboolean
 key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata);

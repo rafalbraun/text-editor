@@ -12,13 +12,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "config.h"
-#include "sourceview.h"
-#include "treeview.h"
-#include "notebook.h"
-#include "callback.h"
-#include "text_editor.h"
-
 /*
 gchar *open_files ();
 void open_file (gpointer userdata, gchar * filepath);
