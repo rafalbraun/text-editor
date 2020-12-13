@@ -154,11 +154,7 @@ key_pressed_listview(GtkWidget *notebook, GdkEventKey *event, gpointer userdata)
     return FALSE;
 }
 
-void
-row_activated (GtkTreeView       *treeview,
-               GtkTreePath       *path,
-               GtkTreeViewColumn *column,
-               gpointer           user_data) {
+void row_activated (GtkTreeView *treeview, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data) {
     GtkTreeSelection *selection; 
     GtkTreeIter iter;
     GtkTreeModel *model;

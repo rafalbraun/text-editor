@@ -6,7 +6,7 @@
     </columns>
       <data>
         <row>
-          <col id="0" translatable="yes">Appearance/Behavior</col>
+          <col id="0" translatable="yes">Appearance</col>
         </row>
         <row>
           <col id="0" translatable="yes">Keymap</col>
@@ -31,23 +31,28 @@
         </row>
       </data>
   </object>
-  <object id="window" class="GtkWindow">
-    <property name="visible">True</property>
-    <property name="title">Grid</property>
-    <property name="border-width">0</property>
-    <property name="default-width">1200</property>
-    <property name="default-height">800</property>
-    <child>
-       <object class="GtkBox">
-          <property name="visible">True</property>
-          <property name="can_focus">False</property>
-          <property name="orientation">vertical</property>
-          <child>
-            <object class="GtkPaned" id="paned">
-              <property name="visible">True</property>
-              <property name="orientation">horizontal</property>
-              <property name="position">400</property>
-              <child>
+   <object id="window" class="GtkWindow">
+      <property name="visible">True</property>
+      <property name="title">Grid</property>
+      <property name="border-width">0</property>
+      <property name="default-width">1200</property>
+      <property name="default-height">800</property>
+      <child>
+         <object class="GtkBox" id="mainbox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
+
+
+            <child>
+               <object class="GtkPaned" id="paned">
+                  <property name="visible">True</property>
+                  <property name="orientation">horizontal</property>
+                  <property name="position">300</property>
+                  <child>
+
+
+
 
                      <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
@@ -85,23 +90,125 @@
                      </object>
 
 
-              </child>
+
+
+
+                  </child>
                   <child>
-                     <object class="GtkFrame">
+                     <object class="GtkNotebook" id="notebook">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="shadow_type">in</property>
-                        <property name="label">Frame</property>
-                     </object>
+                        <property name="show-tabs">True</property>
+                        <child>
+                           <object class="GtkFrame">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="shadow_type">in</property>
+                              <property name="label">Frame0</property>
+                           </object>
+                           <packing>
+                              <property name="position">0</property>
+                           </packing>
+                        </child>
+                        <child type="tab">
+                           <object class="GtkEventBox" id="tab0">
+                              <property name="visible">True</property>
+                              <child>
+                                 <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Appearance</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
+
+                        <child>
+                           <object class="GtkFrame">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="shadow_type">in</property>
+                              <property name="label">Frame1</property>
+                           </object>
+                           <packing>
+                              <property name="position">1</property>
+                           </packing>
+                        </child>
+                        <child type="tab">
+                           <object class="GtkEventBox" id="tab1">
+                              <property name="visible">True</property>
+                              <child>
+                                 <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Keymap</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
+
+
+                        <!--
+                        <child type="tab">
+                           <object class="GtkLabel" id="tab0">
+                              <property name="visible">True</property>
+                              <property name="can_focus">False</property>
+                              <property name="label" translatable="yes">Tab 0</property>
+                           </object>
+                           <packing>
+                              <property name="tab_fill">False</property>
+                           </packing>
+                        </child>
+                        -->
+
+                        <!--
+                        <child>
+                           <object class="GtkScrolledWindow">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="shadow_type">in</property>
+                              <child>
+                                 <object class="GtkTextView">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="editable">True</property>
+                                    <property name="monospace">TRUE</property>
+                                 </object>
+                              </child>
+                           </object>
+                           <packing>
+                              <property name="position">1</property>
+                           </packing>
+                        </child>
+                        <child type="tab">
+                           <object class="GtkEventBox" id="tab1">
+                              <property name="visible">True</property>
+                              <child>
+                                 <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">1111</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
+                          -->
+                       </object>
                   </child>
-            </object>
+               </object>
                <packing>
                   <property name="expand">True</property>
                   <property name="fill">True</property>
-                  <property name="position">2</property>
+                  <property name="position">1</property>
                </packing>
-          </child>
-       </object>
-    </child>
-  </object>
+            </child>
+
+
+
+         </object>
+      </child>
+   </object>
 </interface>

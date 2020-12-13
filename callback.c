@@ -14,8 +14,7 @@
 //       gdk_keyval_name (event->keyval));
 
 gboolean
-key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata) 
-{
+key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata) {
     GtkTreeModel     *tree_model;
     GtkTreeSelection *selection;
     GtkTreePath      *treepath;

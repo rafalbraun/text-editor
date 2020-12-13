@@ -4,7 +4,7 @@
 #include "list.h"
 #include "config.h"
 #include "treeview.h"
-
+/*
 gchar* 
 get_selection(GtkWidget * treeview) {
     GtkTreeIter iter;
@@ -21,7 +21,7 @@ get_selection(GtkWidget * treeview) {
     }
     return NULL;
 }
-
+*/
 void
 popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
     GtkTreeModel     *tree_model;
@@ -56,10 +56,9 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
 
     gtk_widget_show_all(GTK_WIDGET(menu));
     gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent * ) event);
-
 }
 
-
+/*
 void
 on_changed(GtkWidget * widget, gpointer statusbar) {
 
@@ -75,7 +74,7 @@ on_changed(GtkWidget * widget, gpointer statusbar) {
         g_free(value);
     }
 }
-
+*/
 int is_text_file(gchar* filepath) {
     gchar *text;
     gsize len;
@@ -90,7 +89,8 @@ int is_text_file(gchar* filepath) {
     return 1;
 }
 
-int count_files_dirent(const gchar* filepath) {
+int count_files_dirent(const gchar* filepath) 
+{
     int file_count = 0;
     DIR * dirp;
     struct dirent * entry;
@@ -110,16 +110,14 @@ int count_files_dirent(const gchar* filepath) {
     //return ( *(int*)a - *(int*)b );
 //}
 
-int cmpfunc (const void *a, const void *b) {
-    struct dirent *orderA = (struct dirent *)a;
-    struct dirent *orderB = (struct dirent *)b;
-    //g_print ("%s \n", orderA->d_name);
-
-    return strcmp(orderA->d_name, orderB->d_name);
+int cmpfunc (const void *a, const void *b) 
+{
+    return g_strcmp0(((struct dirent *)a)->d_name, ((struct dirent *)b)->d_name);
 }
 
 void
-fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter toplevel) {
+fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter toplevel) 
+{
     DIR             *dir;
     GtkTreeIter      child;
     struct dirent   *entry;
@@ -141,18 +139,15 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
     }
     qsort (entries, count, sizeof(struct dirent), cmpfunc);
 
-    //g_print ("%d \n", count);
     for (int i=0; i<count; i++) {
         entry = &(entries[i]);
         if (entry->d_type == DT_DIR) {
-            //g_print ("[DT_DIR] %s \n", entry->d_name);
             snprintf(path, sizeof(path), "%s/%s", filepath, entry->d_name);
             gtk_tree_store_append(treestore, &child, &toplevel);
             gtk_tree_store_set(treestore, &child, COLUMN, entry->d_name, -1);
             fill_treestore(path, treestore, child);
         }
         if (entry->d_type == DT_REG) {
-            //g_print ("[DT_REG] %s \n", entry->d_name);
             gtk_tree_store_append(treestore, &child, &toplevel);
             gtk_tree_store_set(treestore, &child, COLUMN, entry->d_name, -1);
         }
@@ -163,15 +158,25 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
 }
 
 void
-fill_treestore_new(GtkTreeStore * treestore, const char * pathname) {
-    
-    GtkTreeIter toplevel;
+fill_treestore_new(GtkTreeView * treeview, const char * pathname) 
+{
+    GtkTreeStore    *treestore = NULL;
+    GtkTreePath     *treepath;
+    GtkTreeIter      toplevel;
 
-    gtk_tree_store_append(treestore, & toplevel, NULL);
-    gtk_tree_store_set(treestore, & toplevel, COLUMN, pathname, -1);
+    treestore = GTK_TREE_STORE(gtk_tree_view_get_model(treeview));
+
+    gtk_tree_store_append(treestore, &toplevel, NULL);
+    gtk_tree_store_set(treestore, &toplevel, COLUMN, pathname, -1);
 
     fill_treestore(pathname, treestore, toplevel);
+
+    // Expand top tree node
+    treepath = gtk_tree_path_new_from_string("0");
+    gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
+
 }
+
 /*
 GtkTreeModel *
 create_and_fill_model(const char * pathname) {
@@ -189,13 +194,7 @@ create_and_fill_model(const char * pathname) {
     return GTK_TREE_MODEL(treestore);
 }
 */
-void expand_top_node(GObject * treeview) {
-    GtkTreePath * treepath;
 
-    /* Expand top tree node */
-    treepath = gtk_tree_path_new_from_string("0");
-    gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
-}
 /*
 void
 create_view_and_model(gchar * filepath, GtkWidget * treeview) {

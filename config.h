@@ -14,7 +14,8 @@ t_node   		*head;
 const gchar     *separator;
 gchar           *relative_path[128];
 gchar           *absolute_path[128];
-
+gchar           *file_contents[128]; // buffer for all files contents
+gint            *is_file_saved[128];
 
 typedef struct _UserData
 {

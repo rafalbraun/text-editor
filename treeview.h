@@ -33,13 +33,13 @@ void
 fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter toplevel);
 
 void
-fill_treestore_new(GtkTreeStore * treestore, const char * pathname);
+fill_treestore_new(GtkTreeView * treeview, const char * pathname);
 
 //GtkTreeModel *
 //create_and_fill_model(const char * pathname);
 
-void
-expand_top_node(GObject * treeview);
+// void
+// expand_top_node(GObject * treeview);
 
 //void
 //create_view_and_model(gchar * filepath, GtkWidget * treeview);

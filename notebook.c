@@ -6,15 +6,13 @@
 #include "notebook.h"
 #include "sourceview.h"
 
-int get_max() 
-{
+int get_max() {
     int max = 0;
     while (absolute_path[max]) {max++;}
     return max;
 }
 
-void list_tabs() 
-{
+void list_tabs() {
     int i=0;
     while (absolute_path[i]) {
         g_print("%d :: %s -> %s \n", i, relative_path[i], absolute_path[i]);
@@ -23,8 +21,7 @@ void list_tabs()
     g_print("[INFO] max: %d \n", get_max());
 }
 
-int get_index(gchar* basename) 
-{
+int get_index(gchar* basename) {
     for (int i=0; absolute_path[i]; i++) {
         if (strcmp(relative_path[i], basename) == 0) {
             return i;
@@ -33,16 +30,14 @@ int get_index(gchar* basename)
     return -1;
 }
 
-gchar* open_files() 
-{
+gchar* open_files() {
     int max = get_max();
     absolute_path[max+1] = NULL;
     return g_strjoinv(separator, (gchar**)&absolute_path);
 }
 
 void
-close_file(gpointer userdata, gchar* title) 
-{
+close_file(gpointer userdata, gchar* title) {
     //t_node** head = get_list(userdata);
     gchar* filepath;
     int index;
@@ -66,8 +61,7 @@ close_file(gpointer userdata, gchar* title)
 }
 
 gboolean
-notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) 
-{
+notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
     gchar* title = get_text_from_eventbox(widget);
 
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 1) {
@@ -102,8 +96,7 @@ get_filename_from_page_number (gpointer userdata, int pagenum) {
 
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
 void
-load_file(gpointer userdata, guint pagenum) 
-{
+load_file(gpointer userdata, guint pagenum) {
     gchar* filepath = get_filename_from_page_number (userdata, pagenum);
 
     gchar *text;
@@ -121,8 +114,7 @@ load_file(gpointer userdata, guint pagenum)
 
 
 void
-save_file (const gchar* filename, const gchar* contents) 
-{
+save_file (const gchar* filename, const gchar* contents) {
     int status, mode;
     gssize length;
     GError *err = NULL;
@@ -169,8 +161,7 @@ void save_file_default (gpointer userdata) {
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 void
-open_file (gpointer userdata, gchar* filepath) 
-{
+open_file (gpointer userdata, gchar* filepath) {
     GtkWidget       *eventbox;
     GtkWidget       *textview;
     GtkWidget       *label;
@@ -229,8 +220,7 @@ open_file (gpointer userdata, gchar* filepath)
 }
 
 void
-switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata) 
-{
+switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata) {
     gint page_src;
 
     page_src = gtk_notebook_get_current_page (get_notebook(userdata));

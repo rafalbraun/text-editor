@@ -75,8 +75,8 @@ main (int argc, char *argv[])
     gtk_widget_show (action_widget);
     */
 
-    fill_treestore_new (GTK_TREE_STORE (treestore), cast_to_ud(userdata)->filepath);
-    expand_top_node (treeview);
+    fill_treestore_new (GTK_TREE_VIEW (treeview), cast_to_ud(userdata)->filepath);
+    //expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
     //g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), (gpointer)userdata);
