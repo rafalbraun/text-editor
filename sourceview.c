@@ -218,6 +218,7 @@ sourceview_new(GtkSourceBuffer* buffer)
     gtk_source_view_set_show_right_margin(GTK_SOURCE_VIEW(sourceview), TRUE);
     gtk_source_view_set_show_line_numbers(GTK_SOURCE_VIEW(sourceview), TRUE);
     gtk_source_view_set_highlight_current_line(GTK_SOURCE_VIEW(sourceview), TRUE);
+    gtk_source_view_set_show_line_marks(GTK_SOURCE_VIEW(sourceview), TRUE);
     gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (sourceview));
 
     /* change font */

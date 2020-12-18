@@ -25,13 +25,11 @@ void ud_init (UserData** userdata) {
 	g_print("%s \n", cast_to_ud(*userdata)->filepath);
 }
 
-GtkWindow* get_window (UserData* userdata)
-{
+GtkWindow* get_window (UserData* userdata) {
 	return GTK_WINDOW(userdata->window);
 }
 
-GtkTreeView* get_treeview (UserData* userdata)
-{
+GtkTreeView* get_treeview (UserData* userdata) {
 	return GTK_TREE_VIEW(userdata->treeview);
 }
 

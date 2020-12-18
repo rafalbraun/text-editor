@@ -9,6 +9,7 @@
 #define REPO "/home/rafal/IdeaProjects/gtksourceview-my-ide/application"
 #define SIZE 1024
 
+/*
 gchar* launch_command(gchar* command) {
     gchar* fname = "/tmp/clipboard";
     gchar *contents;
@@ -26,14 +27,14 @@ gchar* launch_command(gchar* command) {
 
     return contents;
 }
-
+*/
 void add_to_list(GtkListStore *liststore, const gchar *str0, const guint num1, const gchar *str2) {
   GtkTreeIter iter;
 
   gtk_list_store_append(liststore, &iter);
   gtk_list_store_set(liststore, &iter, 0, str0, 1, num1, 2, str2, -1);
 }
-
+/*
 // https://ben.straub.cc/2013/10/02/revwalk/
 static int 
 git_init(GtkListStore* liststore) {
@@ -71,8 +72,8 @@ git_init(GtkListStore* liststore) {
 
     return result_int;
 }
-
-void on_changed(GtkTreeSelection *selection, gpointer sourcebuffer) {
+*/
+void on_changed(GtkTreeSelection *selection, gpointer notebook) {
     GtkTreeIter iter;
     GtkTreeModel *model;
     gchar *contents;
@@ -87,6 +88,10 @@ void on_changed(GtkTreeSelection *selection, gpointer sourcebuffer) {
         GTK_TREE_SELECTION(selection), &model, &iter)) {
 
         gtk_tree_model_get(model, &iter, 0, &value,  -1);
+        g_print("%s\n", value);
+
+
+
         g_free(value);
     }
 }

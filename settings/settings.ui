@@ -6,10 +6,10 @@
     </columns>
       <data>
         <row>
-          <col id="0" translatable="yes">Appearance</col>
+          <col id="0" translatable="yes">General</col>
         </row>
         <row>
-          <col id="0" translatable="yes">Keymap</col>
+          <col id="0" translatable="yes">Appearance</col>
         </row>
         <row>
           <col id="0" translatable="yes">Editor</col>
@@ -18,16 +18,13 @@
           <col id="0" translatable="yes">Version Control</col>
         </row>
         <row>
-          <col id="0" translatable="yes">Build/Execution/Deployment</col>
+          <col id="0" translatable="yes">Deployment</col>
         </row>
         <row>
-          <col id="0" translatable="yes">Languages/Frameworks</col>
+          <col id="0" translatable="yes">Languages</col>
         </row>
         <row>
           <col id="0" translatable="yes">Tools</col>
-        </row>
-        <row>
-          <col id="0" translatable="yes">Other Settings</col>
         </row>
       </data>
   </object>
@@ -76,7 +73,7 @@
                                     <property name="fixed-width">500</property>
                                     <child>
                                        <object class="GtkCellRendererText" id="cellrenderertext0">
-                                          <property name="height">44</property>
+                                          <property name="height">28</property>
                                        </object>
                                        <attributes>
                                           <attribute name="text">0</attribute>
@@ -148,6 +145,60 @@
                               </child>
                            </object>
                         </child>
+
+
+                        <child>
+                           <object class="GtkFrame">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="shadow_type">in</property>
+                              <property name="label">Frame2</property>
+                           </object>
+                           <packing>
+                              <property name="position">2</property>
+                           </packing>
+                        </child>
+                        <child type="tab">
+                           <object class="GtkEventBox" id="tab2">
+                              <property name="visible">True</property>
+                              <child>
+                                 <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Keymap</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
+
+
+                        <child>
+                           <object class="GtkFrame">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="shadow_type">in</property>
+                              <property name="label">Frame3</property>
+                           </object>
+                           <packing>
+                              <property name="position">3</property>
+                           </packing>
+                        </child>
+                        <child type="tab">
+                           <object class="GtkEventBox" id="tab3">
+                              <property name="visible">True</property>
+                              <child>
+                                 <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Keymap</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                 </object>
+                              </child>
+                           </object>
+                        </child>
+
+
 
 
                         <!--
