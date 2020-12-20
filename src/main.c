@@ -56,9 +56,9 @@ main (int argc, char *argv[])
     cast_to_ud(userdata)->treestore = treestore;
     cast_to_ud(userdata)->notebook = notebook;
 
-    cast_to_ud(userdata)->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
-    cast_to_ud(userdata)->treeview_menu_expand = gtk_builder_get_object (builder, "treeview_context_menu_expand");
-    cast_to_ud(userdata)->treeview_menu_collapse = gtk_builder_get_object (builder, "treeview_context_menu_collapse");
+    //cast_to_ud(userdata)->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
+    //cast_to_ud(userdata)->treeview_menu_expand = gtk_builder_get_object (builder, "treeview_context_menu_expand");
+    //cast_to_ud(userdata)->treeview_menu_collapse = gtk_builder_get_object (builder, "treeview_context_menu_collapse");
 
     gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), "blue", "background", "white", NULL);
     gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), "black", "foreground", "black", NULL);

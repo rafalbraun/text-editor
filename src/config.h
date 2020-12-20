@@ -74,6 +74,10 @@ get_text_from_eventbox(GtkWidget* widget);
 void
 show_error (GtkWindow * window, gchar * message);
 
+int
+is_text_file(gchar* filepath);
+
+
 #endif
 
 

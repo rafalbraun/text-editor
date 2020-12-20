@@ -4,6 +4,27 @@
 #include "list.h"
 #include "config.h"
 #include "treeview.h"
+
+
+int count_files_dirent(const gchar* filepath) 
+{
+    int file_count = 0;
+    DIR * dirp;
+    struct dirent * entry;
+
+    dirp = opendir(filepath); /* There should be error handling after this */
+    while ((entry = readdir(dirp)) != NULL) {
+        //if (entry->d_type == DT_REG) { /* If the entry is a regular file */
+             file_count++;
+        //}
+    }
+    closedir(dirp);
+
+    return file_count;
+}
+
+
+
 /*
 gchar* 
 get_selection(GtkWidget * treeview) {
@@ -75,36 +96,6 @@ on_changed(GtkWidget * widget, gpointer statusbar) {
     }
 }
 */
-int is_text_file(gchar* filepath) {
-    gchar *text;
-    gsize len;
-    GError *err = NULL;
-
-    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
-        return 0;
-    }
-    if (!g_utf8_validate (text, len, NULL)) {
-        return 0;
-    }
-    return 1;
-}
-
-int count_files_dirent(const gchar* filepath) 
-{
-    int file_count = 0;
-    DIR * dirp;
-    struct dirent * entry;
-
-    dirp = opendir(filepath); /* There should be error handling after this */
-    while ((entry = readdir(dirp)) != NULL) {
-        //if (entry->d_type == DT_REG) { /* If the entry is a regular file */
-             file_count++;
-        //}
-    }
-    closedir(dirp);
-
-    return file_count;
-}
 
 //int cmpfunc (const void * a, const void * b) {
     //return ( *(int*)a - *(int*)b );

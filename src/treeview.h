@@ -26,8 +26,6 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
 void
 on_changed(GtkWidget * widget, gpointer statusbar);
 
-int
-is_text_file(gchar* filepath);
 
 void
 fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter toplevel);
@@ -35,6 +33,8 @@ fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter topl
 void
 fill_treestore_new(GtkTreeView * treeview, const char * pathname);
 
+int 
+count_files_dirent(const gchar* filepath);
 
 // void
 // expand_top_node(GObject * treeview);

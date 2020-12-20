@@ -78,3 +78,17 @@ show_error (GtkWindow * window, gchar * message)
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
 }
+
+int is_text_file(gchar* filepath) {
+    gchar *text;
+    gsize len;
+    GError *err = NULL;
+
+    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
+        return 0;
+    }
+    if (!g_utf8_validate (text, len, NULL)) {
+        return 0;
+    }
+    return 1;
+}

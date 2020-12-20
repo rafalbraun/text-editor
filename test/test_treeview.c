@@ -10,8 +10,17 @@
 #include "../src/config.h"
 #include "../src/treeview.h"
 
+#define UI_DIR "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/ui/treeview.ui"
+#define FILEPATH "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/"
+
 int main(int argc, char * argv[]) {
 
+    GtkBuilder *builder;
+    GObject *window;
+    GObject *treeview;
+    GError *error = NULL;
+
+/*
     GtkWidget * window;
     GtkWidget * swindow;
     GtkWidget * view;
@@ -19,9 +28,24 @@ int main(int argc, char * argv[]) {
     GtkWidget * vbox;
     GtkWidget * statusbar;
     gchar * filepath = ".";
+*/
+    gtk_init(&argc, &argv);
 
-    gtk_init( & argc, & argv);
+    builder = gtk_builder_new ();
+    if (gtk_builder_add_from_file (builder, UI_DIR, &error) == 0) {
+        g_printerr ("Error loading file: %s\n", error->message);
+        g_clear_error (&error);
+        return 1;
+    }
+    
+    window = gtk_builder_get_object (builder, "window");
+    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
+    treeview = gtk_builder_get_object (builder, "treeview");
+    fill_treestore_new (GTK_TREE_VIEW (treeview), FILEPATH);
+
+
+/*
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_title(GTK_WINDOW(window), "Tree view");
@@ -46,7 +70,7 @@ int main(int argc, char * argv[]) {
 
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     gtk_widget_show_all(window);
-
+*/
     gtk_main();
 
     return 0;
