@@ -6,24 +6,6 @@
 #include "treeview.h"
 
 
-int count_files_dirent(const gchar* filepath) 
-{
-    int file_count = 0;
-    DIR * dirp;
-    struct dirent * entry;
-
-    dirp = opendir(filepath); /* There should be error handling after this */
-    while ((entry = readdir(dirp)) != NULL) {
-        //if (entry->d_type == DT_REG) { /* If the entry is a regular file */
-             file_count++;
-        //}
-    }
-    closedir(dirp);
-
-    return file_count;
-}
-
-
 
 /*
 gchar* 
@@ -106,6 +88,24 @@ int cmpfunc (const void *a, const void *b)
     return g_strcmp0(((struct dirent *)a)->d_name, ((struct dirent *)b)->d_name);
 }
 
+int count_files_dirent(const gchar* filepath) 
+{
+    int file_count = 0;
+    DIR * dirp;
+    struct dirent * entry;
+
+    dirp = opendir(filepath); /* There should be error handling after this */
+    while ((entry = readdir(dirp)) != NULL) {
+        //if (entry->d_type == DT_REG) { /* If the entry is a regular file */
+             file_count++;
+        //}
+    }
+    closedir(dirp);
+
+    return file_count;
+}
+
+
 void
 fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter toplevel) 
 {
@@ -113,17 +113,26 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
     GtkTreeIter      child;
     struct dirent   *entry;
     struct dirent   *entries;
-    int              count, i = 0;
+    int              count = 0, i = 0;
     gchar            path[SIZE];
 
     if (!(dir = opendir(filepath))) {
         return;
     }
 
-    count = count_files_dirent (filepath);
+    while ((entry = readdir(dir)) != NULL) {
+        //if (entry->d_type == DT_REG) { /* If the entry is a regular file */
+            count++;
+        //}
+    }
+    closedir(dir);
+
+    dir = opendir(filepath); /* There should be error handling after this */
+    //count = count_files_dirent (filepath);
     entries = g_new0 (struct dirent, count);
 
     while ((entry = readdir(dir)) != NULL) {
+        // HERE ADD FILTER FUNCTION
         if ( (strcmp(entry->d_name, ".") != 0) && (strcmp(entry->d_name, "..") != 0) && (entry->d_name[0] != '.') ) {
             entries[i++] = *entry;
         }
