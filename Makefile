@@ -8,7 +8,8 @@ SRC=./src
 
 ##all: $(PROGRAMS)
 all: text_editor 
-test: test_list test_sourceview test_treeview
+test: test_treeview
+##test_list test_sourceview 
 
 text_editor: text_editor.o treeview.o notebook.o callback.o sourceview.o list.o config.o
 	$(CC) $(GLIB) src/main.c obj/text_editor.o obj/treeview.o obj/notebook.o obj/callback.o obj/sourceview.o obj/list.o obj/config.o $(GTK) -o bin/text_editor
