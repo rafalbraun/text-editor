@@ -169,6 +169,7 @@ fill_treestore_new(GtkTreeView * treeview, const char * pathname)
 }
 
 ////////////////////////////////////////////
+/*
 GtkTreeModel *
 create_and_fill_model(const char * pathname) {
     GtkTreeIter toplevel;
@@ -211,3 +212,4 @@ create_view_and_model(gchar * filepath, GtkWidget * treeview) {
     treepath = gtk_tree_path_new_from_string("0");
     gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
 }
+*/

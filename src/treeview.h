@@ -38,11 +38,11 @@ count_files_dirent(const gchar* filepath);
 
 // void
 // expand_top_node(GObject * treeview);
-
+/*
 void
 create_view_and_model(gchar * filepath, GtkWidget * treeview);
 
 GtkTreeModel *
 create_and_fill_model(const char * pathname);
-
+*/
 #endif
