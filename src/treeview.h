@@ -31,10 +31,13 @@ void
 fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter toplevel);
 
 void
-fill_treestore_new(GtkTreeView * treeview, const char * pathname);
+fill_treeview(GtkTreeView * treeview, const char * pathname);
 
-int 
-count_files_dirent(const gchar* filepath);
+gboolean
+on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
+
+gboolean
+key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata);
 
 // void
 // expand_top_node(GObject * treeview);

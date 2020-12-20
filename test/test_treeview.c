@@ -42,7 +42,7 @@ int main(int argc, char * argv[]) {
     g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
     treeview = gtk_builder_get_object (builder, "treeview");
-    fill_treestore_new (GTK_TREE_VIEW (treeview), FILEPATH);
+    fill_treeview (GTK_TREE_VIEW (treeview), FILEPATH);
 
 
 /*

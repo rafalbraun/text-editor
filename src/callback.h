@@ -9,13 +9,8 @@
 
 
 gboolean
-key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata);
-
-gboolean
 key_pressed_window(GtkWidget *widget, GdkEventKey *event, gpointer userdata);
 
-gboolean
-on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
 
 #endif
 

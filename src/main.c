@@ -77,16 +77,17 @@ main (int argc, char *argv[])
     gtk_widget_show (action_widget);
     */
 
-    fill_treestore_new (GTK_TREE_VIEW (treeview), cast_to_ud(userdata)->filepath);
+    fill_treeview (GTK_TREE_VIEW (treeview), cast_to_ud(userdata)->filepath);
     //expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
     //g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), (gpointer)userdata);
     g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (on_main_quit), (gpointer) userdata);
     g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_window), userdata);
-    g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), userdata);
-    g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), (gpointer) userdata);
+
     g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer) userdata);
+
+
     //g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_notebook), NULL);
 
     button = gtk_builder_get_object (builder, "file_new");
