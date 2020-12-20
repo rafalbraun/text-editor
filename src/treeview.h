@@ -26,7 +26,6 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
 void
 on_changed(GtkWidget * widget, gpointer statusbar);
 
-
 void
 fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter toplevel);
 
@@ -38,6 +37,8 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
 gboolean
 key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata);
+
+void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection);
 
 // void
 // expand_top_node(GObject * treeview);

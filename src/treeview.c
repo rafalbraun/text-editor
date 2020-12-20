@@ -164,28 +164,61 @@ fill_treeview(GtkTreeView * treeview, const char * pathname)
 
 
 gboolean
-on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
+on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) 
+{
   GtkTreeSelection *selection;
-  GtkTreeIter       child, parent;
   GtkTreeModel     *model;
-  gboolean          hasParent;
-  gchar            *path, *name, *parent_name;
+  GtkTreeIter       child;
+  gchar            *path;
+  
+  path = "";
 
-  if (event->type == GDK_2BUTTON_PRESS) {
-      GtkTreeSelection *selection;
+  if (event->type == GDK_2BUTTON_PRESS) 
+  {
       selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
       if (gtk_tree_selection_count_selected_rows(selection) == 1) {
 
         model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
+
+        validate_file (path, model, selection);
+
+        //g_free(path);
+      }
+
+      return TRUE;
+    } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) 
+    {
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+        if (gtk_tree_selection_count_selected_rows(selection) <= 1) 
+        {
+            GtkTreePath * path;
+
+            if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
+                event->x, event->y, &path, NULL, NULL, NULL)) {
+                gtk_tree_selection_unselect_all(selection);
+                gtk_tree_selection_select_path(selection, path);
+                gtk_tree_path_free(path);
+            }
+    }
+    //popup_menu(treeview, event, userdata);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
+void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection) {
+        GtkTreeIter       child, parent;
+        gboolean          hasParent;
+        gchar            *name, *parent_name;
+        
+        parent_name = "";
+
         gtk_tree_selection_get_selected(selection, &model, &child);
-
-        path = "";
         gtk_tree_model_get (model, &child, COLUMN, &name, -1);
-
         while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) {
           if ( hasParent == TRUE ) {
-            parent_name = "";
             gtk_tree_model_get (model, &parent, COLUMN, &parent_name, -1);
             path = g_strconcat(parent_name, "/", path, NULL);
             g_free(parent_name);
@@ -194,6 +227,8 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
         }
 
         path = g_strconcat(path, name, NULL);
+        g_free(name);
+
 
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
@@ -207,35 +242,8 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
             //show_error(get_window(userdata), "filepath is directory");
         }
 
-        g_free(name);
-        //g_free(path);
+        g_free(path);
 
-      }
-
-      return TRUE;
-    } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-      /*
-        GtkTreeSelection * selection;
-
-        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-        if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
-            GtkTreePath * path;
-
-        if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
-            event->x, event->y, &path, NULL, NULL, NULL)) {
-            gtk_tree_selection_unselect_all(selection);
-            gtk_tree_selection_select_path(selection, path);
-            gtk_tree_path_free(path);
-        }
-    }
-
-    popup_menu(treeview, event, userdata);
-        */
-
-    return TRUE;
-  }
-
-  return FALSE;
 }
 
 
