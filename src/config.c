@@ -18,7 +18,8 @@ void ud_init (UserData** userdata) {
 	cast_to_ud(*userdata)->head = NULL;
 	cast_to_ud(*userdata)->session_info = "~session-info";
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
-	cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
+	//cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
+	cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/vault13";
 
 	separator = "\n";
 

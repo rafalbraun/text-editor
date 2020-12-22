@@ -17,6 +17,11 @@ enum {
     NUM_COLS
 };
 
+typedef enum pm {
+	COLLAPSE,
+	EXPAND
+} PopupMenu;
+
 gchar* 
 get_selection(GtkWidget * treeview);
 

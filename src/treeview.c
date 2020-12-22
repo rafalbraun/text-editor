@@ -5,8 +5,6 @@
 #include "config.h"
 #include "treeview.h"
 
-
-
 /*
 gchar* 
 get_selection(GtkWidget * treeview) {
@@ -25,6 +23,26 @@ get_selection(GtkWidget * treeview) {
     return NULL;
 }
 */
+
+
+GtkWidget*
+build_menu (PopupMenu menuType) {
+    GtkWidget *menu;
+    GtkWidget *hideMi;
+    GtkWidget *quitMi;
+
+    menu = gtk_menu_new();
+    hideMi = gtk_menu_item_new_with_label("Minimize");
+    gtk_widget_show(hideMi);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), hideMi);
+  
+    quitMi = gtk_menu_item_new_with_label("Quit");
+    gtk_widget_show(quitMi);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), quitMi);
+
+    return menu;
+}
+
 void
 popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
     GtkTreeModel     *tree_model;
@@ -32,7 +50,7 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
     GtkTreePath      *treepath;
     GtkTreeIter       parent;
     GList            *rows;
-    GtkMenu          *menu;
+    GtkWidget        *menu;
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
@@ -49,11 +67,14 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
 
             if (gtk_tree_view_row_expanded (GTK_TREE_VIEW(treeview), treepath)) {
                 //menu = get_treeview_menu_collapse(userdata); OD ODKOMENTOWANIA
+                menu = build_menu(COLLAPSE);
             } else {
                 //menu = get_treeview_menu_expand(userdata); OD ODKOMENTOWANIA
+                menu = build_menu(COLLAPSE);
             }
         } else {
             //menu = get_treeview_menu(userdata); OD ODKOMENTOWANIA
+            menu = build_menu(COLLAPSE);
         }
     }
 
@@ -110,7 +131,6 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
     closedir(dir);
 
     dir = opendir(filepath); /* There should be error handling after this */
-    //count = count_files_dirent (filepath);
     entries = g_new0 (struct dirent, count);
 
     while ((entry = readdir(dir)) != NULL) {
@@ -201,7 +221,7 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
                 gtk_tree_path_free(path);
             }
     }
-    //popup_menu(treeview, event, userdata);
+    popup_menu(treeview, event, userdata);
     return TRUE;
   }
   return FALSE;
@@ -233,10 +253,10 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     //open_file (userdata, path);
-                    g_print("open_file");
+                    g_print("open_file: %s \n", path);
               } else {
                 //show_error(get_window(userdata), "no file under filepath");
-                   g_print("show_error");
+                   g_print("show_error: %s \n", path);
               }
         } else {
             //show_error(get_window(userdata), "filepath is directory");
