@@ -53,7 +53,7 @@ main (int argc, char *argv[])
     gtk_widget_show (action_widget);
     */
 
-    fill_treeview (GET_TREE_VIEW (user_data), GET_FILEPATH (user_data), user_data);
+    fill_treeview (user_data);
 
     //expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
@@ -62,7 +62,6 @@ main (int argc, char *argv[])
 
     connect_signals (user_data);
 
-    open_file (user_data, "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/~session-info");
     open_file (user_data, "/home/rafal/IdeaProjects/vault13/README.MD");
 
 

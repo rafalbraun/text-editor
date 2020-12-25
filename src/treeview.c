@@ -179,12 +179,16 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
 }
 
 void
-fill_treeview(GtkTreeView * treeview, const char * pathname, gpointer user_data) 
+fill_treeview(gpointer user_data) 
 {
     GtkTreeStore    *treestore = NULL;
     GtkTreePath     *treepath;
     GtkTreeIter      toplevel;
+    GtkTreeView     *treeview;
+    gchar           *pathname;
 
+    treeview = GET_TREE_VIEW (user_data);
+    pathname = GET_FILEPATH (user_data);
     treestore = GTK_TREE_STORE(gtk_tree_view_get_model(treeview));
 
     gtk_tree_store_append(treestore, &toplevel, NULL);

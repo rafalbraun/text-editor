@@ -35,7 +35,7 @@ void
 fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter toplevel);
 
 void
-fill_treeview(GtkTreeView * treeview, const char * pathname, gpointer user_data);
+fill_treeview(gpointer user_data);
 
 gboolean
 on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
