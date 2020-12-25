@@ -13,17 +13,22 @@ cast_to_ud (gpointer userdata)
 	return (UserData *) userdata;
 }
 
-void ud_init (UserData** userdata) {
-	*userdata = g_new0 (UserData, 1);
-	cast_to_ud(*userdata)->head = NULL;
-	cast_to_ud(*userdata)->session_info = "~session-info";
+void ud_init (UserData** userdata_ptr) {
+	*userdata_ptr = g_new0 (UserData, 1);
+
+	UserData* userdata = *userdata_ptr;
+
+	//cast_to_ud(*userdata)->head = NULL;
+	userdata->head = NULL;
+	userdata->session_info = "~session-info";
+	
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
-	cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/vault13";
+	userdata->filepath = "/home/rafal/IdeaProjects/vault13";
 
 	separator = "\n";
 
-	g_print("%s \n", cast_to_ud(*userdata)->filepath);
+	g_print("%s \n", userdata->filepath);
 }
 
 GtkWindow* get_window (UserData* userdata) {
