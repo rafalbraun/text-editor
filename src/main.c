@@ -27,7 +27,6 @@ main (int argc, char *argv[])
 
     // Init GTK
     gtk_init (&argc, &argv);
-    ud_init (&userdata);
 
     // Construct a GtkBuilder instance and load our UI description
     builder = gtk_builder_new ();
@@ -36,6 +35,8 @@ main (int argc, char *argv[])
         g_clear_error (&error);
         return 1;
     }
+
+    ud_init (&userdata, builder);
 
 /*
     userdata = g_new0 (UserData, 1);
@@ -60,10 +61,10 @@ main (int argc, char *argv[])
     //cast_to_ud(userdata)->treeview_menu_expand = gtk_builder_get_object (builder, "treeview_context_menu_expand");
     //cast_to_ud(userdata)->treeview_menu_collapse = gtk_builder_get_object (builder, "treeview_context_menu_collapse");
 
-    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), "blue", "background", "white", NULL);
-    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), "black", "foreground", "black", NULL);
-    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), "italic", "style", PANGO_STYLE_ITALIC, NULL);
-    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
+    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "blue", "background", "white", NULL);
+    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "black", "foreground", "black", NULL);
+    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "italic", "style", PANGO_STYLE_ITALIC, NULL);
+    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
 
     set_language (buffer);
     set_buffer_scheme (buffer);

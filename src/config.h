@@ -45,7 +45,7 @@ UserData *
 cast_to_ud (gpointer userdata);
 
 void
-ud_init (UserData** userdata);
+ud_init (UserData** userdata_ptr, GtkBuilder* builder);
 
 GtkWindow* 
 get_window (UserData* userdata);
@@ -77,6 +77,8 @@ show_error (GtkWindow * window, gchar * message);
 int
 is_text_file(gchar* filepath);
 
+GtkSourceBuffer* GET_SOURCE_BUFFER (UserData* userdata);
+GtkTextBuffer* GET_TEXT_BUFFER (UserData* userdata);
 
 typedef enum EventType {
     OPEN_FILE,

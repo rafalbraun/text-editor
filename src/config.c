@@ -13,7 +13,7 @@ cast_to_ud (gpointer userdata)
 	return (UserData *) userdata;
 }
 
-void ud_init (UserData** userdata_ptr) {
+void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	*userdata_ptr = g_new0 (UserData, 1);
 
 	UserData* userdata = *userdata_ptr;
@@ -21,7 +21,7 @@ void ud_init (UserData** userdata_ptr) {
 	//cast_to_ud(*userdata)->head = NULL;
 	userdata->head = NULL;
 	userdata->session_info = "~session-info";
-	
+
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
 	userdata->filepath = "/home/rafal/IdeaProjects/vault13";
@@ -44,11 +44,23 @@ GtkNotebook* get_notebook (UserData* userdata)
 	return GTK_NOTEBOOK(userdata->notebook);
 }
 
+///////////////////
 GtkSourceBuffer* get_buffer (UserData* userdata)
 {
 	return GTK_SOURCE_BUFFER(userdata->buffer);
 }
 
+GtkSourceBuffer* GET_SOURCE_BUFFER (UserData* userdata)
+{
+	return GTK_SOURCE_BUFFER(userdata->buffer);
+}
+
+GtkTextBuffer* GET_TEXT_BUFFER (UserData* userdata)
+{
+	return GTK_TEXT_BUFFER(userdata->buffer);
+}
+
+/////////////////////
 GtkMenu* get_treeview_menu (UserData* userdata)
 {
 	return GTK_MENU(userdata->treeview_menu);
