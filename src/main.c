@@ -45,17 +45,6 @@ main (int argc, char *argv[])
     cast_to_ud(userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
 */
     // Connect signal handlers to the constructed widgets
-    window = gtk_builder_get_object (builder, "window");
-    buffer = gtk_builder_get_object (builder, "sourcebuffer");
-    treeview = gtk_builder_get_object (builder, "treeview");
-    treestore = gtk_builder_get_object (builder, "treestore");
-    notebook = gtk_builder_get_object (builder, "notebook");
-
-    cast_to_ud(userdata)->window = window;
-    cast_to_ud(userdata)->buffer = buffer;
-    cast_to_ud(userdata)->treeview = treeview;
-    cast_to_ud(userdata)->treestore = treestore;
-    cast_to_ud(userdata)->notebook = notebook;
 
     //cast_to_ud(userdata)->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
     //cast_to_ud(userdata)->treeview_menu_expand = gtk_builder_get_object (builder, "treeview_context_menu_expand");
@@ -91,6 +80,8 @@ main (int argc, char *argv[])
 
 
     //g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_notebook), NULL);
+/*
+    DO ODKOMENTOWANIA
 
     button = gtk_builder_get_object (builder, "file_new");
     g_signal_connect (button, "activate", G_CALLBACK (new_file_cb), userdata);
@@ -104,6 +95,7 @@ main (int argc, char *argv[])
     button = gtk_builder_get_object (builder, "edit_findfiles");
     g_signal_connect (button, "activate", G_CALLBACK (find_files_cb), NULL);
 
+*/
     //GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
     //set_syntax_submenu(GTK_MENU_ITEM(syntax_menuitem));
 

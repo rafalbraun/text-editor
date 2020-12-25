@@ -26,6 +26,12 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
 	userdata->filepath = "/home/rafal/IdeaProjects/vault13";
 
+    userdata->window = gtk_builder_get_object (builder, "window");
+    userdata->buffer = gtk_builder_get_object (builder, "sourcebuffer");
+    userdata->treeview = gtk_builder_get_object (builder, "treeview");
+    userdata->treestore = gtk_builder_get_object (builder, "treestore");
+    userdata->notebook = gtk_builder_get_object (builder, "notebook");
+
 	separator = "\n";
 
 	g_print("%s \n", userdata->filepath);
