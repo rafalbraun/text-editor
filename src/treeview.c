@@ -23,22 +23,40 @@ get_selection(GtkWidget * treeview) {
     return NULL;
 }
 */
+void open_file_cb() {
 
+}
+
+static GtkActionEntry buffer_action_entries[] = {
+    { "Collapse", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (open_file_cb) },
+    { "New", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Copy", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Paste", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Filter", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Mark", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Rename", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Delete", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Show", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Open", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "Quit", "document-open", "_Quit", "<control>Q", "Exit the application", G_CALLBACK (gtk_main_quit) }
+};
 
 GtkWidget*
 build_menu (PopupMenu menuType) {
     GtkWidget *menu;
-    GtkWidget *hideMi;
-    GtkWidget *quitMi;
+    GtkWidget *menuItem;
+    GtkActionEntry *actionEntry;
 
     menu = gtk_menu_new();
-    hideMi = gtk_menu_item_new_with_label("Minimize");
-    gtk_widget_show(hideMi);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), hideMi);
-  
-    quitMi = gtk_menu_item_new_with_label("Quit");
-    gtk_widget_show(quitMi);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), quitMi);
+
+    // name, callback, accelerator, stock_id, callback, label, tooltip
+    for (int i=0; i<G_N_ELEMENTS (buffer_action_entries); i++) {
+        actionEntry = &(buffer_action_entries[i]);
+        menuItem = gtk_menu_item_new_with_label(actionEntry->name);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuItem);
+    }
+
+    gtk_widget_show_all(menu);
 
     return menu;
 }
@@ -253,7 +271,11 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     //open_file (userdata, path);
-                    g_print("open_file: %s \n", path);
+#ifdef __TEST__
+                    g_print("[TEST] open_file: %s \n", path);
+#else
+                    g_print("[AAAA] open_file: %s \n", path);
+#endif
               } else {
                 //show_error(get_window(userdata), "no file under filepath");
                    g_print("show_error: %s \n", path);

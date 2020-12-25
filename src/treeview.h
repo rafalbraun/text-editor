@@ -43,7 +43,13 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 gboolean
 key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata);
 
-void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection);
+void 
+validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection);
+
+
+
+
+
 
 // void
 // expand_top_node(GObject * treeview);

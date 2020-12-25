@@ -61,6 +61,26 @@
 
 <!--
 
+
+Collapse
+===
+New
+===
+Copy
+Paste
+===
+Filter
+Mark Directory as ...
+Rename
+Delete
+===
+Show in Files
+Open in Terminal
+
+
+
+
+
 powinno zawierać definicję
 menu_expand i menu_collapse
 
@@ -317,6 +337,12 @@ menu_expand i menu_collapse
                                  </object>
                               </child>
    </object>
+
+
+
+
+
+
 
 
    <object class="GtkMenu" id="treeview_context_menu_collapse">

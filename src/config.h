@@ -78,6 +78,32 @@ int
 is_text_file(gchar* filepath);
 
 
+typedef enum EventType {
+    OPEN_FILE,
+    CLOSE_FILE,
+    SAVE_FILE,
+    LOAD_FILE,
+    NEW_FILE,
+    
+
+    SHOW_ERROR
+} EventType;
+
+typedef struct _Event {
+    EventType type;
+    gchar*    data;
+} Event;
+
+
+
+
+
+
+
+
+
+
+
 #endif
 
 

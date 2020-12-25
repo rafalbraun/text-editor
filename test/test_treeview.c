@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+//#define __TEST__
+
 #include "../src/list.h"
 #include "../src/config.h"
 #include "../src/treeview.h"

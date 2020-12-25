@@ -59,6 +59,10 @@ GtkMenu* get_treeview_menu_collapse (UserData* userdata)
 	return GTK_MENU(userdata->treeview_menu_collapse);
 }
 
+gchar* GET_FILEPATH(UserData* userdata) {
+	return userdata->filepath;
+}
+
 gchar*
 get_text_from_eventbox(GtkWidget* widget)
 {
