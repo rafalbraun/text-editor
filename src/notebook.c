@@ -161,12 +161,12 @@ void save_file_default (gpointer userdata) {
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 void
-open_file (gpointer userdata, gchar* filepath) {
+open_file (gpointer user_data, gchar* filepath) {
     GtkWidget       *eventbox;
     GtkWidget       *textview;
     GtkWidget       *label;
     gchar           *title;
-    GtkNotebook     *notebook = get_notebook(userdata);
+    GtkNotebook     *notebook = GET_NOTEBOOK(user_data);
 
     //g_print("[INFO] opening file %s \n", filepath);
 
@@ -179,7 +179,7 @@ open_file (gpointer userdata, gchar* filepath) {
         return;
     }
     if (!g_utf8_validate (text, len, NULL)) {
-        show_error(get_window(userdata), "the file is binary");
+        show_error(GET_WINDOW(user_data), "the file is binary");
         return;
     }
 
@@ -202,11 +202,11 @@ open_file (gpointer userdata, gchar* filepath) {
     eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox), label);
 
-    textview = sourceview_new(GTK_SOURCE_BUFFER(get_buffer(userdata)));
+    textview = sourceview_new(GET_SOURCE_BUFFER(user_data));
     //guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
 
     int pagenum = gtk_notebook_append_page (notebook, textview, eventbox);
-    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
+    gtk_text_buffer_set_text(GET_TEXT_BUFFER(user_data), text, len);
     g_free(text);
 
     //g_print("[INFO] opening file %s under index %d \n", filepath, index);
@@ -214,7 +214,7 @@ open_file (gpointer userdata, gchar* filepath) {
     gtk_widget_show_all (GTK_WIDGET(notebook));
     gtk_widget_show (label);
 
-    g_signal_connect (eventbox, "button-press-event", G_CALLBACK (notebook_tab_clicked), userdata);
+    g_signal_connect (eventbox, "button-press-event", G_CALLBACK (notebook_tab_clicked), user_data);
 
     gtk_notebook_set_current_page (notebook, pagenum);
 }

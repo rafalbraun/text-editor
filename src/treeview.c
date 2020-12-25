@@ -4,6 +4,7 @@
 #include "list.h"
 #include "config.h"
 #include "treeview.h"
+#include "notebook.h"
 
 /*
 gchar* 
@@ -178,7 +179,7 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
 }
 
 void
-fill_treeview(GtkTreeView * treeview, const char * pathname) 
+fill_treeview(GtkTreeView * treeview, const char * pathname, gpointer user_data) 
 {
     GtkTreeStore    *treestore = NULL;
     GtkTreePath     *treepath;
@@ -195,8 +196,8 @@ fill_treeview(GtkTreeView * treeview, const char * pathname)
     treepath = gtk_tree_path_new_from_string("0");
     gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
 
-    g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), NULL);
-    g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), NULL);
+    g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), user_data);
+    g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), user_data);
 
 }
 
@@ -219,7 +220,7 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
         model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
 
-        validate_file (path, model, selection);
+        validate_file (path, model, selection, userdata);
 
         //g_free(path);
       }
@@ -245,8 +246,7 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
   return FALSE;
 }
 
-
-void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection) {
+void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
         GtkTreeIter       child, parent;
         gboolean          hasParent;
         gchar            *name, *parent_name;
@@ -270,12 +270,8 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
 
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
-                    //open_file (userdata, path);
-#ifdef __TEST__
                     g_print("[TEST] open_file: %s \n", path);
-#else
-                    g_print("[AAAA] open_file: %s \n", path);
-#endif
+                    open_file (user_data, path);
               } else {
                 //show_error(get_window(userdata), "no file under filepath");
                    g_print("show_error: %s \n", path);

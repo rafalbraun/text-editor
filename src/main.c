@@ -11,19 +11,20 @@
 
 #define UI_DIR "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/ui/text_editor.ui"
 
+void connect_signals(UserData* userdata) {
+    g_signal_connect (GET_WINDOW(userdata), "destroy", G_CALLBACK (on_main_quit), (gpointer) userdata);
+    g_signal_connect (GET_WINDOW(userdata), "key-press-event", G_CALLBACK (key_pressed_window), userdata);
+    g_signal_connect (GET_NOTEBOOK(userdata), "switch-page", G_CALLBACK (switch_page), (gpointer) userdata);
+
+}
+
 // https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
 main (int argc, char *argv[])
 {
     GtkBuilder *builder;
-    GObject *buffer;
-    GObject *window;
-    GObject *button;
-    GObject *treeview;
-    GObject *treestore;
-    GObject *notebook;
+    UserData* user_data;
     GError *error = NULL;
-    UserData* userdata;
 
     // Init GTK
     gtk_init (&argc, &argv);
@@ -36,24 +37,9 @@ main (int argc, char *argv[])
         return 1;
     }
 
-    ud_init (&userdata, builder);
+    ud_init (&user_data, builder);
 
-/*
-    userdata = g_new0 (UserData, 1);
-    cast_to_ud(userdata)->head = NULL;
-    cast_to_ud(userdata)->session_info = "~session-info";
-    cast_to_ud(userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
-*/
     // Connect signal handlers to the constructed widgets
-
-    //cast_to_ud(userdata)->treeview_menu = gtk_builder_get_object (builder, "treeview_context_menu");
-    //cast_to_ud(userdata)->treeview_menu_expand = gtk_builder_get_object (builder, "treeview_context_menu_expand");
-    //cast_to_ud(userdata)->treeview_menu_collapse = gtk_builder_get_object (builder, "treeview_context_menu_collapse");
-
-    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "blue", "background", "white", NULL);
-    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "black", "foreground", "black", NULL);
-    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "italic", "style", PANGO_STYLE_ITALIC, NULL);
-    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
 
     //set_language (buffer);
     //set_buffer_scheme (buffer);
@@ -67,16 +53,17 @@ main (int argc, char *argv[])
     gtk_widget_show (action_widget);
     */
 
-    fill_treeview (GET_TREE_VIEW (userdata), GET_FILEPATH (userdata));
+    fill_treeview (GET_TREE_VIEW (user_data), GET_FILEPATH (user_data), user_data);
 
     //expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
     //g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), (gpointer)userdata);
-    g_signal_connect (G_OBJECT (GET_WINDOW(userdata)), "destroy", G_CALLBACK (on_main_quit), (gpointer) userdata);
-    g_signal_connect (G_OBJECT (GET_WINDOW(userdata)), "key-press-event", G_CALLBACK (key_pressed_window), userdata);
 
-    g_signal_connect (G_OBJECT (GET_NOTEBOOK(userdata)), "switch-page", G_CALLBACK (switch_page), (gpointer) userdata);
+    connect_signals (user_data);
+
+    open_file (user_data, "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/~session-info");
+    open_file (user_data, "/home/rafal/IdeaProjects/vault13/README.MD");
 
 
     //g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_notebook), NULL);
@@ -105,7 +92,7 @@ main (int argc, char *argv[])
     // DO ODKOMENTOWANIA
     //g_timeout_add (80, (GSourceFunc) _check_timeout_since_last_keypress, userdata);
 
-    open_files_from_last_session (userdata);
+    //open_files_from_last_session (user_data);
 
     gtk_main ();
 

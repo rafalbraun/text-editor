@@ -41,7 +41,7 @@ void
 save_file_default ();
 
 void
-open_file (gpointer userdata, gchar* filepath);
+open_file (gpointer user_data, gchar* filepath);
 
 void
 switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata);
