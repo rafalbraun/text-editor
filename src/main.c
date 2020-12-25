@@ -66,8 +66,8 @@ main (int argc, char *argv[])
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "italic", "style", PANGO_STYLE_ITALIC, NULL);
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
 
-    set_language (buffer);
-    set_buffer_scheme (buffer);
+    //set_language (buffer);
+    //set_buffer_scheme (buffer);
 
 
     /*
@@ -78,15 +78,16 @@ main (int argc, char *argv[])
     gtk_widget_show (action_widget);
     */
 
-    fill_treeview (GTK_TREE_VIEW (treeview), cast_to_ud(userdata)->filepath);
+    fill_treeview (GET_TREE_VIEW (userdata), GET_FILEPATH (userdata));
+
     //expand_top_node (treeview);
     //gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(treeview), GTK_TREE_VIEW_GRID_LINES_BOTH);
 
     //g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), (gpointer)userdata);
-    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (on_main_quit), (gpointer) userdata);
-    g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_window), userdata);
+    g_signal_connect (G_OBJECT (GET_WINDOW(userdata)), "destroy", G_CALLBACK (on_main_quit), (gpointer) userdata);
+    g_signal_connect (G_OBJECT (GET_WINDOW(userdata)), "key-press-event", G_CALLBACK (key_pressed_window), userdata);
 
-    g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (switch_page), (gpointer) userdata);
+    g_signal_connect (G_OBJECT (GET_NOTEBOOK(userdata)), "switch-page", G_CALLBACK (switch_page), (gpointer) userdata);
 
 
     //g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_notebook), NULL);

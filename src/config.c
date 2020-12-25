@@ -60,12 +60,26 @@ GtkTextBuffer* GET_TEXT_BUFFER (UserData* userdata)
 	return GTK_TEXT_BUFFER(userdata->buffer);
 }
 
+GtkTreeView* GET_TREE_VIEW(UserData* userdata) 
+{
+	return GTK_TREE_VIEW(userdata->treeview);	
+}
+gchar* GET_FILEPATH(UserData* userdata) {
+	return userdata->filepath;
+}
+GtkWindow* GET_WINDOW(UserData* userdata) {
+	return GTK_WINDOW(userdata->window);
+}
+GtkNotebook* GET_NOTEBOOK(UserData* userdata) {
+	return GTK_NOTEBOOK(userdata->notebook);
+}
 /////////////////////
+/*
+
 GtkMenu* get_treeview_menu (UserData* userdata)
 {
 	return GTK_MENU(userdata->treeview_menu);
 }
-
 GtkMenu* get_treeview_menu_expand (UserData* userdata)
 {
 	return GTK_MENU(userdata->treeview_menu_expand);
@@ -75,10 +89,7 @@ GtkMenu* get_treeview_menu_collapse (UserData* userdata)
 {
 	return GTK_MENU(userdata->treeview_menu_collapse);
 }
-
-gchar* GET_FILEPATH(UserData* userdata) {
-	return userdata->filepath;
-}
+*/
 
 gchar*
 get_text_from_eventbox(GtkWidget* widget)

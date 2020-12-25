@@ -79,6 +79,10 @@ is_text_file(gchar* filepath);
 
 GtkSourceBuffer* GET_SOURCE_BUFFER (UserData* userdata);
 GtkTextBuffer* GET_TEXT_BUFFER (UserData* userdata);
+GtkTreeView* GET_TREE_VIEW(UserData* userdata);
+gchar* GET_FILEPATH(UserData* userdata);
+GtkWindow* GET_WINDOW(UserData* userdata);
+GtkNotebook* GET_NOTEBOOK(UserData* userdata) ;
 
 typedef enum EventType {
     OPEN_FILE,
