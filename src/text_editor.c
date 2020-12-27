@@ -10,6 +10,7 @@
 #include "text_editor.h"
 
 // on quit save clipboard to xclip: https://wiki.ubuntu.com/ClipboardPersistence
+
 void
 on_main_quit (GtkWidget * widget, gpointer userdata)
 {
@@ -22,18 +23,26 @@ on_main_quit (GtkWidget * widget, gpointer userdata)
     gtk_main_quit ();
 }
 
-void
-new_file_cb (GtkButton * widget, gpointer userdata)
+
+
+
+
+void 
+build_languages_submenu () 
 {
-    gchar buffer[64];
-    gchar *fname;
-    g_print ("%d \n", cast_to_ud (userdata)->untitled_files_in_buffer_max);
-    sprintf (buffer, "/tmp/Untitled %d",
-       cast_to_ud (userdata)->untitled_files_in_buffer_max++);
-    fname = g_strdup (buffer);
-    g_creat (fname, S_IREAD | S_IWRITE);
-    open_file (userdata, fname);
+    
 }
+
+void
+build_themes_submenu () 
+{
+
+}
+
+
+
+
+
 /*
 gboolean
 _check_timeout_since_last_keypress (gpointer userdata)
@@ -150,6 +159,79 @@ void set_buffer_scheme (GObject* buffer) {
 
 }
 
+void 
+list_langs() 
+{
+    GtkSourceLanguageManager *manager;
+    const gchar *const *lang_ids;
+
+    manager = gtk_source_language_manager_get_default ();
+    lang_ids = gtk_source_language_manager_get_language_ids (manager);
+
+    for (int i = 0; lang_ids[i]; i++) {
+        const gchar *lang_name = lang_ids[i];
+        g_print("%d -> %s \n", i, lang_name);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void
+list_schemes ()
+{
+  GtkSourceStyleScheme *style_scheme = NULL;
+  GtkSourceStyleSchemeManager *sm;
+  const gchar *const *schemes;
+
+  sm = gtk_source_style_scheme_manager_get_default ();
+  schemes = gtk_source_style_scheme_manager_get_scheme_ids (sm);
+  g_print ("Available style schemes:\n");
+  while (*schemes != NULL) {
+    const gchar *const *authors;
+    gchar *authors_str = NULL;
+
+    style_scheme = gtk_source_style_scheme_manager_get_scheme (sm, *schemes);
+
+    authors = gtk_source_style_scheme_get_authors (style_scheme);
+    if (authors != NULL)
+      authors_str = g_strjoinv (", ", (gchar **) authors);
+
+    g_print (" - [%s] %s: %s\n",
+         gtk_source_style_scheme_get_id (style_scheme),
+         gtk_source_style_scheme_get_name (style_scheme),
+         gtk_source_style_scheme_get_description (style_scheme) ?
+         gtk_source_style_scheme_get_description (style_scheme) : "");
+
+    if (authors_str) {
+      g_print ("   by %s\n", authors_str);
+      g_free (authors_str);
+    }
+
+    ++schemes;
+  }
+  g_print ("\n");
+}
 
 void
 set_syntax_submenu (GtkMenuItem * menuitem)
@@ -188,41 +270,6 @@ set_syntax_submenu (GtkMenuItem * menuitem)
   gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), quitMi);
 */
     gtk_widget_show_all (GTK_WIDGET (menuitem));
-}
-
-void
-list_schemes (GtkSourceStyleSchemeManager * sm)
-{
-  GtkSourceStyleScheme *style_scheme = NULL;
-  const gchar *const *schemes;
-
-  //sm = gtk_source_style_scheme_manager_get_default ();
-  schemes = gtk_source_style_scheme_manager_get_scheme_ids (sm);
-  g_print ("Available style schemes:\n");
-  while (*schemes != NULL) {
-    const gchar *const *authors;
-    gchar *authors_str = NULL;
-
-    style_scheme = gtk_source_style_scheme_manager_get_scheme (sm, *schemes);
-
-    authors = gtk_source_style_scheme_get_authors (style_scheme);
-    if (authors != NULL)
-      authors_str = g_strjoinv (", ", (gchar **) authors);
-
-    g_print (" - [%s] %s: %s\n",
-         gtk_source_style_scheme_get_id (style_scheme),
-         gtk_source_style_scheme_get_name (style_scheme),
-         gtk_source_style_scheme_get_description (style_scheme) ?
-         gtk_source_style_scheme_get_description (style_scheme) : "");
-
-    if (authors_str) {
-      g_print ("   by %s\n", authors_str);
-      g_free (authors_str);
-    }
-
-    ++schemes;
-  }
-  g_print ("\n");
 }
 
 void

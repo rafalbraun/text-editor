@@ -4,12 +4,8 @@
 #ifndef NOTEBOOK_H
 #define NOTEBOOK_H
 
-#include <stdio.h>
-
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
-
-#include <glib/gstdio.h>
 
 //t_node *head;
 //t_pair *map_ptr;

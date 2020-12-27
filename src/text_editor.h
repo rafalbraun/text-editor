@@ -31,9 +31,6 @@ void
 set_syntax_submenu (GtkMenuItem * menuitem);
 
 void
-list_schemes (GtkSourceStyleSchemeManager * sm);
-
-void
 set_langs_dir (GtkSourceBuffer * buffer);
 
 void
@@ -44,5 +41,11 @@ find_files_cb (GtkWidget * widget, gpointer userdata);
 
 gboolean
 key_pressed_notebook (GtkWidget * notebook, GdkEventKey * event, gpointer userdata);
+
+void 
+list_langs ();
+
+void
+list_schemes ();
 
 #endif

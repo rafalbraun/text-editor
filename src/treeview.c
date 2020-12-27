@@ -23,13 +23,13 @@ get_selection(GtkWidget * treeview) {
     }
     return NULL;
 }
-*/
 void open_file_cb() {
 
 }
+*/
 
 static GtkActionEntry buffer_action_entries[] = {
-    { "Collapse", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (open_file_cb) },
+    //{ "Collapse", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (open_file_cb) },
     { "New", "document-open", "_Open", "<control>O", "Open a file", NULL },
     { "Copy", "document-open", "_Open", "<control>O", "Open a file", NULL },
     { "Paste", "document-open", "_Open", "<control>O", "Open a file", NULL },
@@ -270,7 +270,6 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
 
         path = g_strconcat(path, name, NULL);
         g_free(name);
-
 
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {

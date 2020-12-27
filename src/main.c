@@ -84,6 +84,8 @@ main (int argc, char *argv[])
 */
     //GObject* syntax_menuitem = gtk_builder_get_object (builder, "syntax");
     //set_syntax_submenu(GTK_MENU_ITEM(syntax_menuitem));
+    list_schemes();
+    list_langs();
 
     //timer = g_timer_new ();
     //g_timer_start (timer);

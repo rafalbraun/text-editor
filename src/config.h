@@ -7,6 +7,11 @@
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
 
+/* for file creation 
+#include <stdio.h>
+#include <glib/gstdio.h>
+*/
+
 //GTimer *timer;
 //gboolean is_saved = FALSE;
 

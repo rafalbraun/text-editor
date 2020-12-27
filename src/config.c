@@ -125,17 +125,6 @@ get_text_from_eventbox(GtkWidget* widget)
 	return title;
 }
 
-void
-show_error (GtkWindow * window, gchar * message)
-{
-    GtkWidget *dialog;
-    dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-                GTK_DIALOG_DESTROY_WITH_PARENT,
-                GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message);
-    gtk_window_set_title (GTK_WINDOW (dialog), "Error");
-    gtk_dialog_run (GTK_DIALOG (dialog));
-    gtk_widget_destroy (dialog);
-}
 
 int is_text_file(gchar* filepath) {
     gchar *text;
@@ -150,3 +139,82 @@ int is_text_file(gchar* filepath) {
     }
     return 1;
 }
+
+////////////////////////////////////////////////////////////////
+// error
+////////////////////////////////////////////////////////////////
+
+void
+show_error (GtkWindow* window, gchar* message)
+{
+    GtkWidget *dialog;
+    
+    dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+                GTK_DIALOG_DESTROY_WITH_PARENT,
+                GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message);
+    
+    gtk_window_set_title (GTK_WINDOW (dialog), "Error");
+    gtk_dialog_run (GTK_DIALOG (dialog));
+    gtk_widget_destroy (dialog);
+}
+
+////////////////////////////////////////////////////////////////
+// model
+////////////////////////////////////////////////////////////////
+
+// nothing special, just a new tab and new buffer
+void
+new_file_cb (gpointer userdata)
+{
+	/*
+    gchar buffer[64];
+    gchar *fname;
+    g_print ("%d \n", cast_to_ud (userdata)->untitled_files_in_buffer_max);
+    sprintf (buffer, "/tmp/Untitled %d",
+       cast_to_ud (userdata)->untitled_files_in_buffer_max++);
+    fname = g_strdup (buffer);
+    g_creat (fname, S_IREAD | S_IWRITE);
+    open_file (userdata, fname);
+    */
+}
+
+// check if file exists and is text file
+void 
+open_file_cb (gchar* filepath, gpointer user_data) {
+    gchar *text;
+    gsize len;
+    GError *err = NULL;
+
+    if (!g_utf8_validate (text, len, NULL)) {
+        show_error(GET_WINDOW(user_data), "the file is binary");
+        return;
+    }
+    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
+        show_error(GET_WINDOW(user_data), "error reading file");
+        //g_error("error reading %s: %s", filepath, err->message);
+        return;
+    }
+
+}
+
+// ask if we really want to save file, then check if file exists and if we would overwrite
+void 
+save_file_cb (gchar* filepath, gpointer userdata) {
+
+}
+
+// ask if file saved when we want to close tab
+void 
+close_file_cb (gpointer userdata) {
+
+}
+
+// after we go back to the file tab we need to make sure the file has not been changed and then load out app buffer
+void 
+load_file_cb (gpointer userdata) {
+
+}
+
+
+
+
