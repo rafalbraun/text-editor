@@ -159,6 +159,13 @@ void set_buffer_scheme (GObject* buffer) {
 
 }
 
+bool t_strcmp(const char* const str0, const char* const str1) {
+    if (g_strcmp0 (str0, str1)==0) {
+        return true;
+    }
+    return false;
+}
+
 void 
 list_langs() 
 {
@@ -170,7 +177,10 @@ list_langs()
 
     for (int i = 0; lang_ids[i]; i++) {
         const gchar *lang_name = lang_ids[i];
-        g_print("%d -> %s \n", i, lang_name);
+
+        if (t_strcmp(lang_name, "c")) {
+            g_print("%d -> %s \n", i, lang_name);
+        }
     }
 
 }

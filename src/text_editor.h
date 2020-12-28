@@ -12,6 +12,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <stdbool.h> // for bool
+
 void
 on_main_quit (GtkWidget * widget, gpointer userdata);
 
