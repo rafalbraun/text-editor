@@ -195,7 +195,7 @@ open_file_cb (const gchar* filepath, gchar* text, gsize length, gpointer user_da
         return;
     }
 
-    //g_print("%s \n", text);
+    g_print("%s \n", text);
 }
 
 // ask if we really want to save file, then check if file exists and if we would overwrite
