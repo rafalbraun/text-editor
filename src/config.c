@@ -181,21 +181,21 @@ new_file_cb (gpointer userdata)
 // check if file exists and is text file
 // should I return boolean???
 void
-open_file_cb (const gchar* filepath, gchar* text, gsize length, gpointer user_data) {
+open_file_cb (const gchar* filepath, gchar** text, gsize length, gpointer user_data) {
     GError *err = NULL;
+    gchar* tmp = NULL;
     
-    if (g_file_get_contents (filepath, &text, &length, &err) == FALSE) {
+    if (g_file_get_contents (filepath, &tmp, &length, &err) == FALSE) {
         show_error (GET_WINDOW (user_data), "error reading file");
         g_error ("[g_file_get_contents] error reading %s: %s", filepath, err->message);
         return;
     }
-    if (!g_utf8_validate (text, length, NULL)) {
+    if (!g_utf8_validate (tmp, length, NULL)) {
         show_error (GET_WINDOW (user_data), "the file is binary");
         g_error ("[g_utf8_validate] error reading %s: %s", filepath, err->message);
         return;
     }
-
-    g_print("%s \n", text);
+    *text = g_strdup (tmp);
 }
 
 // ask if we really want to save file, then check if file exists and if we would overwrite

@@ -32,17 +32,18 @@ int main( int argc, char *argv[] ) {
 
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
-    gchar* text;
-    gsize length = 18856;
+    gchar* text = NULL;
+    gsize length = 10423;
     gchar* filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/tmp";
     UserData* user_data;
     user_data = g_new0 (UserData, 1);
     user_data->window = G_OBJECT (window);
-    open_file_cb (filepath, text, length, user_data);
-    //create_tab (user_data, filepath, text, length);
 
-    //g_print("%s \n", text);
-    //gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), text, length);
+    open_file_cb (filepath, &text, length, user_data);
+    gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), text, length);
+
+    //create_tab (user_data, filepath, text, length);
+    //g_print("text: %s \n", text);
 
     gtk_widget_show_all (window);
     gtk_main();
