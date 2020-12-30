@@ -179,22 +179,23 @@ new_file_cb (gpointer userdata)
 }
 
 // check if file exists and is text file
-void 
-open_file_cb (gchar* filepath, gpointer user_data) {
-    gchar *text;
-    gsize len;
+// should I return boolean???
+void
+open_file_cb (const gchar* filepath, gchar* text, gsize length, gpointer user_data) {
     GError *err = NULL;
-
-    if (!g_utf8_validate (text, len, NULL)) {
-        show_error(GET_WINDOW(user_data), "the file is binary");
+    
+    if (g_file_get_contents (filepath, &text, &length, &err) == FALSE) {
+        show_error (GET_WINDOW (user_data), "error reading file");
+        g_error ("[g_file_get_contents] error reading %s: %s", filepath, err->message);
         return;
     }
-    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
-        show_error(GET_WINDOW(user_data), "error reading file");
-        //g_error("error reading %s: %s", filepath, err->message);
+    if (!g_utf8_validate (text, length, NULL)) {
+        show_error (GET_WINDOW (user_data), "the file is binary");
+        g_error ("[g_utf8_validate] error reading %s: %s", filepath, err->message);
         return;
     }
 
+    //g_print("%s \n", text);
 }
 
 // ask if we really want to save file, then check if file exists and if we would overwrite
@@ -206,13 +207,13 @@ save_file_cb (gchar* filepath, gpointer userdata) {
 // ask if file saved when we want to close tab
 void 
 close_file_cb (gpointer userdata) {
-
+	
 }
 
 // after we go back to the file tab we need to make sure the file has not been changed and then load out app buffer
 void 
 load_file_cb (gpointer userdata) {
-
+	
 }
 
 

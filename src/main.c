@@ -62,7 +62,7 @@ main (int argc, char *argv[])
 
     connect_signals (user_data);
 
-    open_file (user_data, "/home/rafal/IdeaProjects/vault13/README.MD");
+    //open_file (user_data, "/home/rafal/IdeaProjects/vault13/README.MD");
 
 
     //g_signal_connect (G_OBJECT (window), "key-press-event", G_CALLBACK (key_pressed_notebook), NULL);

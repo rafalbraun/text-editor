@@ -273,8 +273,8 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
 
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
-                    g_print("[TEST] open_file: %s \n", path);
-                    open_file (user_data, path);
+                    g_print("[TEST] create_tab: %s \n", path);
+                    create_tab (user_data, path, path, 3);
               } else {
                 //show_error(get_window(userdata), "no file under filepath");
                    g_print("show_error: %s \n", path);

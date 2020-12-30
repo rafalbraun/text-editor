@@ -8,8 +8,9 @@ SRC=./src
 
 ##all: $(PROGRAMS)
 all: text_editor 
-test: test_treeview
+##test: test_treeview test_sourceview
 ##test_list test_sourceview 
+test: test_sourceview
 
 text_editor: text_editor.o treeview.o notebook.o callback.o sourceview.o list.o config.o
 	$(CC) $(GLIB) src/main.c obj/text_editor.o obj/treeview.o obj/notebook.o obj/callback.o obj/sourceview.o obj/list.o obj/config.o $(GTK) -o bin/text_editor
@@ -43,11 +44,11 @@ test_list.o: test/test_list.c src/list.h
 test_list: test_list.o list.o
 	$(CC) $(GLIB) test/test_list.c obj/list.o $(GTK) -o bin/test_list
 
-test_sourceview.o: test/test_sourceview.c src/sourceview.h
+test_sourceview.o: test/test_sourceview.c src/sourceview.h src/config.h
 	$(CC) -c $(GLIB) test/test_sourceview.c $(GTK) -o obj/test_sourceview.o
 
-test_sourceview: test_sourceview.o sourceview.o
-	$(CC) $(GLIB) test/test_sourceview.c obj/sourceview.o $(GTK) -o bin/test_sourceview
+test_sourceview: test_sourceview.o sourceview.o config.o
+	$(CC) $(GLIB) test/test_sourceview.c obj/sourceview.o obj/config.o $(GTK) -o bin/test_sourceview
 
 test_treeview.o: test/test_treeview.c src/treeview.h
 	$(CC) -c $(GLIB) test/test_treeview.c $(GTK) -o obj/test_treeview.o

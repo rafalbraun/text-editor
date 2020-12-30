@@ -88,7 +88,7 @@ GtkTreeView* GET_TREE_VIEW(UserData* userdata);
 gchar* GET_FILEPATH(UserData* userdata);
 GtkWindow* GET_WINDOW(UserData* userdata);
 GtkNotebook* GET_NOTEBOOK(UserData* userdata) ;
-
+/*
 typedef enum EventType {
     OPEN_FILE,
     CLOSE_FILE,
@@ -104,13 +104,14 @@ typedef struct _Event {
     EventType type;
     gchar*    data;
 } Event;
+*/
 
 
 
 
 
-
-
+void
+open_file_cb (const gchar* filepath, gchar* text, gsize length, gpointer user_data);
 
 
 

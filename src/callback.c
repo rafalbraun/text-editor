@@ -26,7 +26,7 @@ key_pressed_window(GtkWidget *widget, GdkEventKey *event, gpointer userdata) {
     }
     if (event->state & GDK_CONTROL_MASK && event->keyval == 's') {
         g_print ("ctrl + s \n");
-        save_file_default (userdata);
+        //save_file_default (userdata);
         //save_file ("/home/rafal/IdeaProjects/gtksourceview-my-ide/application/aaa.c", "Aaaaaaaaaaaaaaaaaaaaa");
 
     }

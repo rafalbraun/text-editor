@@ -18,26 +18,26 @@ int get_index(gchar* basename);
 
 gchar* open_files();
 
-void
-close_file(gpointer userdata, gchar* title);
-
 gboolean
 notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata);
 
 gchar* 
 get_filename_from_page_number (gpointer userdata, int pagenum);
 
-void
-load_file(gpointer userdata, guint pagenum);
+//void
+//save_file_default ();
 
 void
-save_file (const gchar* filename, const gchar* contents);
+create_tab (gpointer user_data, gchar* filepath, gchar *text, gsize len);
 
 void
-save_file_default ();
+close_tab (gpointer userdata, gchar* title);
 
 void
-open_file (gpointer user_data, gchar* filepath);
+load_file (gpointer userdata, guint pagenum);
+
+//void
+//save_file (const gchar* filename, const gchar* contents);
 
 void
 switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata);

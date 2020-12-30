@@ -36,30 +36,6 @@ gchar* open_files() {
     return g_strjoinv(separator, (gchar**)&absolute_path);
 }
 
-void
-close_file(gpointer userdata, gchar* title) {
-    //t_node** head = get_list(userdata);
-    gchar* filepath;
-    int index;
-
-    index = get_index(title);
-    filepath = absolute_path[index];
-    //absolute_path[index] = "";
-    //relative_path[index] = "";
-
-    index = l_delete_value(&head, filepath);
-    gtk_notebook_remove_page (get_notebook(userdata), index);
-
-    // przepisać na niższe indexy relative_path i absolute_path
-    int max = get_max();
-    for (int i=index; i<max; i++) {
-        absolute_path[i] = absolute_path[i+1];
-        relative_path[i] = relative_path[i+1];
-    }
-    absolute_path[max] = NULL;
-    relative_path[max] = NULL;
-}
-
 gboolean
 notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
     gchar* title = get_text_from_eventbox(widget);
@@ -69,7 +45,7 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
         return FALSE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2) {
-        close_file (userdata, title);
+        close_tab (userdata, title);
         return TRUE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3) {
@@ -94,25 +70,7 @@ get_filename_from_page_number (gpointer userdata, int pagenum) {
     return filepath;
 }
 
-// https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
-void
-load_file(gpointer userdata, guint pagenum) {
-    gchar* filepath = get_filename_from_page_number (userdata, pagenum);
-
-    gchar *text;
-    gsize len;
-    GError *err = NULL;
-    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
-        g_error("error reading %s: %s", filepath, err->message);
-    }
-
-    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
-    //guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
-
-    g_free(text);
-}
-
-
+/*
 void
 save_file (const gchar* filename, const gchar* contents) {
     int status, mode;
@@ -157,23 +115,22 @@ void save_file_default (gpointer userdata) {
     
     save_file (filepath, contents);
 }
-
+*/
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 void
-open_file (gpointer user_data, gchar* filepath) {
+create_tab (gpointer user_data, gchar* filepath, gchar *text, gsize len) {
     GtkWidget       *eventbox;
     GtkWidget       *textview;
     GtkWidget       *label;
-    gchar           *title;
     GtkNotebook     *notebook = GET_NOTEBOOK(user_data);
+    GError          *err = NULL;
+    gchar           *title;
 
     //g_print("[INFO] opening file %s \n", filepath);
 
     // sprawdzanie czy nie jest binarny musi być tutaj ponieważ jeśli byłoby po l_append to wrzucany byłby w listę pod indexem NULL (bo nie zapisywalibyśmy nazwy pliku w liście - wywalałoby się)
-    gchar *text;
-    gsize len;
-    GError *err = NULL;
+    /*
     if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
         g_error("error reading %s: %s", filepath, err->message);
         return;
@@ -181,7 +138,7 @@ open_file (gpointer user_data, gchar* filepath) {
     if (!g_utf8_validate (text, len, NULL)) {
         show_error(GET_WINDOW(user_data), "the file is binary");
         return;
-    }
+    }*/
 
     //t_node** head = get_list(userdata);
     int index = l_append(&head, filepath);
@@ -217,6 +174,48 @@ open_file (gpointer user_data, gchar* filepath) {
     g_signal_connect (eventbox, "button-press-event", G_CALLBACK (notebook_tab_clicked), user_data);
 
     gtk_notebook_set_current_page (notebook, pagenum);
+}
+
+// https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
+void
+load_file(gpointer userdata, guint pagenum) {
+    gchar* filepath = get_filename_from_page_number (userdata, pagenum);
+
+    gchar *text;
+    gsize len;
+    GError *err = NULL;
+    if (g_file_get_contents(filepath, &text, &len, &err) == FALSE) {
+        g_error("error reading %s: %s", filepath, err->message);
+    }
+
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
+    //guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
+
+    g_free(text);
+}
+
+void
+close_tab (gpointer userdata, gchar* title) {
+    //t_node** head = get_list(userdata);
+    gchar* filepath;
+    int index;
+
+    index = get_index(title);
+    filepath = absolute_path[index];
+    //absolute_path[index] = "";
+    //relative_path[index] = "";
+
+    index = l_delete_value(&head, filepath);
+    gtk_notebook_remove_page (get_notebook(userdata), index);
+
+    // przepisać na niższe indexy relative_path i absolute_path
+    int max = get_max();
+    for (int i=index; i<max; i++) {
+        absolute_path[i] = absolute_path[i+1];
+        relative_path[i] = relative_path[i+1];
+    }
+    absolute_path[max] = NULL;
+    relative_path[max] = NULL;
 }
 
 void

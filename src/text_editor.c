@@ -98,7 +98,7 @@ open_files_from_last_session (gpointer userdata)
 
   while (filepaths[i]) {
     if (strcmp (filepaths[i], "") != 0) {
-      open_file (userdata, filepaths[i]);
+      create_tab (userdata, filepaths[i], "aaa", 3);
     }
     i++;
   }

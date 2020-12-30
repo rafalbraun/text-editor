@@ -69,7 +69,7 @@ gboolean is_valid_string(gchar* line)
     return TRUE;
 }
 
-
+/*
 gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* sourcebuff, GtkWidget* scroll) 
 {
     gint left, right, i, j;
@@ -116,28 +116,27 @@ gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* 
     match = gtk_text_iter_get_text (&start, &end);
     g_print("match [%d]: %s \n", strlen(match), match);
 
-    /*
-    NIE DZIAŁA
+    
+    // NIE DZIAŁA
 
-    if (strlen(match) != 0) {
-        GdkCursor *cursor;
-        GdkDisplay *display;
+    // if (strlen(match) != 0) {
+    //     GdkCursor *cursor;
+    //     GdkDisplay *display;
 
-        display = gdk_display_get_default ();
-        cursor = gdk_cursor_new_from_name(display, "grab");
-        g_assert (cursor != NULL);
+    //     display = gdk_display_get_default ();
+    //     cursor = gdk_cursor_new_from_name(display, "grab");
+    //     g_assert (cursor != NULL);
 
-        GtkWidget* win = gtk_widget_get_ancestor(scroll, GTK_TYPE_WINDOW);
-        gdk_window_set_cursor (gtk_widget_get_window(win), cursor);
-    }
-    */
+    //     GtkWidget* win = gtk_widget_get_ancestor(scroll, GTK_TYPE_WINDOW);
+    //     gdk_window_set_cursor (gtk_widget_get_window(win), cursor);
+    // }
 
-    /*
-    gtk_text_iter_backward_chars (&start, i-left);
-    gtk_text_iter_forward_chars (&end, right-i);
-    match = gtk_text_iter_get_text (&start, &end);
-    g_print("match: %s \n", match);
-    */
+
+    // gtk_text_iter_backward_chars (&start, i-left);
+    // gtk_text_iter_forward_chars (&end, right-i);
+    // match = gtk_text_iter_get_text (&start, &end);
+    // g_print("match: %s \n", match);
+
 
     if (is_valid_string(match)) {
         GtkTextTagTable* table = gtk_text_buffer_get_tag_table (GTK_TEXT_BUFFER(sourcebuff));
@@ -152,7 +151,8 @@ gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* 
         active = 1;
     }
 }
-
+*/
+/*
 // http://www.bravegnu.org/gtktext/x498.html
 gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll) 
 {
@@ -196,14 +196,12 @@ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
             g_print("BAD\n");
         }
 
-
-        /*
-        g_print(g_strescape(msg, NULL));
-        */
+        //g_print(g_strescape(msg, NULL));
 
         g_free(msg);
     }
 }
+*/
 
 GtkWidget*
 sourceview_new(GtkSourceBuffer* buffer) 
