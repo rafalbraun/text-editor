@@ -113,7 +113,8 @@ typedef struct _Event {
 void
 open_file_cb (const gchar* filepath, gchar** text, gsize length, gpointer user_data);
 
-
+void 
+save_file_cb (const gchar* filepath, const gchar* text, gpointer userdata);
 
 
 #endif

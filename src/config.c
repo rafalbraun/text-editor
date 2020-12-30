@@ -187,21 +187,38 @@ open_file_cb (const gchar* filepath, gchar** text, gsize length, gpointer user_d
     
     if (g_file_get_contents (filepath, &tmp, &length, &err) == FALSE) {
         show_error (GET_WINDOW (user_data), "error reading file");
-        g_error ("[g_file_get_contents] error reading %s: %s", filepath, err->message);
+        g_error ("[open_file_cb:g_file_get_contents] error reading %s: %s", filepath, err->message);
         return;
     }
     if (!g_utf8_validate (tmp, length, NULL)) {
         show_error (GET_WINDOW (user_data), "the file is binary");
-        g_error ("[g_utf8_validate] error reading %s: %s", filepath, err->message);
+        g_error ("[open_file_cb:g_utf8_validate] error reading %s: %s", filepath, err->message);
         return;
     }
     *text = g_strdup (tmp);
 }
 
 // ask if we really want to save file, then check if file exists and if we would overwrite
+// should I return boolean???
 void 
-save_file_cb (gchar* filepath, gpointer userdata) {
+save_file_cb (const gchar* filepath, const gchar* text, gpointer userdata) {
+    GError *err = NULL;
+    GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_CONSISTENT;
 
+    int status, mode = 0666;
+    gssize length = strlen(text);
+
+    status = g_file_set_contents_full (filepath,
+                                       text,
+                                       length,
+                                       flags,
+                                       mode,
+                                       &err);
+
+    if (status == FALSE) {
+        g_error("[save_file_cb:g_file_set_contents_full] Error saving %s: %s", filepath, err->message);
+        return;
+    }
 }
 
 // ask if file saved when we want to close tab
