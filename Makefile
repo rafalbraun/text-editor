@@ -10,7 +10,8 @@ SRC=./src
 all: text_editor 
 ##test: test_treeview test_sourceview
 ##test_list test_sourceview 
-test: test_sourceview
+##test: test_sourceview
+##test: stack.o
 
 text_editor: text_editor.o treeview.o notebook.o callback.o sourceview.o list.o config.o
 	$(CC) $(GLIB) src/main.c obj/text_editor.o obj/treeview.o obj/notebook.o obj/callback.o obj/sourceview.o obj/list.o obj/config.o $(GTK) -o bin/text_editor
@@ -35,6 +36,9 @@ callback.o: src/callback.h src/callback.c
 
 text_editor.o: src/text_editor.h src/text_editor.c 
 	$(CC) -c $(GLIB) src/text_editor.c $(GTK) -o obj/text_editor.o
+
+stack.o: src/stack.h src/stack.c 
+	$(CC) -c $(GLIB) src/stack.c $(GTK) -o obj/stack.o
 
 ### TEST
 

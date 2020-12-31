@@ -38,7 +38,7 @@ int main( int argc, char *argv[] ) {
 
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_widget_show(window);
-
+    
     scroll = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
                                     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -50,6 +50,8 @@ int main( int argc, char *argv[] ) {
     gtk_container_add (GTK_CONTAINER (window), scroll);
 
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+    ///////////////////////////////////////////////////////
 
     gchar* text = NULL;
     gsize length;
@@ -66,10 +68,11 @@ int main( int argc, char *argv[] ) {
 
     //create_tab (user_data, filepath, text, length);
     //g_print("text: %s \n", text);
+    
+    ///////////////////////////////////////////////////////
 
     gtk_widget_show_all (window);
     gtk_main();
 
     return 0;
 }
-
