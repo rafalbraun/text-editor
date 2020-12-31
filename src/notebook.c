@@ -141,7 +141,8 @@ create_tab (gpointer user_data, gchar* filepath, gchar *text, gsize len) {
     }*/
 
     //t_node** head = get_list(userdata);
-    int index = l_append(&head, filepath);
+    t_tab* t = new_tab(filepath);
+    int index = l_append(&head, t);
     if (index != -1) {
         gtk_notebook_set_current_page (notebook, index);
         //g_print("[INFO] switching to file %s under index %d \n", filepath, index);

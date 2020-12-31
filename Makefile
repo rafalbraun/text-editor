@@ -7,7 +7,8 @@ GLIB=`pkg-config --cflags --libs glib-2.0`
 SRC=./src
 
 ##all: $(PROGRAMS)
-all: text_editor 
+#all: text_editor 
+all: test_list
 ##test: test_treeview test_sourceview
 ##test_list test_sourceview 
 ##test: test_sourceview

@@ -10,24 +10,31 @@
 
 #include <gtk/gtk.h>
 
-typedef gchar datatype;
+typedef struct t {
+	gchar* title;
+} t_tab;
+
+typedef t_tab datatype;
+
 typedef struct node {
 	struct node *next;
 	datatype* data;
 
 } t_node;
 
+datatype* new_tab(gchar* title);
+
 int l_init(struct node **head, datatype* data);
 
 int l_insert(struct node **head, datatype* data);
 
-int l_index_of(struct node **head, datatype* value);
+int l_index_of(struct node **head, gchar* value);
 
-int l_delete_value(struct node **head, datatype* data);
+int l_delete_value(struct node **head, gchar* data);
 
 struct node* l_at(struct node **head, int index);
 
-int l_append(struct node **head, datatype* data);
+int l_append(struct node **head, t_tab* data);
 
 void l_print(struct node **head);
 

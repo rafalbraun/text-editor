@@ -4,6 +4,17 @@
 #include "list.h"
 
 /* PRIVATE */
+int compare (t_tab* tab, gchar* title) {
+	return (strcmp(tab->title, title)==0);
+}
+
+datatype* new_tab(gchar* title) {
+	t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
+	new_tab->title = title;
+	return new_tab;
+}
+
+/* PRIVATE */
 int l_init(struct node **head, datatype* data)
 {
 	*head = malloc(sizeof(struct node));
@@ -58,7 +69,7 @@ void deinit(struct node **head)
 */
 
 /* PUBLIC */
-int l_index_of(struct node **head, datatype* value) {
+int l_index_of(struct node **head, gchar* value) {
 	struct node *current = *head;
 	int index = -1;
 
@@ -68,7 +79,7 @@ int l_index_of(struct node **head, datatype* value) {
 	while (current) {
 		index++;
 		//g_print("aaaaaaaa %d \n", index);
-		if (strcmp(current->data, value) == 0) {
+		if (compare(current->data, value)) {
 			return index;
 		}
 		current = current->next;
@@ -77,14 +88,14 @@ int l_index_of(struct node **head, datatype* value) {
 }
 
 /* PUBLIC */
-int l_delete_value(struct node **head, datatype* data)
+int l_delete_value(struct node **head, gchar* value)
 {
 	struct node *current = *head;
 	struct node *prev = NULL;
-	int index = l_index_of(head, data);
+	int index = l_index_of(head, value);
 
 	do {
-		if (strcmp(current->data, data)==0) {
+		if (compare(current->data, value)) {
 			break;
 		}
 		prev = current;
@@ -144,8 +155,8 @@ void delete_at(struct node **head, int index) {
 }
 */
 /* PUBLIC */
-int l_append(struct node **head, datatype* data) {
-	int index = l_index_of(head, data);
+int l_append(struct node **head, t_tab* data) {
+	int index = l_index_of(head, data->title);
 	if (index != -1) {
 		return index;
 	}
@@ -166,7 +177,7 @@ void l_print(struct node **head)
 {
 	struct node *current = *head;
 	while (current) {
-		printf("current data: %s, address: %p\n", current->data,
+		printf("current data: %s, address: %p\n", current->data->title,
 		       current);
 		current = current->next;
 	}
