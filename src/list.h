@@ -14,19 +14,19 @@ typedef struct t {
 	gchar* title;
 } t_tab;
 
-typedef t_tab datatype;
+//typedef t_tab datatype;
 
 typedef struct node {
 	struct node *next;
-	datatype* data;
+	t_tab* data;
 
 } t_node;
 
-datatype* new_tab(gchar* title);
+t_tab* new_tab(gchar* title);
 
-int l_init(struct node **head, datatype* data);
+int l_init(struct node **head, t_tab* data);
 
-int l_insert(struct node **head, datatype* data);
+int l_insert(struct node **head, t_tab* data);
 
 int l_index_of(struct node **head, gchar* value);
 

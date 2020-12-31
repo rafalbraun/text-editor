@@ -8,14 +8,14 @@ int compare (t_tab* tab, gchar* title) {
 	return (strcmp(tab->title, title)==0);
 }
 
-datatype* new_tab(gchar* title) {
+t_tab* new_tab(gchar* title) {
 	t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
 	new_tab->title = title;
 	return new_tab;
 }
 
 /* PRIVATE */
-int l_init(struct node **head, datatype* data)
+int l_init(struct node **head, t_tab* data)
 {
 	*head = malloc(sizeof(struct node));
 	if (!*head) {
@@ -30,7 +30,7 @@ int l_init(struct node **head, datatype* data)
 }
 
 /* PRIVATE */
-int l_insert(struct node **head, datatype* data)
+int l_insert(struct node **head, t_tab* data)
 {
 	struct node *current = *head;
 	struct node *tmp;
