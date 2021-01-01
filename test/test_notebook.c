@@ -18,7 +18,9 @@ int main(int argc, char * argv[]) {
     gtk_init(&argc, &argv);
 
 	user_data = g_new0 (UserData, 1);
-	user_data->head = NULL;
+	//user_data->head = NULL;
+	head = NULL;
+	tab_max = 0;
 
     builder = gtk_builder_new ();
     if (gtk_builder_add_from_file (builder, UI_DIR, &error) == 0) {
@@ -33,11 +35,8 @@ int main(int argc, char * argv[]) {
 
     g_signal_connect (G_OBJECT (user_data->window), "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
-    gchar *title = "sample.c";
-	gchar *text = "sample";
-	gsize len = strlen(text);
-
-	create_tab (user_data, title, text, len);
+	create_tab (user_data, "foo.c", "foo", 3);
+	create_tab (user_data, "bar.c", "bar", 3);
 
     gtk_main();
 

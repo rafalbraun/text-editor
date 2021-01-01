@@ -116,15 +116,6 @@ GtkMenu* get_treeview_menu_collapse (UserData* userdata)
 }
 */
 
-gchar*
-get_text_from_eventbox(GtkWidget* widget)
-{
-	GList* list = gtk_container_get_children(GTK_CONTAINER(widget));
-	GtkLabel* label = ((GtkLabel*) list->data);
-	gchar* title = (gchar *)gtk_label_get_text(GTK_LABEL(label));
-	return title;
-}
-
 
 int is_text_file(gchar* filepath) {
     gchar *text;

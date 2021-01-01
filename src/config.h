@@ -15,7 +15,8 @@
 //GTimer *timer;
 //gboolean is_saved = FALSE;
 
-t_node   		*head;
+int              tab_max;
+t_node   		    *head;
 const gchar     *separator;
 gchar           *relative_path[128];
 gchar           *absolute_path[128];
@@ -73,8 +74,6 @@ get_treeview_menu_expand (UserData* userdata);
 GtkMenu* 
 get_treeview_menu_collapse (UserData* userdata);
 
-gchar*
-get_text_from_eventbox(GtkWidget* widget);
 
 void
 show_error (GtkWindow * window, gchar * message);

@@ -10,14 +10,14 @@
 //t_node *head;
 //t_pair *map_ptr;
 
-int get_max();
-
 void list_tabs();
+/*
+int get_max();
 
 int get_index(gchar* basename);
 
 gchar* open_files();
-
+*/
 gboolean
 notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata);
 
@@ -41,5 +41,9 @@ load_file (gpointer userdata, guint pagenum);
 
 void
 switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata);
+
+
+gchar*
+get_text_from_eventbox(GtkWidget* widget);
 
 #endif
