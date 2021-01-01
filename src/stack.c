@@ -105,28 +105,30 @@ void l_print(s_node **head) {
 	}
 }
 
+void l_apply_changes(s_node **head, gchar* buffer) {
+	s_node *current = *head;
+	gchar* original = current->data->string;
+	gchar* delta = NULL;
+	long offset;
+	long length;
 
+	for (int i=0; i<strlen(original); i++) {
+		buffer[i] = original[i];
+	}
+	current = current->next;
 
+	while (current) {
+		delta = current->data->string;
+		offset = current->data->offset;
 
+		for(int i=0; i<strlen(delta); i++) {
+			buffer[offset+strlen(delta)+i] = buffer[offset+i];
+		}
 
+		for(int i=0; i<strlen(delta); i++) {
+			buffer[offset+i] = delta[i];
+		}
 
-
-
-/*
-void create_node () {
-	
-	return;
+		current = current->next;
+	}
 }
-
-void apply_change () {
-
-}
-
-void load_node () {
-
-}
-
-void show_nodes () {
-	
-}
-*/

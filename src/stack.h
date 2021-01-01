@@ -37,6 +37,7 @@ int l_append(s_node **head, s_change* data);
 
 void l_print(s_node **head);
 
+void l_apply_changes(s_node **head, gchar* buffer);
 
 
 
