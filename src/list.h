@@ -12,31 +12,35 @@
 
 typedef struct t {
 	gchar* title;
+	gchar* relative_path;
+	gchar* absolute_path;
+	gint   is_file_saved;
+
 } t_tab;
 
 //typedef t_tab datatype;
 
-typedef struct node {
-	struct node *next;
+typedef struct ynode {
+	struct ynode *next;
 	t_tab* data;
 
 } t_node;
 
 t_tab* new_tab(gchar* title);
 
-int l_init(struct node **head, t_tab* data);
+int l_init(t_node **head, t_tab* data);
 
-int l_insert(struct node **head, t_tab* data);
+int l_insert(t_node **head, t_tab* data);
 
-int l_index_of(struct node **head, gchar* value);
+int l_index_of(t_node **head, gchar* value);
 
-int l_delete_value(struct node **head, gchar* data);
+int l_delete_value(t_node **head, gchar* data);
 
-struct node* l_at(struct node **head, int index);
+t_node* l_at(t_node **head, int index);
 
-int l_append(struct node **head, t_tab* data);
+int l_append(t_node **head, t_tab* data);
 
-void l_print(struct node **head);
+void l_print(t_node **head);
 
 #endif
 

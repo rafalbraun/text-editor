@@ -7,8 +7,9 @@ GLIB=`pkg-config --cflags --libs glib-2.0`
 SRC=./src
 
 ##all: $(PROGRAMS)
-#all: text_editor 
-all: test_list
+##all: text_editor 
+all: test_stack
+##all: test_list
 ##test: test_treeview test_sourceview
 ##test_list test_sourceview 
 ##test: test_sourceview
@@ -43,18 +44,28 @@ stack.o: src/stack.h src/stack.c
 
 ### TEST
 
+###################################################################
 test_list.o: test/test_list.c src/list.h
 	$(CC) -c $(GLIB) test/test_list.c $(GTK) -o obj/test_list.o
 
 test_list: test_list.o list.o
 	$(CC) $(GLIB) test/test_list.c obj/list.o $(GTK) -o bin/test_list
 
+###################################################################
+test_stack.o: test/test_stack.c src/stack.h
+	$(CC) -c $(GLIB) test/test_stack.c $(GTK) -o obj/test_stack.o
+
+test_stack: test_stack.o stack.o
+	$(CC) $(GLIB) test/test_stack.c obj/stack.o $(GTK) -o bin/test_stack
+
+###################################################################
 test_sourceview.o: test/test_sourceview.c src/sourceview.h src/config.h
 	$(CC) -c $(GLIB) test/test_sourceview.c $(GTK) -o obj/test_sourceview.o
 
 test_sourceview: test_sourceview.o sourceview.o config.o
 	$(CC) $(GLIB) test/test_sourceview.c obj/sourceview.o obj/config.o $(GTK) -o bin/test_sourceview
 
+###################################################################
 test_treeview.o: test/test_treeview.c src/treeview.h
 	$(CC) -c $(GLIB) test/test_treeview.c $(GTK) -o obj/test_treeview.o
 

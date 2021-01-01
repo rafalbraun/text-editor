@@ -4,20 +4,22 @@
 #include "list.h"
 
 /* PRIVATE */
-int compare (t_tab* tab, gchar* title) {
+int compare (t_tab* tab, gchar* title)
+{
 	return (strcmp(tab->title, title)==0);
 }
 
-t_tab* new_tab(gchar* title) {
+t_tab* new_tab(gchar* title) 
+{
 	t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
 	new_tab->title = title;
 	return new_tab;
 }
 
 /* PRIVATE */
-int l_init(struct node **head, t_tab* data)
+int l_init(t_node **head, t_tab* data)
 {
-	*head = malloc(sizeof(struct node));
+	*head = malloc(sizeof(t_node));
 	if (!*head) {
 		fprintf(stderr, "Failed to init a linked list\n");
 		return 1;
@@ -30,10 +32,10 @@ int l_init(struct node **head, t_tab* data)
 }
 
 /* PRIVATE */
-int l_insert(struct node **head, t_tab* data)
+int l_insert(t_node **head, t_tab* data)
 {
-	struct node *current = *head;
-	struct node *tmp;
+	t_node *current = *head;
+	t_node *tmp;
 
 	do {
 		tmp = current;
@@ -41,7 +43,7 @@ int l_insert(struct node **head, t_tab* data)
 	} while (current);
 
 	/* create a new node after tmp */
-	struct node *new = malloc(sizeof(struct node));
+	t_node *new = malloc(sizeof(t_node));
 	if (!new) {
 		fprintf(stderr, "Failed to insert a new element\n");
 		return 1;
@@ -69,8 +71,8 @@ void deinit(struct node **head)
 */
 
 /* PUBLIC */
-int l_index_of(struct node **head, gchar* value) {
-	struct node *current = *head;
+int l_index_of(t_node **head, gchar* value) {
+	t_node *current = *head;
 	int index = -1;
 
 	if (current == NULL) {
@@ -88,10 +90,10 @@ int l_index_of(struct node **head, gchar* value) {
 }
 
 /* PUBLIC */
-int l_delete_value(struct node **head, gchar* value)
+int l_delete_value(t_node **head, gchar* value)
 {
-	struct node *current = *head;
-	struct node *prev = NULL;
+	t_node *current = *head;
+	t_node *prev = NULL;
 	int index = l_index_of(head, value);
 
 	do {
@@ -125,8 +127,8 @@ int l_delete_value(struct node **head, gchar* value)
 
 
 /* PUBLIC */
-struct node* l_at(struct node **head, int index) {
-	struct node *current = *head;
+t_node* l_at(t_node **head, int index) {
+	t_node *current = *head;
 	int iter = 0;
 
 	while (current) {
@@ -155,7 +157,7 @@ void delete_at(struct node **head, int index) {
 }
 */
 /* PUBLIC */
-int l_append(struct node **head, t_tab* data) {
+int l_append(t_node **head, t_tab* data) {
 	int index = l_index_of(head, data->title);
 	if (index != -1) {
 		return index;
@@ -173,9 +175,9 @@ int l_append(struct node **head, t_tab* data) {
 }
 
 /* PUBLIC */
-void l_print(struct node **head)
+void l_print(t_node **head)
 {
-	struct node *current = *head;
+	t_node *current = *head;
 	while (current) {
 		printf("current data: %s, address: %p\n", current->data->title,
 		       current);
