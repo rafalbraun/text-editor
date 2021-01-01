@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkListStore" id="liststore">
+    <columns>
+       <column type="gchararray" />
+    </columns>
+      <data>
+
+<!--
+<row><col id="0" translatable="yes">2020-11-05::23:08</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:09</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:10</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:11</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:12</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:13</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:14</col></row>
+<row><col id="0" translatable="yes">2020-11-05::23:15</col></row>
+-->
+
+      </data>
+  </object>
+  <object id="window" class="GtkWindow">
+    <property name="visible">True</property>
+    <property name="title">File History</property>
+    <property name="border-width">0</property>
+    <property name="default-width">1200</property>
+    <property name="default-height">800</property>
+    <child>
+       <object class="GtkBox">
+          <property name="visible">True</property>
+          <property name="can_focus">False</property>
+          <property name="orientation">vertical</property>
+          <child>
+            <object class="GtkPaned" id="paned">
+              <property name="visible">True</property>
+              <property name="orientation">horizontal</property>
+              <property name="position">400</property>
+              <child>
+
+                     <object class="GtkScrolledWindow">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+
+                           <object class="GtkTreeView" id="treeview">
+                              <property name="visible">True</property>
+                              <property name="can_focus">True</property>
+                              <property name="model">liststore</property>
+                              <property name="enable-search">False</property>
+                              <property name="headers-visible">False</property>
+                              <property name="activate-on-single-click">True</property>
+                              <child internal-child="selection">
+                                 <object class="GtkTreeSelection" id="treeview-selection" />
+                              </child>
+                              <child>
+                                 <object class="GtkTreeViewColumn" id="treeviewcolumn0">
+                                    <property name="title" translatable="yes">commit</property>
+                                    <property name="fixed-width">500</property>
+                                    <child>
+                                       <object class="GtkCellRendererText" id="cellrenderertext0">
+                                          <property name="height">24</property>
+                                          <property name="family">Monospace</property>
+                                       </object>
+                                       <attributes>
+                                          <attribute name="text">0</attribute>
+                                       </attributes>
+                                    </child>
+                                 </object>
+                              </child>
+                           </object>
+
+                        </child>
+                     </object>
+
+
+
+              </child>
+                  <child>
+                     <object class="GtkScrolledWindow" id="textbufferscroll">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                           <object class="GtkSourceBuffer" id="textbuffer">
+                              <property name="highlight-syntax">True</property>
+                           </object>
+                           <object class="GtkSourceView" id="sourceview">
+                              <property name="highlight-current-line">True</property>
+                              <property name="show-right-margin">True</property>
+                              <property name="show-line-numbers">True</property>
+                              <property name="tab_width">4</property>
+                              <property name="auto_indent">True</property>
+                              <property name="visible">True</property>
+                              <property name="buffer">textbuffer</property>
+                              <property name="editable">False</property>
+                              <property name="monospace">True</property>
+                           </object>
+                        </child>
+                     </object>
+                  </child>
+            </object>
+               <packing>
+                  <property name="expand">True</property>
+                  <property name="fill">True</property>
+                  <property name="position">2</property>
+               </packing>
+          </child>
+
+
+
+<!--
+              </child>
+                  <child>
+                     <object class="GtkFrame">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <property name="label">Frame</property>
+                     </object>
+                  </child>
+            </object>
+               <packing>
+                  <property name="expand">True</property>
+                  <property name="fill">True</property>
+                  <property name="position">2</property>
+               </packing>
+          </child>
+-->
+
+       </object>
+    </child>
+  </object>
+</interface>
+
+<!--
+2020-11-05::23:08
+2020-11-05::23:09
+2020-11-05::23:10
+2020-11-05::23:11
+2020-11-05::23:12
+2020-11-05::23:13
+2020-11-05::23:14
+2020-11-05::23:15
+-->

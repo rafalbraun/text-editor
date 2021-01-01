@@ -6,9 +6,10 @@ GLIB=`pkg-config --cflags --libs glib-2.0`
 ##PROGRAMS=text_editor glib_regex full_search find_files find_files_gui
 SRC=./src
 
+all: test_notebook
 ##all: $(PROGRAMS)
 ##all: text_editor 
-all: test_stack
+##all: test_stack
 ##all: test_list
 ##test: test_treeview test_sourceview
 ##test_list test_sourceview 
@@ -71,6 +72,18 @@ test_treeview.o: test/test_treeview.c src/treeview.h
 
 test_treeview: test_treeview.o treeview.o
 	$(CC) $(GLIB) test/test_treeview.c obj/treeview.o $(GTK) -o bin/test_treeview
+
+###################################################################
+test_notebook.o: test/test_notebook.c src/notebook.h
+	$(CC) -c $(GLIB) test/test_notebook.c $(GTK) -o obj/test_notebook.o
+
+test_notebook: test_notebook.o notebook.o list.o config.o sourceview.o
+	$(CC) $(GLIB) test/test_notebook.c obj/notebook.o obj/list.o obj/config.o obj/sourceview.o $(GTK) -o bin/test_notebook
+
+###################################################################
+history:
+	$(CC) `pkg-config --cflags gtk+-3.0 gtksourceview-4` -o bin/history modules/history.c `pkg-config --libs gtk+-3.0 gtksourceview-4`
+
 
 
 
