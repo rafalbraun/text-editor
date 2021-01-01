@@ -84,6 +84,9 @@ test_notebook: test_notebook.o notebook.o list.o config.o sourceview.o
 history:
 	$(CC) `pkg-config --cflags gtk+-3.0 gtksourceview-4` -o bin/history modules/history.c `pkg-config --libs gtk+-3.0 gtksourceview-4`
 
+settings:
+	$(CC) `pkg-config --cflags gtk+-3.0 gtksourceview-4` -o bin/settings modules/settings.c `pkg-config --libs gtk+-3.0 gtksourceview-4`
+
 
 
 

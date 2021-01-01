@@ -42,3 +42,28 @@ To close tab use middle mouse button
 ### Full Search
 ![Full Search](images/full-search.png?raw=true "Full Search")
 
+
+
+
+
+
+
+
+
+
+
+#########################
+
+potential names:
+o asap
+
+
+
+
+
+
+
+
+
+
+
