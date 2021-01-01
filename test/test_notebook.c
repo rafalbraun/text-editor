@@ -4,16 +4,21 @@
 #include "../src/list.h"
 #include "../src/config.h"
 #include "../src/notebook.h"
+#include "../src/sourceview.h"
 
 #define UI_DIR "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/ui/notebook.ui"
 
 int main(int argc, char * argv[]) {
 
     GtkBuilder *builder;
-    GObject *window;
+    //GObject *window;
     GError *error = NULL;
+    UserData* user_data;
 
     gtk_init(&argc, &argv);
+
+	user_data = g_new0 (UserData, 1);
+	user_data->head = NULL;
 
     builder = gtk_builder_new ();
     if (gtk_builder_add_from_file (builder, UI_DIR, &error) == 0) {
@@ -22,8 +27,17 @@ int main(int argc, char * argv[]) {
         return 1;
     }
     
-    window = gtk_builder_get_object (builder, "window");
-    g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), NULL);
+    user_data->window = gtk_builder_get_object (builder, "window");
+    user_data->notebook = gtk_builder_get_object (builder, "notebook");	
+    user_data->buffer = gtk_builder_get_object (builder, "sourcebuffer");
+
+    g_signal_connect (G_OBJECT (user_data->window), "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+    gchar *title = "sample.c";
+	gchar *text = "sample";
+	gsize len = strlen(text);
+
+	create_tab (user_data, title, text, len);
 
     gtk_main();
 

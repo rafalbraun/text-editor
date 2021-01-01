@@ -10,6 +10,11 @@
 #define SIZE 1024
 #define UI_DIR "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/ui/settings.ui"
 
+/*******************************************************************************
+                            CALLBACK HANDLERS
+*******************************************************************************/
+
+
 /*
 gchar* launch_command(gchar* command) {
     gchar* fname = "/tmp/clipboard";

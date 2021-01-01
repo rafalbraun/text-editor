@@ -74,7 +74,7 @@ test_treeview: test_treeview.o treeview.o
 	$(CC) $(GLIB) test/test_treeview.c obj/treeview.o $(GTK) -o bin/test_treeview
 
 ###################################################################
-test_notebook.o: test/test_notebook.c src/notebook.h
+test_notebook.o: test/test_notebook.c src/notebook.h 
 	$(CC) -c $(GLIB) test/test_notebook.c $(GTK) -o obj/test_notebook.o
 
 test_notebook: test_notebook.o notebook.o list.o config.o sourceview.o

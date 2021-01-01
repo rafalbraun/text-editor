@@ -119,13 +119,13 @@ void save_file_default (gpointer userdata) {
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 void
-create_tab (gpointer user_data, gchar* filepath, gchar *text, gsize len) {
+create_tab (gpointer user_data, gchar* title, gchar *text, gsize len) {
     GtkWidget       *eventbox;
     GtkWidget       *textview;
     GtkWidget       *label;
-    GtkNotebook     *notebook = GET_NOTEBOOK(user_data);
+    GtkWidget       *notebook;
     GError          *err = NULL;
-    gchar           *title;
+    //gchar           *title;
 
     //g_print("[INFO] opening file %s \n", filepath);
 
@@ -141,20 +141,22 @@ create_tab (gpointer user_data, gchar* filepath, gchar *text, gsize len) {
     }*/
 
     //t_node** head = get_list(userdata);
-    t_tab* t = new_tab(filepath);
-    int index = l_append(&head, t);
+    t_tab* tab = new_tab(title);
+    int index = l_append(&head, tab);
     if (index != -1) {
-        gtk_notebook_set_current_page (notebook, index);
+        gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
         //g_print("[INFO] switching to file %s under index %d \n", filepath, index);
         return;
     }
 
-    index = l_index_of(&head, filepath);
-    gchar* basename = g_path_get_basename(filepath);
+    index = l_index_of(&head, title);
+    //gchar* basename = g_path_get_basename(filepath);
 
+    /*
     title = (get_index(basename) == -1) ? basename : filepath;
     relative_path[index] = title;
     absolute_path[index] = filepath;
+    */
 
     label = gtk_label_new(title);
     eventbox = gtk_event_box_new();
@@ -163,18 +165,18 @@ create_tab (gpointer user_data, gchar* filepath, gchar *text, gsize len) {
     textview = sourceview_new(GET_SOURCE_BUFFER(user_data));
     //guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
 
-    int pagenum = gtk_notebook_append_page (notebook, textview, eventbox);
+    int pagenum = gtk_notebook_append_page (GET_NOTEBOOK(user_data), textview, eventbox);
     gtk_text_buffer_set_text(GET_TEXT_BUFFER(user_data), text, len);
-    g_free(text);
+    //g_free(text);
 
     //g_print("[INFO] opening file %s under index %d \n", filepath, index);
 
-    gtk_widget_show_all (GTK_WIDGET(notebook));
+    gtk_widget_show_all (GTK_WIDGET(GET_NOTEBOOK(user_data)));
     gtk_widget_show (label);
 
     g_signal_connect (eventbox, "button-press-event", G_CALLBACK (notebook_tab_clicked), user_data);
 
-    gtk_notebook_set_current_page (notebook, pagenum);
+    gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), pagenum);
 }
 
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
