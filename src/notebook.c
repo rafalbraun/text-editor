@@ -7,6 +7,9 @@
 #include "sourceview.h"
 
 void list_tabs() {
+    g_print("tabs: \n");
+    l_print(&head);
+
     /*
     int i=0;
     while (absolute_path[i]) {
@@ -93,7 +96,9 @@ void
 close_tab (gpointer user_data, gchar* title) {
     int index;
 
+    g_print("%s \n", title);
     index = l_delete_value(&head, title); // check if delete correct - namely if page exists
+    g_print("%d \n", index);
     gtk_notebook_remove_page (GET_NOTEBOOK(user_data), index);
 
     tab_max--;

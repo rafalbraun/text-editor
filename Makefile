@@ -6,9 +6,10 @@ GLIB=`pkg-config --cflags --libs glib-2.0`
 ##PROGRAMS=text_editor glib_regex full_search find_files find_files_gui
 SRC=./src
 
-all: test_notebook
+##all: test_notebook
+all: text_editor 
+
 ##all: $(PROGRAMS)
-##all: text_editor 
 ##all: test_stack
 ##all: test_list
 ##test: test_treeview test_sourceview

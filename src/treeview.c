@@ -30,7 +30,8 @@ void open_file_cb() {
 
 static GtkActionEntry buffer_action_entries[] = {
     //{ "Collapse", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (open_file_cb) },
-    { "New", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    { "New", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (list_tabs) },
+    /*
     { "Copy", "document-open", "_Open", "<control>O", "Open a file", NULL },
     { "Paste", "document-open", "_Open", "<control>O", "Open a file", NULL },
     { "Filter", "document-open", "_Open", "<control>O", "Open a file", NULL },
@@ -39,6 +40,7 @@ static GtkActionEntry buffer_action_entries[] = {
     { "Delete", "document-open", "_Open", "<control>O", "Open a file", NULL },
     { "Show", "document-open", "_Open", "<control>O", "Open a file", NULL },
     { "Open", "document-open", "_Open", "<control>O", "Open a file", NULL },
+    */
     { "Quit", "document-open", "_Quit", "<control>Q", "Exit the application", G_CALLBACK (gtk_main_quit) }
 };
 
@@ -55,6 +57,7 @@ build_menu (PopupMenu menuType) {
         actionEntry = &(buffer_action_entries[i]);
         menuItem = gtk_menu_item_new_with_label(actionEntry->name);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuItem);
+        g_signal_connect (G_OBJECT(menuItem), "activate", G_CALLBACK (actionEntry->callback), NULL);
     }
 
     gtk_widget_show_all(menu);
@@ -274,7 +277,7 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     g_print("[TEST] create_tab: %s \n", path);
-                    create_tab (user_data, path, path, 3);
+                    create_tab (user_data, path, "aaa", 3);
               } else {
                 //show_error(get_window(userdata), "no file under filepath");
                    g_print("show_error: %s \n", path);

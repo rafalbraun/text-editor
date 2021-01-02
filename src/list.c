@@ -13,7 +13,7 @@ int compare (t_tab* tab, gchar* title)
 t_tab* new_tab(gchar* title, gchar* text) 
 {
 	t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
-	new_tab->title = title;
+	new_tab->title = g_strdup(title);
 	new_tab->tab_buffer = (gchar*)malloc(1024*1024);
 	strcpy(new_tab->tab_buffer, text);
 	return new_tab;
@@ -91,6 +91,11 @@ int l_index_of(t_node **head, gchar* value) {
 	}
 	return -1;
 }
+/*
+int l_index_by_title() {
+
+}
+*/
 
 /* PUBLIC */
 int l_delete_value(t_node **head, gchar* value)
@@ -98,6 +103,8 @@ int l_delete_value(t_node **head, gchar* value)
 	t_node *current = *head;
 	t_node *prev = NULL;
 	int index = l_index_of(head, value);
+
+	g_print("%s :: %s \n", current->data->title, value);
 
 	do {
 		if (compare(current->data, value)) {
