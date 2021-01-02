@@ -15,6 +15,7 @@ typedef struct t {
 	gchar* relative_path;
 	gchar* absolute_path;
 	gint   is_file_saved;
+	gchar* tab_buffer;
 
 } t_tab;
 
@@ -26,7 +27,7 @@ typedef struct ynode {
 
 } t_node;
 
-t_tab* new_tab(gchar* title);
+t_tab* new_tab(gchar* title, gchar* text);
 
 int l_init(t_node **head, t_tab* data);
 

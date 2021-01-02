@@ -38,6 +38,11 @@ int main(int argc, char * argv[]) {
 	create_tab (user_data, "foo.c", "foo", 3);
 	create_tab (user_data, "bar.c", "bar", 3);
 
+    //gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), 0);
+
+    // CONNECT THIS SIGNAL AFTER CREATING ALL NEEDED TABS!!!!!!!!
+    g_signal_connect (G_OBJECT (user_data->notebook), "switch-page", G_CALLBACK (switch_page), (gpointer) user_data);
+
     gtk_main();
 
     return 0;

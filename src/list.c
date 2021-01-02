@@ -9,10 +9,13 @@ int compare (t_tab* tab, gchar* title)
 	return (strcmp(tab->title, title)==0);
 }
 
-t_tab* new_tab(gchar* title) 
+/* PUBLIC */
+t_tab* new_tab(gchar* title, gchar* text) 
 {
 	t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
 	new_tab->title = title;
+	new_tab->tab_buffer = (gchar*)malloc(1024*1024);
+	strcpy(new_tab->tab_buffer, text);
 	return new_tab;
 }
 

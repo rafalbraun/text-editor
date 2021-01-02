@@ -71,7 +71,7 @@ get_filename_from_page_number (gpointer userdata, int pagenum) {
 
     //filepath = absolute_path[index];
     //return filepath;
-    
+
     return title;
 }
 
@@ -93,7 +93,7 @@ void
 close_tab (gpointer user_data, gchar* title) {
     int index;
 
-    index = l_delete_value(&head, title);
+    index = l_delete_value(&head, title); // check if delete correct - namely if page exists
     gtk_notebook_remove_page (GET_NOTEBOOK(user_data), index);
 
     tab_max--;
@@ -109,7 +109,7 @@ create_tab (gpointer user_data, gchar* title, gchar *text, gsize len) {
     GtkWidget       *notebook;
     GError          *err = NULL;
 
-    t_tab* tab = new_tab(title);
+    t_tab* tab = new_tab(title, text);
     int index = l_append(&head, tab);
     if (index != -1) {
         gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
@@ -154,11 +154,32 @@ load_file(gpointer userdata, guint pagenum) {
 }
 
 void
-switch_page (GtkNotebook *notebook, GtkWidget *page, guint pagedst, gpointer userdata) {
+switch_page (GtkNotebook *notebook, GtkWidget *page, guint page_dst, gpointer user_data) {
+    GtkTextIter statr, end;
+    GtkTextBuffer* buffer;
     gint page_src;
+    gchar *text, *buffer_src, *buffer_dst;
 
-    page_src = gtk_notebook_get_current_page (get_notebook(userdata));
-    load_file (userdata, pagedst);
+    page_src = gtk_notebook_get_current_page (GET_NOTEBOOK(user_data));
+
+    if (page_src<0) {
+        return;
+    }
+    //g_print("%d -> %d \n", page_src, page_dst);
+
+    buffer = GET_TEXT_BUFFER(user_data);
+
+    buffer_src = l_at(&head, page_src)->data->tab_buffer;
+    buffer_dst = l_at(&head, page_dst)->data->tab_buffer;
+
+    gtk_text_buffer_get_bounds (buffer, &start, &end);
+    text = gtk_text_buffer_get_text (buffer, &start, &end, TRUE);
+    strcpy (buffer_src, text);
+    
+    gtk_text_buffer_set_text(buffer, buffer_dst, strlen(buffer_dst));
+
+
+    //load_file (userdata, page_dst);
     /*
     if (absolute_path[pagedst]) {
         load_file(userdata, pagedst);
