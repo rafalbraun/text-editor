@@ -77,23 +77,23 @@ close_tab (gpointer user_data, gchar* title) {
 void create_empty_tab (GtkMenuItem *menuitem, gpointer user_data) {
     gchar title[128];
 
-    snprintf(title, sizeof(title), "Untitled (%d)", get_untitled_files(user_data));
-    create_tab (user_data, title, "", 0);
-    incr_untitled_files (user_data);
+    //snprintf(title, sizeof(title), "Untitled (%d)", get_untitled_files(user_data));
+    //create_tab (user_data, title, "", 0);
+    //incr_untitled_files (user_data);
 }
 
 
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 GtkSourceBuffer*
-create_tab (gpointer user_data, gchar* title, gchar *text, gsize len) {
+create_tab (gpointer user_data, gchar* title) {
     GtkWidget       *eventbox;
     GtkWidget       *textview;
     GtkWidget       *label;
     GtkWidget       *notebook;
     GError          *err = NULL;
 
-    t_tab* tab = new_tab(title, text);
+    t_tab* tab = new_tab(title);
     int index = l_append(&head, tab);
     if (index != -1) {
         gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
@@ -108,7 +108,7 @@ create_tab (gpointer user_data, gchar* title, gchar *text, gsize len) {
     textview = sourceview_new(GTK_SOURCE_BUFFER(tab->buffer));
 
     int pagenum = gtk_notebook_append_page (GET_NOTEBOOK(user_data), textview, eventbox);
-    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(tab->buffer), text, len);
+    //gtk_text_buffer_set_text(GTK_TEXT_BUFFER(tab->buffer), text, len);
     //g_free(text);
 
     gtk_widget_show_all (GTK_WIDGET(GET_NOTEBOOK(user_data)));
@@ -122,6 +122,7 @@ create_tab (gpointer user_data, gchar* title, gchar *text, gsize len) {
 }
 
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
+/*
 void
 load_file(gpointer userdata, guint pagenum) {
     gchar* filepath = get_filename_from_page_number (userdata, pagenum);
@@ -138,7 +139,7 @@ load_file(gpointer userdata, guint pagenum) {
 
     g_free(text);
 }
-
+*/
 void
 switch_page (GtkNotebook *notebook, GtkWidget *page, guint page_dst, gpointer user_data) {
     GtkTextIter statr, end;

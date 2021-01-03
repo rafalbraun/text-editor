@@ -267,12 +267,25 @@ result_func (
   g_return_if_fail (success);
 }
 
+void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data) 
+{
+    GtkSourceFile * src_file = gtk_source_file_new ();
+    GFile * file = g_file_new_for_path (path);
+    gtk_source_file_set_location (src_file, file);
+    g_object_unref (file);
+
+    GtkSourceFileLoader * file_loader = gtk_source_file_loader_new (buffer, src_file);
+    gtk_source_file_loader_load_async (file_loader, G_PRIORITY_DEFAULT, NULL, NULL, NULL, NULL, (GAsyncReadyCallback) result_func, user_data);
+
+}
+
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
 void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
         GtkTreeIter       child, parent;
         gboolean          hasParent;
         gchar            *name, *parent_name;
-        
+        GtkSourceBuffer * buffer;
+
         parent_name = "";
 
         gtk_tree_selection_get_selected(selection, &model, &child);
@@ -292,32 +305,13 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     g_print("[TEST] create_tab: %s \n", path);
-                    GtkSourceBuffer* buffer = create_tab (user_data, path, "aaa", 3);
 
-
-  GtkSourceFile * src_file =
-    gtk_source_file_new ();
-  GFile * file =
-    g_file_new_for_path (path);
-  gtk_source_file_set_location (
-    src_file, file);
-  g_object_unref (file);
-
-  GtkSourceFileLoader * file_loader =
-    gtk_source_file_loader_new (
-      buffer, src_file);
-  gtk_source_file_loader_load_async (
-    file_loader, G_PRIORITY_DEFAULT,
-    NULL, NULL, NULL, NULL,
-    (GAsyncReadyCallback) result_func, user_data);
-
-
-
-
+                    buffer = create_tab (user_data, path);
+                    load_file(buffer, path, user_data);
 
               } else {
-                //show_error(get_window(userdata), "no file under filepath");
-                   g_print("show_error: %s \n", path);
+                    //show_error(get_window(userdata), "no file under filepath");
+                    g_print("show_error: %s \n", path);
               }
         } else {
             //show_error(get_window(userdata), "filepath is directory");

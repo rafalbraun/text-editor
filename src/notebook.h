@@ -31,13 +31,13 @@ create_empty_tab (GtkMenuItem *menuitem, gpointer user_data);
 //save_file_default ();
 
 GtkSourceBuffer*
-create_tab (gpointer user_data, gchar* filepath, gchar *text, gsize len);
+create_tab (gpointer user_data, gchar* filepath);
 
 void
 close_tab (gpointer userdata, gchar* title);
 
-void
-load_file (gpointer userdata, guint pagenum);
+//void
+//load_file (gpointer userdata, guint pagenum);
 
 //void
 //save_file (const gchar* filename, const gchar* contents);

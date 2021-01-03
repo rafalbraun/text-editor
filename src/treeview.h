@@ -22,6 +22,9 @@ typedef enum pm {
 	EXPAND
 } PopupMenu;
 
+void 
+load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data);
+
 gchar* 
 get_selection(GtkWidget * treeview);
 

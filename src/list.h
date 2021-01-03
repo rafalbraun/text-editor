@@ -29,7 +29,7 @@ typedef struct ynode {
 
 } t_node;
 
-t_tab* new_tab(gchar* title, gchar* text);
+t_tab* new_tab(gchar* title);
 
 int l_init(t_node **head, t_tab* data);
 

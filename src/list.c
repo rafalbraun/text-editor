@@ -10,7 +10,7 @@ int compare (t_tab* tab, gchar* title)
 }
 
 /* PUBLIC */
-t_tab* new_tab(gchar* title, gchar* text) 
+t_tab* new_tab(gchar* title) 
 {
 	t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
 	new_tab->title = g_strdup(title);
