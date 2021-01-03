@@ -24,6 +24,9 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
 gchar* 
 get_filename_from_page_number (gpointer userdata, int pagenum);
 
+void 
+create_empty_tab (GtkMenuItem *menuitem, gpointer user_data);
+
 //void
 //save_file_default ();
 

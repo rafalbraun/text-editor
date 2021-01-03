@@ -62,6 +62,9 @@ main (int argc, char *argv[])
 
     connect_signals (user_data);
 
+    //create_tab (user_data, "aaaaaaaa", "", 0);
+
+
     //open_file (user_data, "/home/rafal/IdeaProjects/vault13/README.MD");
 
 

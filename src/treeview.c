@@ -30,7 +30,7 @@ void open_file_cb() {
 
 static GtkActionEntry buffer_action_entries[] = {
     //{ "Collapse", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (open_file_cb) },
-    { "New", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (list_tabs) },
+    { "New", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (create_empty_tab) },
     /*
     { "Copy", "document-open", "_Open", "<control>O", "Open a file", NULL },
     { "Paste", "document-open", "_Open", "<control>O", "Open a file", NULL },
@@ -45,7 +45,7 @@ static GtkActionEntry buffer_action_entries[] = {
 };
 
 GtkWidget*
-build_menu (PopupMenu menuType) {
+build_menu (PopupMenu menuType, gpointer user_data) {
     GtkWidget *menu;
     GtkWidget *menuItem;
     GtkActionEntry *actionEntry;
@@ -57,16 +57,16 @@ build_menu (PopupMenu menuType) {
         actionEntry = &(buffer_action_entries[i]);
         menuItem = gtk_menu_item_new_with_label(actionEntry->name);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuItem);
-        g_signal_connect (G_OBJECT(menuItem), "activate", G_CALLBACK (actionEntry->callback), NULL);
+        g_signal_connect (G_OBJECT(menuItem), "activate", G_CALLBACK (actionEntry->callback), user_data);
     }
-
+    
     gtk_widget_show_all(menu);
 
     return menu;
 }
 
 void
-popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
+popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer user_data) {
     GtkTreeModel     *tree_model;
     GtkTreeSelection *selection;
     GtkTreePath      *treepath;
@@ -89,14 +89,14 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
 
             if (gtk_tree_view_row_expanded (GTK_TREE_VIEW(treeview), treepath)) {
                 //menu = get_treeview_menu_collapse(userdata); OD ODKOMENTOWANIA
-                menu = build_menu(COLLAPSE);
+                menu = build_menu(COLLAPSE, user_data);
             } else {
                 //menu = get_treeview_menu_expand(userdata); OD ODKOMENTOWANIA
-                menu = build_menu(COLLAPSE);
+                menu = build_menu(COLLAPSE, user_data);
             }
         } else {
             //menu = get_treeview_menu(userdata); OD ODKOMENTOWANIA
-            menu = build_menu(COLLAPSE);
+            menu = build_menu(COLLAPSE, user_data);
         }
     }
 
@@ -262,6 +262,7 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
 
         gtk_tree_selection_get_selected(selection, &model, &child);
         gtk_tree_model_get (model, &child, COLUMN, &name, -1);
+
         while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) {
           if ( hasParent == TRUE ) {
             gtk_tree_model_get (model, &parent, COLUMN, &parent_name, -1);
@@ -272,7 +273,6 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
         }
 
         path = g_strconcat(path, name, NULL);
-        g_free(name);
 
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
@@ -286,8 +286,8 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
             //show_error(get_window(userdata), "filepath is directory");
         }
 
+        g_free(name);
         g_free(path);
-
 }
 
 

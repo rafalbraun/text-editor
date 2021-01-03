@@ -9,38 +9,8 @@
 void list_tabs() {
     g_print("tabs: \n");
     l_print(&head);
-
-    /*
-    int i=0;
-    while (absolute_path[i]) {
-        g_print("%d :: %s -> %s \n", i, relative_path[i], absolute_path[i]);
-        i++;
-    }
-    g_print("[INFO] max: %d \n", get_max());
-    */
-}
-/*
-int get_max() {
-    int max = 0;
-    while (absolute_path[max]) {max++;}
-    return max;
 }
 
-int get_index(gchar* basename) {
-    for (int i=0; absolute_path[i]; i++) {
-        if (strcmp(relative_path[i], basename) == 0) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-gchar* open_files() {
-    int max = get_max();
-    absolute_path[max+1] = NULL;
-    return g_strjoinv(separator, (gchar**)&absolute_path);
-}
-*/
 gboolean
 notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata) {
     gchar* title = get_text_from_eventbox(widget);
@@ -96,13 +66,22 @@ void
 close_tab (gpointer user_data, gchar* title) {
     int index;
 
-    g_print("%s \n", title);
+    g_print("closing %s \n", title);
     index = l_delete_value(&head, title); // check if delete correct - namely if page exists
-    g_print("%d \n", index);
+    g_print("closing index %d \n", index);
     gtk_notebook_remove_page (GET_NOTEBOOK(user_data), index);
 
     tab_max--;
 }
+
+void create_empty_tab (GtkMenuItem *menuitem, gpointer user_data) {
+    gchar title[128];
+
+    snprintf(title, sizeof(title), "Untitled (%d)", get_untitled_files(user_data));
+    create_tab (user_data, title, "", 0);
+    incr_untitled_files (user_data);
+}
+
 
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html

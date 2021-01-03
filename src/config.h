@@ -43,9 +43,13 @@ typedef struct _UserData
     gchar*		session_info;
     gchar* 		filepath;
 
-    gint untitled_files_in_buffer_max;
+    int             untitled_files;
 
 } UserData;
+
+
+int get_untitled_files (gpointer user_data);
+void incr_untitled_files (gpointer user_data);
 
 UserData *
 cast_to_ud (gpointer userdata);

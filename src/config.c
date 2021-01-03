@@ -34,12 +34,22 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 
 	separator = "\n";
 
+    userdata->untitled_files = 0;
+
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "blue", "background", "white", NULL);
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "black", "foreground", "black", NULL);
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "italic", "style", PANGO_STYLE_ITALIC, NULL);
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
 
 	g_print("%s \n", userdata->filepath);
+}
+
+void incr_untitled_files (gpointer user_data) {
+    ((UserData*)user_data)->untitled_files++;
+}
+
+gint get_untitled_files (gpointer user_data) {
+  return ((UserData*)user_data)->untitled_files;
 }
 
 GtkWindow* get_window (UserData* userdata) {
