@@ -27,7 +27,7 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	userdata->filepath = "/home/rafal/IdeaProjects/vault13";
 
     userdata->window 	= gtk_builder_get_object (builder, "window");
-    userdata->buffer 	= gtk_builder_get_object (builder, "sourcebuffer");
+    //userdata->buffer 	= gtk_builder_get_object (builder, "sourcebuffer");
     userdata->treeview 	= gtk_builder_get_object (builder, "treeview");
     userdata->treestore = gtk_builder_get_object (builder, "treestore");
     userdata->notebook 	= gtk_builder_get_object (builder, "notebook");
@@ -35,12 +35,12 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	separator = "\n";
 
     userdata->untitled_files = 0;
-
+/*
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "blue", "background", "white", NULL);
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "black", "foreground", "black", NULL);
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "italic", "style", PANGO_STYLE_ITALIC, NULL);
     gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
-
+*/
 	g_print("%s \n", userdata->filepath);
 }
 
@@ -64,10 +64,11 @@ GtkNotebook* get_notebook (UserData* userdata)
 {
 	return GTK_NOTEBOOK(userdata->notebook);
 }
+/*
 GtkSourceBuffer* get_buffer (UserData* userdata)
 {
 	return GTK_SOURCE_BUFFER(userdata->buffer);
-}
+}*/
 
 ///////////////////
 int check_not_null(GObject* ptr, gchar* fun_name) {
@@ -77,17 +78,17 @@ int check_not_null(GObject* ptr, gchar* fun_name) {
 	}
 	return 1;
 }
-
+/*
 GtkSourceBuffer* GET_SOURCE_BUFFER (UserData* userdata)
 {
 	return check_not_null(userdata->buffer, "GET_SOURCE_BUFFER") ? GTK_SOURCE_BUFFER(userdata->buffer) : NULL;
-}
-
+}*/
+/*
 GtkTextBuffer* GET_TEXT_BUFFER (UserData* userdata)
 {
 	return check_not_null(userdata->buffer, "GTK_TEXT_BUFFER") ? GTK_TEXT_BUFFER(userdata->buffer) : NULL;
 }
-
+*/
 GtkTreeView* GET_TREE_VIEW(UserData* userdata) 
 {
 	return check_not_null(userdata->treeview, "GTK_TREE_VIEW") ? GTK_TREE_VIEW(userdata->treeview) : NULL;

@@ -105,10 +105,10 @@ create_tab (gpointer user_data, gchar* title, gchar *text, gsize len) {
     eventbox = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(eventbox), label);
 
-    textview = sourceview_new(GET_SOURCE_BUFFER(user_data));
+    textview = sourceview_new(GTK_SOURCE_BUFFER(tab->buffer));
 
     int pagenum = gtk_notebook_append_page (GET_NOTEBOOK(user_data), textview, eventbox);
-    gtk_text_buffer_set_text(GET_TEXT_BUFFER(user_data), text, len);
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(tab->buffer), text, len);
     //g_free(text);
 
     gtk_widget_show_all (GTK_WIDGET(GET_NOTEBOOK(user_data)));
@@ -131,7 +131,7 @@ load_file(gpointer userdata, guint pagenum) {
         g_error("error reading %s: %s", filepath, err->message);
     }
 
-    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
+    //gtk_text_buffer_set_text(GTK_TEXT_BUFFER(get_buffer(userdata)), text, len);
     //guess_language(GTK_SOURCE_BUFFER(get_buffer(userdata)), filepath);
 
     g_free(text);
@@ -146,6 +146,7 @@ switch_page (GtkNotebook *notebook, GtkWidget *page, guint page_dst, gpointer us
 
     page_src = gtk_notebook_get_current_page (GET_NOTEBOOK(user_data));
 
+    /*
     if (page_src<0) {
         return;
     }
@@ -161,7 +162,7 @@ switch_page (GtkNotebook *notebook, GtkWidget *page, guint page_dst, gpointer us
     strcpy (buffer_src, text);
     
     gtk_text_buffer_set_text(buffer, buffer_dst, strlen(buffer_dst));
-
+    */
 
     //load_file (userdata, page_dst);
     /*

@@ -9,13 +9,15 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
+#include <gtksourceview/gtksource.h>
 
 typedef struct t {
 	gchar* title;
 	gchar* relative_path;
 	gchar* absolute_path;
 	gint   is_file_saved;
-	gchar* tab_buffer;
+	//gchar* tab_buffer;
+	GtkWidget* buffer;
 
 } t_tab;
 

@@ -14,8 +14,9 @@ t_tab* new_tab(gchar* title, gchar* text)
 {
 	t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
 	new_tab->title = g_strdup(title);
-	new_tab->tab_buffer = (gchar*)malloc(1024*1024);
-	strcpy(new_tab->tab_buffer, text);
+	//new_tab->tab_buffer = (gchar*)malloc(1024*1024);
+	new_tab->buffer = (GtkWidget*)gtk_source_buffer_new(NULL);
+	//strcpy(new_tab->tab_buffer, text);
 	return new_tab;
 }
 
@@ -119,7 +120,7 @@ int l_delete_value(t_node **head, gchar* value)
 		/* reuse prev */
 		prev = *head;
 		*head = current->next;
-		free(prev->data->tab_buffer);
+		//free(prev->data->tab_buffer);
 		free(prev->data->title);
 		free(prev);
 		return index;
@@ -128,14 +129,14 @@ int l_delete_value(t_node **head, gchar* value)
 	/* if the last element */
 	if (current->next == NULL) {
 		prev->next = NULL;
-		free(current->data->tab_buffer);
+		//free(current->data->tab_buffer);
 		free(current->data->title);
 		free(current);
 		return index;
 	}
 
 	prev->next = current->next;
-	free(current->data->tab_buffer);
+	//free(current->data->tab_buffer);
 	free(current->data->title);
 	free(current);
 	return index;

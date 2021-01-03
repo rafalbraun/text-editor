@@ -32,7 +32,7 @@ typedef struct _UserData
     GObject* 	window;
     GObject*	treeview;
     GObject*	notebook;
-    GObject*	buffer;
+    //GObject*	buffer;
     GObject*	treestore;
     GObject* 	treeview_menu;
     GObject* 	treeview_menu_collapse;
@@ -66,8 +66,8 @@ get_treeview (UserData* userdata);
 GtkNotebook* 
 get_notebook (UserData* userdata);
 
-GtkSourceBuffer* 
-get_buffer (UserData* userdata);
+// GtkSourceBuffer* 
+// get_buffer (UserData* userdata);
 
 GtkMenu* 
 get_treeview_menu (UserData* userdata);
@@ -85,8 +85,8 @@ show_error (GtkWindow * window, gchar * message);
 int
 is_text_file(gchar* filepath);
 
-GtkSourceBuffer* GET_SOURCE_BUFFER (UserData* userdata);
-GtkTextBuffer* GET_TEXT_BUFFER (UserData* userdata);
+//GtkSourceBuffer* GET_SOURCE_BUFFER (UserData* userdata);
+//GtkTextBuffer* GET_TEXT_BUFFER (UserData* userdata);
 GtkTreeView* GET_TREE_VIEW(UserData* userdata);
 gchar* GET_FILEPATH(UserData* userdata);
 GtkWindow* GET_WINDOW(UserData* userdata);
