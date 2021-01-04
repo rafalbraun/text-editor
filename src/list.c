@@ -17,6 +17,10 @@ t_tab* new_tab(gchar* title)
 	//new_tab->tab_buffer = (gchar*)malloc(1024*1024);
 	new_tab->buffer = (GtkWidget*)gtk_source_buffer_new(NULL);
 	//strcpy(new_tab->tab_buffer, text);
+
+    //gchar* basename = g_path_get_basename(filepath);
+    //title = (get_index(basename) == -1) ? basename : filepath;
+
 	return new_tab;
 }
 

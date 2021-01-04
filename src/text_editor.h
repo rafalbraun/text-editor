@@ -22,10 +22,10 @@ new_file_cb (GtkButton * widget, gpointer userdata);
 
 void
 open_files_from_last_session (gpointer userdata);
-
+/*
 void
 set_language(GObject* buffer);
-
+*/
 void
 set_buffer_scheme (GObject* buffer);
 

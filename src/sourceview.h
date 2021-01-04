@@ -32,6 +32,8 @@ mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll);
 GtkWidget*
 sourceview_new(GtkSourceBuffer* buffer);
 
+void set_language (GtkSourceBuffer* buffer, const char* lang);
+
 #endif
 
 

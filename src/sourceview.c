@@ -3,46 +3,7 @@
 
 #include "sourceview.h"
 
-void
-guess_language(GtkSourceBuffer* buffer, gchar* filepath) 
-{
-    GtkSourceLanguageManager *manager;
-    GtkSourceLanguage *lang = NULL;
-    gboolean result_uncertain;
-    gchar *content_type;
-
-    manager = gtk_source_language_manager_get_default ();
-    content_type = g_content_type_guess (filepath, NULL, 0, &result_uncertain);
-    if (result_uncertain) {
-        //g_print("no lang recognized \n");
-        gtk_source_buffer_set_highlight_syntax (buffer, FALSE);
-        g_free (content_type);
-        return;
-    }
-
-    lang = gtk_source_language_manager_guess_language (manager, filepath, content_type);
-    if (lang != NULL) {
-        g_print("lang %s recognized in file %s \n", gtk_source_language_get_name(lang), filepath);
-        gtk_source_buffer_set_language (buffer, lang);
-        gtk_source_buffer_set_highlight_syntax (buffer, TRUE);
-        g_free (content_type);
-    }
-}
-
-void show_langs() 
-{
-    GtkSourceLanguageManager *manager;
-    const gchar * const * lang_ids;
-
-    manager = gtk_source_language_manager_get_default ();
-    lang_ids = gtk_source_language_manager_get_language_ids (manager);
-
-    for (int i=0; *(lang_ids+i); i++) {
-        g_print("%d -> %s \n", i, *(lang_ids+i));
-    }
-
-}
-
+/*
 void clear_buffer(GtkSourceBuffer* buffer) 
 {
     GtkTextIter iter_start, iter_end;
@@ -51,7 +12,7 @@ void clear_buffer(GtkSourceBuffer* buffer)
     gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter_end);
     gtk_text_buffer_delete ( GTK_TEXT_BUFFER( buffer ), &iter_start, &iter_end );
 }
-
+*/
 gboolean is_valid_string(gchar* line) 
 {
     for (int i=0; i!=strlen(line); i++) {
@@ -203,6 +164,57 @@ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
 }
 */
 
+void show_langs() 
+{
+    GtkSourceLanguageManager *manager;
+    const gchar * const * lang_ids;
+
+    manager = gtk_source_language_manager_get_default ();
+    lang_ids = gtk_source_language_manager_get_language_ids (manager);
+
+    for (int i=0; *(lang_ids+i); i++) {
+        g_print("%d -> %s \n", i, *(lang_ids+i));
+    }
+
+}
+
+void
+guess_language(GtkSourceBuffer* buffer, gchar* filepath) 
+{
+    GtkSourceLanguageManager *manager;
+    GtkSourceLanguage *lang = NULL;
+    gboolean result_uncertain;
+    gchar *content_type;
+
+    manager = gtk_source_language_manager_get_default ();
+    content_type = g_content_type_guess (filepath, NULL, 0, &result_uncertain);
+    if (result_uncertain) {
+        //g_print("no lang recognized \n");
+        gtk_source_buffer_set_highlight_syntax (buffer, FALSE);
+        g_free (content_type);
+        return;
+    }
+
+    lang = gtk_source_language_manager_guess_language (manager, filepath, content_type);
+    if (lang != NULL) {
+        g_print("lang %s recognized in file %s \n", gtk_source_language_get_name(lang), filepath);
+        gtk_source_buffer_set_language (buffer, lang);
+        gtk_source_buffer_set_highlight_syntax (buffer, TRUE);
+        g_free (content_type);
+    }
+}
+
+void set_language (GtkSourceBuffer* buffer, const char* lang_name) {
+    GtkSourceLanguageManager *manager;
+    GtkSourceLanguage *lang = NULL;
+    
+    manager = gtk_source_language_manager_get_default ();
+    lang = gtk_source_language_manager_get_language (manager, lang_name);
+    gtk_source_buffer_set_language (buffer, lang);
+    gtk_source_buffer_set_highlight_syntax (buffer, TRUE);
+
+}
+
 GtkWidget*
 sourceview_new(GtkSourceBuffer* buffer) 
 {
@@ -216,10 +228,14 @@ sourceview_new(GtkSourceBuffer* buffer)
 
     gtk_source_view_set_show_right_margin(GTK_SOURCE_VIEW(sourceview), TRUE);
     gtk_source_view_set_show_line_numbers(GTK_SOURCE_VIEW(sourceview), TRUE);
-    gtk_source_view_set_highlight_current_line(GTK_SOURCE_VIEW(sourceview), TRUE);
     gtk_source_view_set_show_line_marks(GTK_SOURCE_VIEW(sourceview), TRUE);
+    gtk_source_view_set_highlight_current_line(GTK_SOURCE_VIEW(sourceview), TRUE);
 
     gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (sourceview));
+
+    gtk_text_view_set_bottom_margin (GTK_TEXT_VIEW(sourceview), 100);
+
+    set_language (buffer, "c");
 
     /* change font */
     GtkCssProvider *provider = gtk_css_provider_new ();

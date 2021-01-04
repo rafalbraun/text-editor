@@ -24,7 +24,8 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
-	userdata->filepath = "/home/rafal/IdeaProjects/vault13";
+	//userdata->filepath = "/home/rafal/IdeaProjects/vault13";
+    userdata->filepath = "/home/rafal/IdeaProjects/xed";
 
     userdata->window 	= gtk_builder_get_object (builder, "window");
     //userdata->buffer 	= gtk_builder_get_object (builder, "sourcebuffer");

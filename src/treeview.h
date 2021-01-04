@@ -49,17 +49,4 @@ key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata)
 void 
 validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data);
 
-
-
-
-
-// void
-// expand_top_node(GObject * treeview);
-/*
-void
-create_view_and_model(gchar * filepath, GtkWidget * treeview);
-
-GtkTreeModel *
-create_and_fill_model(const char * pathname);
-*/
 #endif

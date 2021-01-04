@@ -321,7 +321,6 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
         g_free(path);
 }
 
-
 gboolean
 key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata) {
     GtkTreeModel     *tree_model;
@@ -356,49 +355,3 @@ key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata)
 
     return FALSE;
 }
-
-////////////////////////////////////////////
-/*
-GtkTreeModel *
-create_and_fill_model(const char * pathname) {
-    GtkTreeIter toplevel;
-    GtkTreeStore * treestore;
-
-    treestore = gtk_tree_store_new(NUM_COLS,
-        G_TYPE_STRING);
-
-    gtk_tree_store_append(treestore, & toplevel, NULL);
-    gtk_tree_store_set(treestore, & toplevel, COLUMN, pathname, -1);
-
-    fill_treestore(pathname, treestore, toplevel);
-
-    return GTK_TREE_MODEL(treestore);
-}
-
-
-
-void
-create_view_and_model(gchar * filepath, GtkWidget * treeview) {
-    GtkCellRenderer * renderer;
-    GtkTreeViewColumn * col;
-    GtkTreePath * treepath;
-    GtkTreeModel * model;
-
-    gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview), FALSE);
-
-    col = gtk_tree_view_column_new();
-    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
-
-    renderer = gtk_cell_renderer_text_new();
-    gtk_tree_view_column_pack_start(col, renderer, TRUE);
-    gtk_tree_view_column_add_attribute(col, renderer, "text", COLUMN);
-
-    model = create_and_fill_model(filepath);
-    gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), model);
-    g_object_unref(model);
-
-    // Expand top tree node
-    treepath = gtk_tree_path_new_from_string("0");
-    gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
-}
-*/

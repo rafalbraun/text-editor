@@ -103,7 +103,7 @@ open_files_from_last_session (gpointer userdata)
     i++;
   }
 }
-
+/*
 void set_language(GObject* buffer) {
   GtkSourceLanguageManager *manager = gtk_source_language_manager_new ();
   gchar **lang_dirs;
@@ -130,7 +130,7 @@ void set_language(GObject* buffer) {
   gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER (buffer), TRUE);
 
 }
-
+*/
 void set_buffer_scheme (GObject* buffer) {
   GtkSourceStyleSchemeManager *sm = gtk_source_style_scheme_manager_new ();
   gchar **scheme_dirs;
