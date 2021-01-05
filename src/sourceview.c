@@ -13,6 +13,62 @@ void clear_buffer(GtkSourceBuffer* buffer)
     gtk_text_buffer_delete ( GTK_TEXT_BUFFER( buffer ), &iter_start, &iter_end );
 }
 */
+/*
+gboolean is_valid_first_char (gchar c) {
+    return ((c>='A' && c<='Z') || (c>='a' && c<='z') || c=='_' || c=='\n' || c=='\0' || c=='\r');
+}
+
+gboolean is_valid_char (gchar c) {
+    return is_valid_first_char(c) || (c>='0'&&c<='9');
+}
+
+gboolean is_quote_char (gchar c) {
+    return ((c=='"') || (c=='\''));
+}
+
+void underline_varnames (GtkTextBuffer* buffer) {
+    GtkTextIter statr, end;
+    gchar* text;
+
+    g_print("underline_varnames %d \n", gtk_text_buffer_get_line_count(buffer));
+    for (int i=0; i<gtk_text_buffer_get_line_count(buffer); i++) {
+        gtk_text_buffer_get_iter_at_line (buffer, &start, i);
+        gtk_text_buffer_get_iter_at_line_index (buffer, &end, i, 9999);
+        //gtk_text_buffer_get_bounds (buffer, &start, &end);
+        text = gtk_text_buffer_get_text (buffer, &start, &end, TRUE);
+        g_print("[%d] %s \n", i, text);
+
+        if (strlen(text)<2) {
+            continue;
+        }
+        long len = strlen(text);
+        gboolean quote = FALSE;
+        
+        for (int j=0; j<len; j++) {
+            //g_print("%c", text[j]);
+            if (is_valid_first_char(text[j])) {
+                //g_print("%c", text[j]);
+
+                if ( is_quote_char(text[j]) && (quote==TRUE) ) {
+                    quote = FALSE;
+                }
+                
+                while ( is_valid_char(text[j]) && (j<len) && (quote==FALSE) )  {
+                    g_print("%c", text[j]);
+                    if ( is_quote_char(text[j]) && (quote==FALSE) ) {
+                        quote = TRUE;
+                    }
+                    j++;
+                }
+            }
+            g_print(" ");
+        }
+        g_print("\n");
+    }
+
+}
+*/
+
 gboolean is_valid_string(gchar* line) 
 {
     for (int i=0; i!=strlen(line); i++) {
@@ -30,7 +86,30 @@ gboolean is_valid_string(gchar* line)
     return TRUE;
 }
 
-/*
+gboolean is_valid_char (gchar c) {
+    if( (c == ' ') || 
+        (c == '[') || 
+        (c == ']') || 
+        (c == '*') || 
+        (c == '(') || 
+        (c == ')') || 
+        (c == '=') || 
+        (c == ';') || 
+        (c == '{') || 
+        (c == '}') || 
+        (c == '+') || 
+        (c == '-') || 
+        (c == '&') || 
+        (c == ',') || 
+        (c == '/') || 
+        (c == '>') || 
+        (c == '<') ) 
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
+
 gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* sourcebuff, GtkWidget* scroll) 
 {
     gint left, right, i, j;
@@ -42,7 +121,7 @@ gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* 
             left = i;
             break;
         }
-        if ( (line[i] == ' ') || (line[i] == '[') || (line[i] == ']') || (line[i] == '*') || (line[i] == '(') || (line[i] == ')') || (line[i] == '=') || (line[i] == ';') || (line[i] == '{') || (line[i] == '}') || (line[i] == '+') || (line[i] == '-') || (line[i] == '&') || (line[i] == ',') || (line[i] == '/') || (line[i] == '>') || (line[i] == '<') ) {
+        if (is_valid_char(line[i])) {
             left = i+1;
             break;
         }
@@ -52,7 +131,7 @@ gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* 
             right = i;
             break;
         }
-        if ( (line[i] == ' ') || (line[i] == '[') || (line[i] == ']') || (line[i] == '*') || (line[i] == '(') || (line[i] == ')') || (line[i] == '=') || (line[i] == ';') || (line[i] == '{') || (line[i] == '}') || (line[i] == '+') || (line[i] == '-') || (line[i] == '&') || (line[i] == ',') || (line[i] == '/') || (line[i] == '>') || (line[i] == '<') ) {
+        if (is_valid_char(line[i])) {
             right = i;
             break;
         }
@@ -112,8 +191,8 @@ gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* 
         active = 1;
     }
 }
-*/
-/*
+
+
 // http://www.bravegnu.org/gtktext/x498.html
 gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll) 
 {
@@ -128,7 +207,7 @@ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
 
         window_x = (guint)e->x;
         window_y = (guint)e->y;
-
+        
         //printf("Coordinates: (%u,%u)\n", window_x, window_y);
         
         gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW(widget), GTK_TEXT_WINDOW_TEXT, window_x, window_y, &buffer_x, &buffer_y);
@@ -146,8 +225,13 @@ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
 
 
         GtkTextBuffer* buffer = GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget)));
+        
+        //gtk_text_buffer_get_iter_at_line (buffer, &start, row);
+        //gtk_text_buffer_get_iter_at_line (buffer, &end, row+1);
+        
         gtk_text_buffer_get_iter_at_line (buffer, &start, row);
-        gtk_text_buffer_get_iter_at_line (buffer, &end, row+1);
+        gtk_text_buffer_get_iter_at_line_index (buffer, &end, row, 9999);
+
         msg = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 
         if (msg) {
@@ -162,7 +246,7 @@ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
         g_free(msg);
     }
 }
-*/
+
 
 void show_langs() 
 {

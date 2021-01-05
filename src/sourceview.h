@@ -34,6 +34,8 @@ sourceview_new(GtkSourceBuffer* buffer);
 
 void set_language (GtkSourceBuffer* buffer, const char* lang);
 
+//void underline_varnames (GtkTextBuffer* buffer);
+
 #endif
 
 

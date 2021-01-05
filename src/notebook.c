@@ -142,12 +142,20 @@ load_file(gpointer userdata, guint pagenum) {
 */
 void
 switch_page (GtkNotebook *notebook, GtkWidget *page, guint page_dst, gpointer user_data) {
-    GtkTextIter statr, end;
+    GList* children;
+    GtkTextView* text_view;
     GtkTextBuffer* buffer;
     gint page_src;
-    gchar *text, *buffer_src, *buffer_dst;
 
-    page_src = gtk_notebook_get_current_page (GET_NOTEBOOK(user_data));
+    //page_src = gtk_notebook_get_current_page (notebook);
+
+    //page = gtk_notebook_get_nth_page (notebook, page_src);
+
+    children = gtk_container_get_children (GTK_CONTAINER(page));
+    text_view = ((GtkTextView*) children->data);
+    buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
+
+    SET_TEXT_BUFFER (user_data, buffer);
 
     /*
     if (page_src<0) {

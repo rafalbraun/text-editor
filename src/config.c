@@ -110,6 +110,23 @@ GtkNotebook* GET_NOTEBOOK(UserData* userdata)
 	return check_not_null(userdata->notebook, "GTK_NOTEBOOK") ? GTK_NOTEBOOK(userdata->notebook) : NULL;
 }
 
+GtkSourceBuffer* GET_SOURCE_BUFFER (UserData* user_data) {
+    return GTK_SOURCE_BUFFER(user_data->buffer);
+}
+
+GtkTextBuffer* GET_TEXT_BUFFER (UserData* user_data) {
+    return GTK_TEXT_BUFFER(user_data->buffer);
+}
+
+void SET_SOURCE_BUFFER(UserData* user_data, GtkSourceBuffer* buffer) {
+  user_data->buffer = G_OBJECT(buffer);
+}
+
+void SET_TEXT_BUFFER(UserData* user_data, GtkTextBuffer* buffer) {
+  user_data->buffer = G_OBJECT(buffer);
+}
+
+
 /////////////////////
 /*
 

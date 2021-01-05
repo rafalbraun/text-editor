@@ -5,6 +5,7 @@
 #include "config.h"
 #include "treeview.h"
 #include "notebook.h"
+#include "sourceview.h"
 
 /*
 gchar* 
@@ -31,6 +32,7 @@ void open_file_cb() {
 static GtkActionEntry buffer_action_entries[] = {
     //{ "Collapse", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (open_file_cb) },
     { "New", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (create_empty_tab) },
+    //{ "Varnames", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (underline_varnames) },
     /*
     { "Copy", "document-open", "_Open", "<control>O", "Open a file", NULL },
     { "Paste", "document-open", "_Open", "<control>O", "Open a file", NULL },
@@ -255,16 +257,18 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
 static void
 result_func (
-  GtkSourceFileLoader * loader,
-  GAsyncResult *        res,
-  gpointer *     user_data)
+    GtkSourceFileLoader * loader,
+    GAsyncResult *        res,
+    gpointer *            user_data)
 {
-  gboolean success = FALSE;
+    gboolean success = FALSE;
 
-  success =
-    gtk_source_file_loader_load_finish (
-      loader, res, NULL);
-  g_return_if_fail (success);
+    success = gtk_source_file_loader_load_finish (loader, res, NULL);
+
+    // do usuniecia !!!!!!!
+    //underline_varnames (GTK_TEXT_BUFFER(user_data));
+
+    g_return_if_fail (success);
 }
 
 void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data) 
@@ -275,7 +279,7 @@ void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data)
     g_object_unref (file);
 
     GtkSourceFileLoader * file_loader = gtk_source_file_loader_new (buffer, src_file);
-    gtk_source_file_loader_load_async (file_loader, G_PRIORITY_DEFAULT, NULL, NULL, NULL, NULL, (GAsyncReadyCallback) result_func, user_data);
+    gtk_source_file_loader_load_async (file_loader, G_PRIORITY_DEFAULT, NULL, NULL, NULL, NULL, (GAsyncReadyCallback) result_func, buffer);
 
 }
 
@@ -308,6 +312,7 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
 
                     buffer = create_tab (user_data, path);
                     load_file(buffer, path, user_data);
+
 
               } else {
                     //show_error(get_window(userdata), "no file under filepath");
