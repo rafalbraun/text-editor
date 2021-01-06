@@ -52,25 +52,41 @@ int main() {
     std::vector<Token> tokens;
     parseStream.parse(&tokens);
     
-    //std::copy_if(tokens.begin(), tokens.end(), std::ostream_iterator<Token>(std::cout, "\n"), _isnotmacro);
+    std::copy_if(tokens.begin(), tokens.end(), std::ostream_iterator<Token>(std::cout, "\n"), _isnotmacro);
     
 
+    std::cout << "[function calls]" << std::endl;
+
     int block = 0, bracket = 0;;
-    std::set<std::string> functionCalls;
+    std::set<std::string> functionCalls, functionDefs;
     for (auto iter = tokens.begin(); iter != tokens.end(); iter++) {
 
-        if ( (*iter).get_content() == "}" ) {
-            block = 1;
-        }
         if ( (*iter).get_content() == "{" ) {
-            block = 0;
+            block++;
         }
 
+        if (block > 0) {
+            std::cout << "INSIDE["<< block<<"]:" << *iter << std::endl;
+            if (_is_function(iter) ) {
+                functionCalls.insert(iter->get_content());
+            }
+        } else {
+            std::cout << "OUTSIDE["<< block<<"]: " << *iter << std::endl;         
+            if (_is_function(iter) ) {
+                functionDefs.insert(iter->get_content());
+            }
+        }
+
+        if ( (*iter).get_content() == "}" ) {
+            block--;
+        }
+
+        /*
         if (_is_function(iter) ) {
             //std::cout << *iter << " ";
             functionCalls.insert(iter->get_content());
             //std::cout << std::endl;
-        }
+        }*/
 
         /*
         std::cout << *iter << " ";
@@ -101,6 +117,9 @@ int main() {
         }*/
     }
 
+    std::cout << "============ functionDefs" << std::endl;
+    std::copy(functionDefs.begin(), functionDefs.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+    std::cout << "============ functionCalls" << std::endl;
     std::copy(functionCalls.begin(), functionCalls.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
 
     /*
