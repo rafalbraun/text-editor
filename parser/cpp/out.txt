@@ -1,0 +1,875 @@
+----------
+----------
+----------
+----------
+_ident   : GtkTextBuffer
+_opchar  : *
+_ident   : buffer
+----------
+_ident   : GtkTextIter
+_ident   : iter
+----------
+----------
+----------
+----------
+----------
+_ident   : keywords
+_punc    : [
+_punc    : ]
+_opchar  : =
+_punc    : {
+_string  : "#include"
+_punc    : ,
+_string  : "static"
+_punc    : ,
+_string  : "delete"
+_punc    : ,
+_string  : "while"
+_punc    : ,
+_string  : "sizeof"
+_punc    : ,
+_string  : "for"
+_punc    : ,
+_string  : "return"
+_punc    : ,
+_string  : "if"
+_punc    : ,
+_string  : "else"
+_punc    : ,
+_string  : "class"
+_punc    : ,
+_string  : "const"
+_punc    : }
+----------
+----------
+----------
+----------
+----------
+_ident   : typenames
+_punc    : [
+_punc    : ]
+_opchar  : =
+_punc    : {
+_string  : "gchar"
+_punc    : ,
+_string  : "gint"
+_punc    : ,
+_string  : "guint"
+_punc    : ,
+_string  : "int"
+_punc    : ,
+_string  : "char"
+_punc    : ,
+_string  : "float"
+_punc    : ,
+_string  : "size_t"
+_punc    : ,
+_string  : "void"
+_punc    : }
+----------
+----------
+----------
+_ident   : size_keywords
+_opchar  : =
+_keyword : sizeof
+_punc    : (
+_ident   : keywords
+_punc    : )
+_opchar  : /
+_keyword : sizeof
+_punc    : (
+_ident   : keywords
+_punc    : [
+_number  : 0
+_punc    : ]
+_punc    : )
+----------
+----------
+----------
+_ident   : size_typenames
+_opchar  : =
+_keyword : sizeof
+_punc    : (
+_ident   : typenames
+_punc    : )
+_opchar  : /
+_keyword : sizeof
+_punc    : (
+_ident   : typenames
+_punc    : [
+_number  : 0
+_punc    : ]
+_punc    : )
+----------
+_ident   : size_t
+_ident   : f_size
+----------
+----------
+----------
+_ident   : content
+----------
+----------
+----------
+_ident   : highlight_syntax
+_punc    : (
+_keyword : const
+_keyword : char
+_opchar  : *
+_opchar  : *
+_keyword : const
+_ident   : typenames
+_punc    : ,
+_keyword : int
+_ident   : size
+_punc    : ,
+_ident   : gchar
+_opchar  : *
+_ident   : tagname
+_punc    : )
+_punc    : {
+_ident   : GtkTextIter
+_ident   : iter
+_punc    : ,
+_ident   : match_start
+_punc    : ,
+_ident   : match_end
+----------
+_ident   : GtkTextSearchFlags
+_ident   : flags
+----------
+_ident   : GtkTextTagTable
+_opchar  : *
+_ident   : table
+_opchar  : =
+_ident   : gtk_text_buffer_get_tag_table
+_punc    : (
+_ident   : buffer
+_punc    : )
+----------
+_ident   : GtkTextTag
+_opchar  : *
+_ident   : tag1
+_opchar  : =
+_ident   : gtk_text_tag_table_lookup
+_punc    : (
+_ident   : table
+_punc    : ,
+_ident   : tagname
+_punc    : )
+----------
+----------
+----------
+----------
+_ident   : i
+_opchar  : =
+_number  : 0
+----------
+_ident   : i<size
+----------
+_ident   : i
+_opchar  : +
+_opchar  : +
+_punc    : )
+_punc    : {
+_ident   : gtk_text_buffer_get_start_iter
+_punc    : (
+_ident   : GTK_TEXT_BUFFER
+_punc    : (
+_ident   : buffer
+_punc    : )
+_punc    : ,
+_opchar  : &
+_ident   : iter
+_punc    : )
+----------
+----------
+----------
+_ident   : gtk_text_iter_forward_search
+_punc    : (
+_opchar  : &
+_ident   : iter
+_punc    : ,
+_ident   : typenames
+_punc    : [
+_ident   : i
+_punc    : ]
+_punc    : ,
+_ident   : flags
+_punc    : ,
+_opchar  : &
+_ident   : match_start
+_punc    : ,
+_opchar  : &
+_ident   : match_end
+_punc    : ,
+_ident   : NULL
+_punc    : )
+_punc    : )
+_punc    : {
+_ident   : gtk_text_buffer_apply_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_ident   : tag1
+_punc    : ,
+_opchar  : &
+_ident   : match_start
+_punc    : ,
+_opchar  : &
+_ident   : match_end
+_punc    : )
+----------
+_ident   : iter
+_opchar  : =
+_ident   : match_end
+----------
+----------
+----------
+----------
+----------
+_ident   : gboolean
+_ident   : key_callback
+_punc    : (
+_ident   : GtkWidget
+_opchar  : *
+_ident   : widget
+_punc    : ,
+_ident   : GdkEventKey
+_opchar  : *
+_ident   : event
+_punc    : ,
+_ident   : GtkIMContext
+_opchar  : *
+_ident   : im_context
+_punc    : )
+_punc    : {
+_keyword : if
+_punc    : (
+_punc    : (
+_ident   : event
+_opchar  : -
+_ident   : >keyval
+_opchar  : =
+_opchar  : =
+_ident   : GDK_KEY_space
+_punc    : )
+_opchar  : |
+_opchar  : |
+_punc    : (
+_ident   : event
+_opchar  : -
+_ident   : >keyval
+_opchar  : =
+_opchar  : =
+_ident   : GDK_KEY_Return
+_punc    : )
+_punc    : )
+_punc    : {
+_ident   : highlight_syntax
+_punc    : (
+_ident   : keywords
+_punc    : ,
+_ident   : size_keywords
+_punc    : ,
+_string  : "red"
+_punc    : )
+----------
+_ident   : highlight_syntax
+_punc    : (
+_ident   : typenames
+_punc    : ,
+_ident   : size_typenames
+_punc    : ,
+_string  : "blue"
+_punc    : )
+----------
+----------
+----------
+_ident   : FALSE
+----------
+----------
+----------
+----------
+----------
+----------
+----------
+----------
+----------
+----------
+_ident   : c_read_file
+_punc    : (
+_keyword : const
+_keyword : char
+_opchar  : *
+_ident   : f_name
+_punc    : ,
+_keyword : int
+_opchar  : *
+_ident   : err
+_punc    : ,
+_ident   : size_t
+_opchar  : *
+_ident   : f_size
+_punc    : )
+_punc    : {
+_keyword : char
+_opchar  : *
+_ident   : buffer
+----------
+_ident   : size_t
+_ident   : length
+----------
+_ident   : FILE
+_opchar  : *
+_ident   : f
+_opchar  : =
+_ident   : fopen
+_punc    : (
+_ident   : f_name
+_punc    : ,
+_string  : "rb"
+_punc    : )
+----------
+_ident   : size_t
+_ident   : read_length
+----------
+----------
+----------
+_ident   : f
+_punc    : )
+_punc    : {
+_ident   : fseek
+_punc    : (
+_ident   : f
+_punc    : ,
+_number  : 0
+_punc    : ,
+_ident   : SEEK_END
+_punc    : )
+----------
+_ident   : length
+_opchar  : =
+_ident   : ftell
+_punc    : (
+_ident   : f
+_punc    : )
+----------
+_ident   : fseek
+_punc    : (
+_ident   : f
+_punc    : ,
+_number  : 0
+_punc    : ,
+_ident   : SEEK_SET
+_punc    : )
+----------
+----------
+----------
+_ident   : length
+_ident   : >
+_number  : 1073741824
+_punc    : )
+_punc    : {
+_opchar  : *
+_ident   : err
+_opchar  : =
+_ident   : FILE_TO_LARGE
+----------
+----------
+_ident   : NULL
+----------
+----------
+_ident   : buffer
+_opchar  : =
+_punc    : (
+_keyword : char
+_opchar  : *
+_punc    : )
+_ident   : malloc
+_punc    : (
+_ident   : length
+_opchar  : +
+_number  : 1
+_punc    : )
+----------
+----------
+----------
+_ident   : length
+_punc    : )
+_punc    : {
+_ident   : read_length
+_opchar  : =
+_ident   : fread
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_number  : 1
+_punc    : ,
+_ident   : length
+_punc    : ,
+_ident   : f
+_punc    : )
+----------
+----------
+----------
+_ident   : length
+_opchar  : !
+_opchar  : =
+_ident   : read_length
+_punc    : )
+_punc    : {
+_opchar  : *
+_ident   : err
+_opchar  : =
+_ident   : FILE_READ_ERROR
+----------
+----------
+_ident   : NULL
+----------
+----------
+----------
+_ident   : fclose
+_punc    : (
+_ident   : f
+_punc    : )
+----------
+----------
+_ident   : err
+_opchar  : =
+_ident   : FILE_OK
+----------
+_ident   : buffer
+_punc    : [
+_ident   : length
+_punc    : ]
+_opchar  : =
+_squote  : '\0'
+----------
+----------
+_ident   : f_size
+_opchar  : =
+_ident   : length
+----------
+----------
+----------
+----------
+----------
+_ident   : err
+_opchar  : =
+_ident   : FILE_NOT_EXIST
+----------
+----------
+_ident   : NULL
+----------
+----------
+----------
+_ident   : buffer
+----------
+----------
+----------
+_ident   : main
+_punc    : (
+_keyword : int
+_ident   : argc
+_punc    : ,
+_ident   : gchar
+_opchar  : *
+_ident   : argv
+_punc    : [
+_punc    : ]
+_punc    : )
+_punc    : {
+_ident   : GtkWidget
+_opchar  : *
+_ident   : window
+----------
+_ident   : GtkWidget
+_opchar  : *
+_ident   : view
+----------
+_ident   : GtkWidget
+_opchar  : *
+_ident   : vbox
+----------
+_ident   : GtkWidget
+_opchar  : *
+_ident   : scrolled_window
+----------
+_ident   : gtk_init
+_punc    : (
+_opchar  : &
+_ident   : argc
+_punc    : ,
+_opchar  : &
+_ident   : argv
+_punc    : )
+----------
+_ident   : window
+_opchar  : =
+_ident   : gtk_window_new
+_punc    : (
+_ident   : GTK_WINDOW_TOPLEVEL
+_punc    : )
+----------
+_ident   : gtk_window_set_position
+_punc    : (
+_ident   : GTK_WINDOW
+_punc    : (
+_ident   : window
+_punc    : )
+_punc    : ,
+_ident   : GTK_WIN_POS_CENTER
+_punc    : )
+----------
+_ident   : gtk_window_set_default_size
+_punc    : (
+_ident   : GTK_WINDOW
+_punc    : (
+_ident   : window
+_punc    : )
+_punc    : ,
+_number  : 800
+_punc    : ,
+_number  : 600
+_punc    : )
+----------
+_ident   : gtk_window_set_title
+_punc    : (
+_ident   : GTK_WINDOW
+_punc    : (
+_ident   : window
+_punc    : )
+_punc    : ,
+_string  : "Search & highlight"
+_punc    : )
+----------
+_ident   : GtkIMContext
+_opchar  : *
+_ident   : im_context
+_opchar  : =
+_ident   : gtk_im_multicontext_new
+_punc    : (
+_punc    : )
+----------
+_ident   : GdkWindow
+_opchar  : *
+_ident   : gdk_window
+_opchar  : =
+_ident   : gtk_widget_get_window
+_punc    : (
+_ident   : GTK_WIDGET
+_punc    : (
+_ident   : window
+_punc    : )
+_punc    : )
+----------
+_ident   : gtk_im_context_set_client_window
+_punc    : (
+_ident   : im_context
+_punc    : ,
+_ident   : gdk_window
+_punc    : )
+----------
+_ident   : gtk_im_context_focus_in
+_punc    : (
+_ident   : im_context
+_punc    : )
+----------
+_ident   : vbox
+_opchar  : =
+_ident   : gtk_box_new
+_punc    : (
+_ident   : GTK_ORIENTATION_HORIZONTAL
+_punc    : ,
+_number  : 0
+_punc    : )
+----------
+_ident   : view
+_opchar  : =
+_ident   : gtk_text_view_new
+_punc    : (
+_punc    : )
+----------
+_ident   : gtk_widget_add_events
+_punc    : (
+_ident   : view
+_punc    : ,
+_ident   : GDK_BUTTON_PRESS_MASK
+_punc    : )
+----------
+_ident   : gtk_box_pack_start
+_punc    : (
+_ident   : GTK_BOX
+_punc    : (
+_ident   : vbox
+_punc    : )
+_punc    : ,
+_ident   : view
+_punc    : ,
+_ident   : TRUE
+_punc    : ,
+_ident   : TRUE
+_punc    : ,
+_number  : 0
+_punc    : )
+----------
+_ident   : scrolled_window
+_opchar  : =
+_ident   : gtk_scrolled_window_new
+_punc    : (
+_ident   : NULL
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_container_add
+_punc    : (
+_ident   : GTK_CONTAINER
+_punc    : (
+_ident   : scrolled_window
+_punc    : )
+_punc    : ,
+_ident   : vbox
+_punc    : )
+----------
+_ident   : buffer
+_opchar  : =
+_ident   : gtk_text_view_get_buffer
+_punc    : (
+_ident   : GTK_TEXT_VIEW
+_punc    : (
+_ident   : view
+_punc    : )
+_punc    : )
+----------
+_ident   : gtk_text_buffer_get_iter_at_offset
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_opchar  : &
+_ident   : iter
+_punc    : ,
+_number  : 0
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "gap"
+_punc    : ,
+_string  : "pixels_above_lines"
+_punc    : ,
+_number  : 30
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "lmarg"
+_punc    : ,
+_string  : "left_margin"
+_punc    : ,
+_number  : 5
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "blue"
+_punc    : ,
+_string  : "foreground"
+_punc    : ,
+_string  : "#66D9EF"
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "red"
+_punc    : ,
+_string  : "foreground"
+_punc    : ,
+_string  : "#F92672"
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "gray_bg"
+_punc    : ,
+_string  : "background"
+_punc    : ,
+_string  : "gray"
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "italic"
+_punc    : ,
+_string  : "style"
+_punc    : ,
+_ident   : PANGO_STYLE_ITALIC
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "bold"
+_punc    : ,
+_string  : "weight"
+_punc    : ,
+_ident   : PANGO_WEIGHT_BOLD
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "monokaifg"
+_punc    : ,
+_string  : "foreground"
+_punc    : ,
+_string  : "#6c99bb"
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : gtk_text_buffer_create_tag
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_string  : "monokaibg"
+_punc    : ,
+_string  : "background"
+_punc    : ,
+_string  : "#2e2e2e"
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+----------
+_ident   : err
+----------
+_ident   : f_size
+----------
+_ident   : content
+_opchar  : =
+_ident   : c_read_file
+_punc    : (
+_string  : "/home/rafal/IdeaProjects/gtksourceview-my-ide/highlight_syntax/highlight_syntax.c"
+_punc    : ,
+_opchar  : &
+_ident   : err
+_punc    : ,
+_opchar  : &
+_ident   : f_size
+_punc    : )
+----------
+_ident   : gtk_text_buffer_insert
+_punc    : (
+_ident   : buffer
+_punc    : ,
+_opchar  : &
+_ident   : iter
+_punc    : ,
+_ident   : content
+_punc    : ,
+_opchar  : -
+_number  : 1
+_punc    : )
+----------
+_ident   : highlight_syntax
+_punc    : (
+_ident   : keywords
+_punc    : ,
+_ident   : size_keywords
+_punc    : ,
+_string  : "red"
+_punc    : )
+----------
+_ident   : highlight_syntax
+_punc    : (
+_ident   : typenames
+_punc    : ,
+_ident   : size_typenames
+_punc    : ,
+_string  : "blue"
+_punc    : )
+----------
+_ident   : gtk_container_add
+_punc    : (
+_ident   : GTK_CONTAINER
+_punc    : (
+_ident   : window
+_punc    : )
+_punc    : ,
+_ident   : scrolled_window
+_punc    : )
+----------
+_ident   : g_signal_connect
+_punc    : (
+_ident   : G_OBJECT
+_punc    : (
+_ident   : window
+_punc    : )
+_punc    : ,
+_string  : "destroy"
+_punc    : ,
+_ident   : G_CALLBACK
+_punc    : (
+_ident   : gtk_main_quit
+_punc    : )
+_punc    : ,
+_ident   : NULL
+_punc    : )
+----------
+_ident   : g_signal_connect
+_punc    : (
+_ident   : window
+_punc    : ,
+_string  : "key-press-event"
+_punc    : ,
+_ident   : G_CALLBACK
+_punc    : (
+_ident   : key_callback
+_punc    : )
+_punc    : ,
+_ident   : im_context
+_punc    : )
+----------
+_ident   : gtk_widget_show_all
+_punc    : (
+_ident   : window
+_punc    : )
+----------
+_ident   : gtk_main
+_punc    : (
+_punc    : )
+----------
+----------
+----------
+----------
+----------
+----------
