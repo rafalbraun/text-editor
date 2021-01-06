@@ -63,16 +63,29 @@ public:
     int get_pos() {
     	return pos;
     }
+	int get_line() {
+		return line;
+	}
+	int get_col() {
+		return col;
+	}
 };
-
 class Token {
 	std::string content;
 	token_t type;
+	int line;
+	int col;
 public:
 	Token() = delete;
 	Token(std::string content, token_t type) {
 		this->content = content;
 		this->type = type;
+	}
+	Token(std::string content, token_t type, int line, int col) {
+		this->content = content;
+		this->type = type;
+		this->line = line;
+		this->col = col;
 	}
 	friend std::ostream& operator<<(std::ostream& os, const Token& dt);
     token_t get_type() {
@@ -81,7 +94,15 @@ public:
     std::string get_content() {
     	return this->content;
     }
+	int get_line() {
+		return line;
+	}
+	int get_col() {
+		return col;
+	}
+	friend std::ostream& operator<<(std::ostream& os, const Token& dt);
 };
+
 static Token tokenError	("", ERROR);
 static Token tokenEOF	("", EOT);
 

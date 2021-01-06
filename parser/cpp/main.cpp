@@ -68,12 +68,14 @@ int main() {
         if (block > 0) {
             std::cout << "INSIDE["<< block<<"]:" << *iter << std::endl;
             if (_is_function(iter) ) {
-                functionCalls.insert(iter->get_content());
+                std::string str = iter->get_content();// + " " + std::to_string(iter->get_line()) +  " " + std::to_string(iter->get_col());
+                functionCalls.insert(str);
             }
         } else {
             std::cout << "OUTSIDE["<< block<<"]: " << *iter << std::endl;         
             if (_is_function(iter) ) {
-                functionDefs.insert(iter->get_content());
+                std::string str = iter->get_content();// + " " + std::to_string(iter->get_line()) +  " " + std::to_string(iter->get_col());
+                functionDefs.insert(str);
             }
         }
 

@@ -66,6 +66,12 @@ public:
     void croak(std::string msg) {
         throw std::invalid_argument( msg + " (" + std::to_string(line) + ":" + std::to_string(col) + ")" );
     }
+	int get_line() {
+		return line;
+	}
+	int get_col() {
+		return col;
+	}
 };
 
 int _isblank(int ch) {
@@ -128,14 +134,29 @@ int _isinclude(std::string token) {
 class Token {
 	std::string content;
 	token_t type;
+	int line;
+	int col;
 public:
 	Token() = delete;
 	Token(std::string content, token_t type) {
 		this->content = content;
 		this->type = type;
 	}
+	Token(std::string content, token_t type, int line, int col) {
+		this->content = content;
+		this->type = type;
+		this->line = line;
+		this->col = col;
+	}
+	int get_line() {
+		return line;
+	}
+	int get_col() {
+		return col;
+	}
 	friend std::ostream& operator<<(std::ostream& os, const Token& dt);
 };
+/*
 std::ostream& operator<<(std::ostream& os, const Token& token) {
     os << "_________";
     switch (token.type) {
@@ -169,7 +190,7 @@ std::ostream& operator<<(std::ostream& os, const Token& token) {
     }
     os << " \t: " << token.content;
     return os;
-}
+}*/
 static Token tokenError("", ERROR);
 static Token tokenEOF("", EOT);
 

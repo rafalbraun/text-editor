@@ -118,38 +118,38 @@ Token TokenStream::read_next() {
 	char ch = input->peek();
 	if (_ishash(ch)) {
 		read_while(_isnotnewline);
-		return Token("", MACRO);
+		return Token("", MACRO, input->get_line(), input->get_col());
 	}
 	if (_isquote(ch)) {
 		input->next();
 		std::string str = read_while(_isnotquote);
 		input->next();
-		return Token("\"" + str + "\"", STRING);
+		return Token("\"" + str + "\"", STRING, input->get_line(), input->get_col());
     }
 	if (_issinglequote(ch)) {
 		input->next();
 		std::string str = read_while(_isnotsinglequote);
 		input->next();
-		return Token("'" + str + "'", SINGLEQUOTE);
+		return Token("'" + str + "'", SINGLEQUOTE, input->get_line(), input->get_col());
     }
 	if (_isdigit(ch)) {
 		std::string str = read_while(_isdigit);
-		return Token(str, NUMBER);
+		return Token(str, NUMBER, input->get_line(), input->get_col());
     }
     if (_ispunc(ch)) {
 		input->next();
-    	return Token(std::string(1, ch), PUNCTUATION);
+    	return Token(std::string(1, ch), PUNCTUATION, input->get_line(), input->get_col());
     }
     if (_isopchar(ch)) {
 		input->next();
-    	return Token(std::string(1, ch), OPERATOR);
+    	return Token(std::string(1, ch), OPERATOR, input->get_line(), input->get_col());
     }
     if (_isnotblank(ch)) {
     	std::string str = read_while(_isid);
     	if (_iskeyword(str)) {
-    		return Token(str, KEYWORD);
+    		return Token(str, KEYWORD, input->get_line(), input->get_col());
     	}
-    	return Token(str, IDENTIFICATOR);
+    	return Token(str, IDENTIFICATOR, input->get_line(), input->get_col());
     }
 	input->croak("Can't handle character: " + ch);
 	return tokenError; //"error abcdefghijk";
