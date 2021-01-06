@@ -7,6 +7,7 @@
 #include <gtksourceview/gtksource.h>
 #include <gtk/gtk.h>
 
+gboolean print_word_under_mark (gpointer user_data) ;
 
 gboolean
 key_pressed_window(GtkWidget *widget, GdkEventKey *event, gpointer userdata);

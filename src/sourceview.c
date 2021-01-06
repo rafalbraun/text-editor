@@ -68,7 +68,7 @@ void underline_varnames (GtkTextBuffer* buffer) {
 
 }
 */
-
+/*
 gboolean is_valid_string(gchar* line) 
 {
     for (int i=0; i!=strlen(line); i++) {
@@ -86,29 +86,6 @@ gboolean is_valid_string(gchar* line)
     return TRUE;
 }
 
-gboolean is_valid_char (gchar c) {
-    if( (c == ' ') || 
-        (c == '[') || 
-        (c == ']') || 
-        (c == '*') || 
-        (c == '(') || 
-        (c == ')') || 
-        (c == '=') || 
-        (c == ';') || 
-        (c == '{') || 
-        (c == '}') || 
-        (c == '+') || 
-        (c == '-') || 
-        (c == '&') || 
-        (c == ',') || 
-        (c == '/') || 
-        (c == '>') || 
-        (c == '<') ) 
-    {
-        return FALSE;
-    }
-    return TRUE;
-}
 
 gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* sourcebuff, GtkWidget* scroll) 
 {
@@ -207,7 +184,7 @@ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
 
         window_x = (guint)e->x;
         window_y = (guint)e->y;
-        
+
         //printf("Coordinates: (%u,%u)\n", window_x, window_y);
         
         gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW(widget), GTK_TEXT_WINDOW_TEXT, window_x, window_y, &buffer_x, &buffer_y);
@@ -246,7 +223,7 @@ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
         g_free(msg);
     }
 }
-
+*/
 
 void show_langs() 
 {

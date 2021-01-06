@@ -19,7 +19,7 @@ void show_langs();
 
 void
 clear_buffer(GtkSourceBuffer* buffer);
-
+/*
 gboolean
 is_valid_string(gchar* line);
 
@@ -28,7 +28,7 @@ extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* sourceb
 
 gboolean
 mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll);
-
+*/
 GtkWidget*
 sourceview_new(GtkSourceBuffer* buffer);
 
