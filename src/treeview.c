@@ -30,8 +30,10 @@ void open_file_cb() {
 */
 
 static GtkActionEntry buffer_action_entries[] = {
+    //{ "New", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (create_empty_tab) },
+    
+    
     //{ "Collapse", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (open_file_cb) },
-    { "New", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (create_empty_tab) },
     //{ "Varnames", "document-open", "_Open", "<control>O", "Open a file", G_CALLBACK (underline_varnames) },
     /*
     { "Copy", "document-open", "_Open", "<control>O", "Open a file", NULL },
@@ -310,8 +312,8 @@ void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     g_print("[TEST] create_tab: %s \n", path);
 
-                    buffer = create_tab (user_data, path);
-                    load_file(buffer, path, user_data);
+                    //buffer = create_tab (user_data, path);
+                    //load_file(buffer, path, user_data);
 
 
               } else {

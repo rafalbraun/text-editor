@@ -287,6 +287,11 @@ sourceview_new(GtkSourceBuffer* buffer)
 
     sourceview = gtk_source_view_new_with_buffer(buffer);
 
+    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(buffer), "blue", "background", "black", NULL);
+    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(buffer), "black", "foreground", "white", NULL);
+    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(buffer), "italic", "style", PANGO_STYLE_ITALIC, NULL);
+    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(buffer), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
+
     gtk_source_view_set_show_right_margin(GTK_SOURCE_VIEW(sourceview), TRUE);
     gtk_source_view_set_show_line_numbers(GTK_SOURCE_VIEW(sourceview), TRUE);
     gtk_source_view_set_show_line_marks(GTK_SOURCE_VIEW(sourceview), TRUE);

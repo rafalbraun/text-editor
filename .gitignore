@@ -1,2 +1,4 @@
 obj
 bin
+parser/cpp/a.out
+parser/cpp/parser.o

@@ -14,7 +14,9 @@
 //       gdk_keyval_name (event->keyval));
 
 gboolean is_valid_char (gchar c) {
-    if( (c == ' ') ||
+    if( (c == ' ') || 
+        (c == '\t') || 
+        (c == '\n') || 
         (c == '[') || 
         (c == ']') || 
         (c == '*') || 
@@ -38,18 +40,47 @@ gboolean is_valid_char (gchar c) {
     }
     return TRUE;
 }
+/*
+gboolean is_inside_comment (gpointer user_data, gint line, gint col) {
+    GtkTextIter start, end;
+    GtkTextBuffer* buffer;
 
-gchar* extract_word(gchar* line, gint offset) 
+    buffer = GET_TEXT_BUFFER(user_data);
+
+    gtk_text_buffer_get_bounds (buffer, &start, &end);
+
+    gchar* text = gtk_text_buffer_get_text (buffer, &start, &end, TRUE);
+
+    for (int i=0; i<strlen(text); i++) {
+
+    }
+
+    //return TRUE;
+    //return FALSE;
+}
+*/
+gboolean check_if_method_or_member (gchar* line, gint left) {
+    gchar c1 = line[left-1];
+    gchar c2 = line[left-2];
+    if (c1=='.') {
+        return TRUE;
+    }
+    if (c1=='>' && c2=='-') {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+gchar* extract_word(gchar* line, gint row, gint offset, UserData* user_data) 
 {
     //g_print("%s \n", line);
 
     int left, right, i, j;
-    gchar buffer[1024];
+    //gchar buffer[1024];
 
     if ( !is_valid_char(line[offset-1]) || !is_valid_char(line[offset]) ) {
         return NULL;
     }
-
 
     for (i=offset-1; i>=0; i--) {
         //g_print("L %d %c\n", i, line[i]);
@@ -58,8 +89,8 @@ gchar* extract_word(gchar* line, gint offset)
         }
         left = i;
     }
-    g_print("[%d]---", left);
-    g_print("---------\n");
+    //g_print("[%d]---", left);
+    //g_print("---------\n");
 
     for (i=offset; i<=strlen(line); i++) {
         //g_print("R %d %c\n", i, line[i]);
@@ -69,13 +100,40 @@ gchar* extract_word(gchar* line, gint offset)
         }
     }
 
-    g_print("[%d]---\n", right);
-    g_print("%d-%d\n", left, right);
+    //g_print("[%d]---\n", right);
+    //g_print("%d-%d\n", left, right);
 
     for (i=left; i<right; i++) {
         g_print("%c", line[i]);
     }
     g_print("\n");
+
+    GtkTextIter start, end;
+    GtkTextBuffer* buffer = GET_TEXT_BUFFER(user_data);
+    GtkTextTagTable* table = gtk_text_buffer_get_tag_table (buffer);
+    gtk_text_buffer_get_iter_at_line_index (buffer, &start, row, left);
+    gtk_text_buffer_get_iter_at_line_index (buffer, &end, row, right);
+
+    GtkTextTag* tag1 = gtk_text_tag_table_lookup (table, "blue");
+    GtkTextTag* tag2 = gtk_text_tag_table_lookup (table, "black");
+    GtkTextTag* tag3 = gtk_text_tag_table_lookup (table, "italic");
+    GtkTextTag* tag4 = gtk_text_tag_table_lookup (table, "underline");
+
+    gtk_text_buffer_apply_tag (buffer, tag1,  &start, &end);
+    gtk_text_buffer_apply_tag (buffer, tag2,  &start, &end);
+    gtk_text_buffer_apply_tag (buffer, tag3,  &start, &end);
+    gtk_text_buffer_apply_tag (buffer, tag4,  &start, &end);
+
+
+    /*
+    gboolean is_member = check_if_method_or_member(line, left);
+    g_print("%d\n", is_member);
+
+    if (is_member) {
+        extract_word (line, left-3);
+    }
+    */
+
 
     /*
     for (j=0, i=left; i<right; i++, j++) {
@@ -167,14 +225,13 @@ gboolean print_word_under_mark (gpointer user_data)
     msg = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 
     if (msg) {
-        g_print("OK: %d : %s \n", strlen(msg), msg);
+        g_print("OK: %d : /%s/ \n", strlen(msg), msg);
         //extract_word(msg, col, &iter, buffer, scroll);
-        extract_word (msg, col);
+        extract_word (msg, row, col, user_data);
     } else {
         g_print("BAD\n");
     }
 }
-
 
 gboolean
 key_pressed_window(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {

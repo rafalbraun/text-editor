@@ -21,6 +21,7 @@ int main(int argc, char * argv[]) {
     GObject *window;
     GObject *treeview;
     GError *error = NULL;
+    UserData* user_data;
 
 /*
     GtkWidget * window;
@@ -40,11 +41,15 @@ int main(int argc, char * argv[]) {
         return 1;
     }
     
+    ud_init_empty (&user_data, FILEPATH);
+
     window = gtk_builder_get_object (builder, "window");
     g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
     treeview = gtk_builder_get_object (builder, "treeview");
-    fill_treeview (GTK_TREE_VIEW (treeview), FILEPATH);
+    user_data->treeview = treeview;
+
+    fill_treeview (user_data);
 
 
 /*

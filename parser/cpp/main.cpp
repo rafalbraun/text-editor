@@ -38,8 +38,6 @@ int main() {
     //inFile.open("count.c"); 			                //open the input file
     inFile.open("/home/rafal/IdeaProjects/gtksourceview-my-ide/highlight_syntax/highlight_syntax.c");                //open the input file
 
-    //"/home/rafal/IdeaProjects/gtksourceview-my-ide/highlight_syntax/highlight_syntax.c"
-
     std::stringstream strStream;
     strStream << inFile.rdbuf(); 		//read the file
     std::string str = strStream.str(); 	//str holds the content of the file
@@ -51,10 +49,9 @@ int main() {
 
     std::vector<Token> tokens;
     parseStream.parse(&tokens);
-    
+
     std::copy_if(tokens.begin(), tokens.end(), std::ostream_iterator<Token>(std::cout, "\n"), _isnotmacro);
     
-
     std::cout << "[function calls]" << std::endl;
 
     int block = 0, bracket = 0;;
@@ -64,17 +61,17 @@ int main() {
         if ( (*iter).get_content() == "{" ) {
             block++;
         }
-
+        
         if (block > 0) {
             std::cout << "INSIDE["<< block<<"]:" << *iter << std::endl;
             if (_is_function(iter) ) {
-                std::string str = iter->get_content();// + " " + std::to_string(iter->get_line()) +  " " + std::to_string(iter->get_col());
+                std::string str = iter->get_content() + " line:" + std::to_string(iter->get_line()) + " col:" + std::to_string(iter->get_col());
                 functionCalls.insert(str);
             }
         } else {
             std::cout << "OUTSIDE["<< block<<"]: " << *iter << std::endl;         
             if (_is_function(iter) ) {
-                std::string str = iter->get_content();// + " " + std::to_string(iter->get_line()) +  " " + std::to_string(iter->get_col());
+                std::string str = iter->get_content() + " line:" + std::to_string(iter->get_line()) + " col:" + std::to_string(iter->get_col());
                 functionDefs.insert(str);
             }
         }

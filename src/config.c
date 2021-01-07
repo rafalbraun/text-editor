@@ -13,6 +13,12 @@ cast_to_ud (gpointer userdata)
 	return (UserData *) userdata;
 }
 
+void ud_init_empty (UserData** userdata_ptr, gchar* filepath) {
+    *userdata_ptr = g_new0 (UserData, 1);    
+    UserData* userdata = *userdata_ptr;
+    userdata->filepath = filepath;
+}
+
 void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	*userdata_ptr = g_new0 (UserData, 1);
 
@@ -36,12 +42,7 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	separator = "\n";
 
     userdata->untitled_files = 0;
-/*
-    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "blue", "background", "white", NULL);
-    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "black", "foreground", "black", NULL);
-    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "italic", "style", PANGO_STYLE_ITALIC, NULL);
-    gtk_text_buffer_create_tag (GET_TEXT_BUFFER (userdata), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
-*/
+
 	g_print("%s \n", userdata->filepath);
 }
 

@@ -7,12 +7,12 @@ GLIB=`pkg-config --cflags --libs glib-2.0`
 SRC=./src
 
 ##all: test_notebook
-all: text_editor 
-
+#all: text_editor 
+test: test_treeview 
+#test_sourceview
 ##all: $(PROGRAMS)
 ##all: test_stack
 ##all: test_list
-##test: test_treeview test_sourceview
 ##test_list test_sourceview 
 ##test: test_sourceview
 ##test: stack.o
@@ -71,8 +71,8 @@ test_sourceview: test_sourceview.o sourceview.o config.o
 test_treeview.o: test/test_treeview.c src/treeview.h
 	$(CC) -c $(GLIB) test/test_treeview.c $(GTK) -o obj/test_treeview.o
 
-test_treeview: test_treeview.o treeview.o
-	$(CC) $(GLIB) test/test_treeview.c obj/treeview.o $(GTK) -o bin/test_treeview
+test_treeview: test_treeview.o treeview.o config.o
+	$(CC) $(GLIB) test/test_treeview.c obj/treeview.o obj/config.o $(GTK) -o bin/test_treeview
 
 ###################################################################
 test_notebook.o: test/test_notebook.c src/notebook.h 

@@ -57,6 +57,9 @@ cast_to_ud (gpointer userdata);
 void
 ud_init (UserData** userdata_ptr, GtkBuilder* builder);
 
+void 
+ud_init_empty (UserData** userdata_ptr, gchar* filepath);
+
 GtkWindow* 
 get_window (UserData* userdata);
 

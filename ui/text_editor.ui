@@ -345,9 +345,11 @@
                       </object>
                   </child>
                   <child>
+                     <!--
                      <object class="GtkSourceBuffer" id="sourcebuffer">
                         <property name="highlight-syntax">True</property>
                      </object>
+                  -->
                      <object class="GtkNotebook" id="notebook">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>

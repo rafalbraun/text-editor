@@ -11,12 +11,13 @@
 
 #define UI_DIR "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/ui/text_editor.ui"
 
-void connect_signals(UserData* userdata) {
+void connect_signals (UserData* userdata) {
     g_signal_connect (GET_WINDOW(userdata), "destroy", G_CALLBACK (on_main_quit), (gpointer) userdata);
     g_signal_connect (GET_WINDOW(userdata), "key-press-event", G_CALLBACK (key_pressed_window), userdata);
     g_signal_connect (GET_NOTEBOOK(userdata), "switch-page", G_CALLBACK (switch_page), (gpointer) userdata);
 
 }
+
 
 // https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
