@@ -8,7 +8,9 @@ SRC=./src
 
 ##all: test_notebook
 #all: text_editor 
-test: test_treeview 
+all: test_treeview 
+
+
 #test_sourceview
 ##all: $(PROGRAMS)
 ##all: test_stack

@@ -47,6 +47,6 @@ gboolean
 key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata);
 
 void 
-validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data);
+validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data);
 
 #endif

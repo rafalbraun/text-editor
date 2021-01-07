@@ -231,7 +231,7 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 
         model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
 
-        validate_file (path, model, selection, userdata);
+        validate_file (model, selection, userdata);
 
         //g_free(path);
       }
@@ -286,13 +286,15 @@ void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data)
 }
 
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
-void validate_file(gchar* path, GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
+void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
         GtkTreeIter       child, parent;
         gboolean          hasParent;
-        gchar            *name, *parent_name;
+        gchar            *name, *parent_name, *path="";
         GtkSourceBuffer * buffer;
 
         parent_name = "";
+
+        //g_print("path %s \n", path);
 
         gtk_tree_selection_get_selected(selection, &model, &child);
         gtk_tree_model_get (model, &child, COLUMN, &name, -1);

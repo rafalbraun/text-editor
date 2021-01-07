@@ -13,7 +13,8 @@
 #include "../src/treeview.h"
 
 #define UI_DIR "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/ui/treeview.ui"
-#define FILEPATH "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/"
+//#define FILEPATH "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/"
+#define FILEPATH "/home/rafal/IdeaProjects/xed"
 
 int main(int argc, char * argv[]) {
 
