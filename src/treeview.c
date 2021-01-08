@@ -285,38 +285,45 @@ void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data)
 
 }
 
+gchar* translate_gtk_path_to_string (GtkTreeModel *model, GtkTreeSelection *selection) {
+    GtkTreeIter       child, parent;
+    gboolean          hasParent;
+    gchar            *name, *parent_name, *path;
+
+    parent_name = "";
+    path = "";
+
+    gtk_tree_selection_get_selected(selection, &model, &child);
+    gtk_tree_model_get (model, &child, COLUMN, &name, -1);
+
+    while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) {
+      if ( hasParent == TRUE ) {
+        gtk_tree_model_get (model, &parent, COLUMN, &parent_name, -1);
+        path = g_strconcat(parent_name, "/", path, NULL);
+        g_free(parent_name);
+        child = parent;
+      }
+    }
+
+    path = g_strconcat(path, name, NULL);
+
+    g_free(name);
+
+    return path;    
+}
+
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
 void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
-        GtkTreeIter       child, parent;
-        gboolean          hasParent;
-        gchar            *name, *parent_name, *path="";
-        GtkSourceBuffer * buffer;
+        GtkSourceBuffer  *buffer;
 
-        parent_name = "";
-
-        //g_print("path %s \n", path);
-
-        gtk_tree_selection_get_selected(selection, &model, &child);
-        gtk_tree_model_get (model, &child, COLUMN, &name, -1);
-
-        while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) {
-          if ( hasParent == TRUE ) {
-            gtk_tree_model_get (model, &parent, COLUMN, &parent_name, -1);
-            path = g_strconcat(parent_name, "/", path, NULL);
-            g_free(parent_name);
-            child = parent;
-          }
-        }
-
-        path = g_strconcat(path, name, NULL);
+        gchar* path = translate_gtk_path_to_string(model, selection);
 
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     g_print("[TEST] create_tab: %s \n", path);
 
-                    //buffer = create_tab (user_data, path);
-                    //load_file(buffer, path, user_data);
-
+                    buffer = create_tab (user_data, path);
+                    load_file(buffer, path, user_data);
 
               } else {
                     //show_error(get_window(userdata), "no file under filepath");
@@ -326,7 +333,6 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
             //show_error(get_window(userdata), "filepath is directory");
         }
 
-        g_free(name);
         g_free(path);
 }
 

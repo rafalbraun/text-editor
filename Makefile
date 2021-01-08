@@ -7,8 +7,8 @@ GLIB=`pkg-config --cflags --libs glib-2.0`
 SRC=./src
 
 ##all: test_notebook
-#all: text_editor 
-all: test_treeview 
+all: text_editor 
+#all: test_treeview 
 
 
 #test_sourceview
