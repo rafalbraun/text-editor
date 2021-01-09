@@ -324,15 +324,15 @@ void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data)
 
 }
 
-gchar* translate_gtk_path_to_string (GtkTreeModel *model, GtkTreeSelection *selection) {
+gchar* translate_gtk_path_to_string (GtkTreeModel *model, GtkTreeIter* iter) {
     GtkTreeIter       child, parent;
     gboolean          hasParent;
     gchar            *name, *parent_name, *path;
 
     parent_name = "";
     path = "";
+    child = *iter;
 
-    gtk_tree_selection_get_selected(selection, &model, &child);
     gtk_tree_model_get (model, &child, COLUMN, &name, -1);
 
     while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) {
@@ -354,14 +354,16 @@ gchar* translate_gtk_path_to_string (GtkTreeModel *model, GtkTreeSelection *sele
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
 void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
         GtkSourceBuffer  *buffer;
+        GtkTreeIter child;
 
-        gchar* path = translate_gtk_path_to_string(model, selection);
+        gtk_tree_selection_get_selected(selection, &model, &child);
+        gchar* path = translate_gtk_path_to_string(model, &child);
 
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     g_print("[TEST] create_tab: %s \n", path);
 
-                    walk_tree_model (user_data);
+                    //walk_tree_model (user_data);
 
                     buffer = create_tab (user_data, path);
                     load_file(buffer, path, user_data);
