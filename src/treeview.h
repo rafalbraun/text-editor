@@ -52,4 +52,17 @@ validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_da
 void 
 save_expanded_tree_nodes (gpointer user_data);
 
+gchar* tree_path_to_string (GtkTreeModel* tree_model, GtkTreePath* path);
+
+static gboolean
+for_each_func_expand (GtkTreeModel *tree_model,
+                    GtkTreePath *path,
+                    GtkTreeIter *iter,
+                    gpointer user_data);
+
+void
+aaa (GtkTreeView *tree_view,
+                           GtkTreePath *path,
+                           gpointer user_data);
+
 #endif

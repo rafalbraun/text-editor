@@ -340,10 +340,12 @@ void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data)
 
 }
 
+
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
 void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
         GtkSourceBuffer  *buffer;
         GtkTreeIter child;
+        GtkTreeView* tree_view;
 
         gtk_tree_selection_get_selected(selection, &model, &child);
         gchar* path = translate_gtk_iter_to_string(model, &child);
@@ -352,10 +354,14 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     g_print("[TEST] create_tab: %s \n", path);
 
-                    save_expanded_tree_nodes (user_data);
+                    //save_expanded_tree_nodes (user_data);
+
+                    tree_view = GET_TREE_VIEW (user_data);
+
+                    g_print("\n paths: \n");
 
                     // @TODO to wyżej nie, bo mamy już niżej wbudowana func to wołania na rowinietych nodach
-                    //gtk_tree_view_map_expanded_rows
+                    gtk_tree_view_map_expanded_rows (tree_view, (GtkTreeViewMappingFunc) aaa, user_data);
 
                     buffer = create_tab (user_data, path);
                     load_file(buffer, path, user_data);
@@ -421,10 +427,15 @@ for_each_func_expand (GtkTreeModel *tree_model,
     if (gtk_tree_model_iter_has_child(tree_model, iter)) {
         if (gtk_tree_view_row_expanded (tree_view, path)) {
 
-            gchar* path_as_string = gtk_tree_path_to_string(path);
+            /*
             expanded_rows_list = g_list_append (expanded_rows_list, path_as_string);
             g_print("path:%s->%s\n", path_as_string, translate_gtk_iter_to_string(tree_model, iter));
-
+            */
+            /*
+            gchar* gtk_path = gtk_tree_path_to_string(path);
+            gchar* tree_path = tree_path_to_string (tree_model, path);
+            g_print ("%s -> >%s \n", gtk_path, tree_path);
+            */
         }
     }
 
@@ -526,3 +537,25 @@ key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata)
 
     return FALSE;
 }
+
+
+void
+aaa (GtkTreeView *tree_view,
+                           GtkTreePath *path,
+                           gpointer user_data) {
+
+    //gchar* path_as_string = gtk_tree_path_to_string(path);
+    //expanded_rows_list = g_list_append (expanded_rows_list, path_as_string);
+    //g_print("path:%s->%s\n", path_as_string, translate_gtk_iter_to_string(tree_model, iter));
+    //g_print("%s \n", path_as_string);
+    GtkTreeIter iter;
+
+    GtkTreeModel* tree_model = gtk_tree_view_get_model(tree_view);
+    gtk_tree_model_get_iter (tree_model, &iter, path);
+    gchar* qqq = translate_gtk_iter_to_string(tree_model, &iter);
+
+    g_print("%s \n", qqq);
+
+}
+
+
