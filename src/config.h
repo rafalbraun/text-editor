@@ -50,7 +50,7 @@ typedef struct _UserData
 
 } UserData;
 
-GList* GET_EXPANDED_ROWS_LIST (UserData* user_data);
+GList** GET_EXPANDED_ROWS_LIST (UserData* user_data);
 
 
 int get_untitled_files (gpointer user_data);
