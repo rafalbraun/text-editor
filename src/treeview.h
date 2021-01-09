@@ -49,4 +49,7 @@ key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata)
 void 
 validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data);
 
+void 
+save_expanded_tree_nodes (gpointer user_data);
+
 #endif

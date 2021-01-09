@@ -42,10 +42,15 @@ typedef struct _UserData
     gchar*		homedir;
     gchar*		session_info;
     gchar* 		filepath;
+  
+    GList*    expanded_rows_list;
+
 
     int             untitled_files;
 
 } UserData;
+
+GList* GET_EXPANDED_ROWS_LIST (UserData* user_data);
 
 
 int get_untitled_files (gpointer user_data);

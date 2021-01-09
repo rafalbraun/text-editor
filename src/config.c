@@ -42,6 +42,7 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	separator = "\n";
 
     userdata->untitled_files = 0;
+    userdata->expanded_rows_list = NULL;
 
 	g_print("%s \n", userdata->filepath);
 }
@@ -127,7 +128,9 @@ void SET_TEXT_BUFFER(UserData* user_data, GtkTextBuffer* buffer) {
   user_data->buffer = G_OBJECT(buffer);
 }
 
-
+GList* GET_EXPANDED_ROWS_LIST (UserData* user_data) {
+    return user_data->expanded_rows_list;
+}
 /////////////////////
 /*
 
