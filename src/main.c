@@ -18,7 +18,6 @@ void connect_signals (UserData* userdata) {
 
 }
 
-
 // https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Tree_Models
 int
 main (int argc, char *argv[])

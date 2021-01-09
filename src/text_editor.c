@@ -20,6 +20,8 @@ on_main_quit (GtkWidget * widget, gpointer userdata)
     //g_file_set_contents (cast_to_ud(userdata)->session_info, contents, strlen (contents), &err);
     //g_free (contents);
 
+    
+
     gtk_main_quit ();
 }
 

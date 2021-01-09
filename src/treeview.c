@@ -212,6 +212,45 @@ fill_treeview(gpointer user_data)
 
 }
 
+static gboolean
+for_each_func_walk (GtkTreeModel *tree_model,
+                            GtkTreePath *path,
+                            GtkTreeIter *iter,
+                            gpointer user_data) {
+
+    GtkTreeView* tree_view = GET_TREE_VIEW(user_data);
+    //GList expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
+    /*
+    if (gtk_tree_view_row_expanded (tree_view, path)) {
+        data.push_back();
+    }*/
+    g_print("path:%s\n", gtk_tree_path_to_string(path));
+    /*
+    if (gtk_tree_model_iter_has_child(tree_model, iter)) {
+        return FALSE;
+    }
+
+    return TRUE;
+    */
+    return FALSE;
+}
+
+void 
+walk_tree_model (gpointer user_data) {
+    GtkTreeModel* tree_model;
+    GtkTreeView* tree_view;
+    GtkTreeIter iter;
+
+    tree_view = GET_TREE_VIEW (user_data);
+    tree_model = gtk_tree_view_get_model(tree_view);
+
+    if( gtk_tree_model_get_iter_first(tree_model, &iter) ) {
+        gtk_tree_model_foreach (tree_model, (GtkTreeModelForeachFunc) for_each_func_walk, user_data);
+    }
+
+}
+
+
 
 gboolean
 on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) 
@@ -321,6 +360,8 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     g_print("[TEST] create_tab: %s \n", path);
+
+                    walk_tree_model (user_data);
 
                     buffer = create_tab (user_data, path);
                     load_file(buffer, path, user_data);
