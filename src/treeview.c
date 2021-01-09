@@ -363,11 +363,17 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
                     // @TODO make separate function from this
                     expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
                     tree_view = GET_TREE_VIEW (user_data);
-                    //g_list_free_full (g_steal_pointer (&expanded_rows_list), g_object_unref);
+                    g_list_free (g_steal_pointer (expanded_rows_list));
                     gtk_tree_view_map_expanded_rows (tree_view, (GtkTreeViewMappingFunc) aaa, user_data);
                     // here save to file
 
                     g_list_foreach (*expanded_rows_list, (GFunc) print_list, user_data);
+
+                    GList *tmp = g_list_first (*expanded_rows_list);
+                    do {
+                        g_print ("%s\n", (gchar*) tmp->data);
+                    } while ( (tmp = g_list_next (tmp))!=NULL);
+                    
 
 
                     buffer = create_tab (user_data, path);
