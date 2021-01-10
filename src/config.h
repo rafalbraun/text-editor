@@ -51,7 +51,7 @@ typedef struct _UserData
 } UserData;
 
 GList** GET_EXPANDED_ROWS_LIST (UserData* user_data);
-
+void SET_EXPANDED_ROWS_LIST (UserData* user_data, GList* list);
 
 int get_untitled_files (gpointer user_data);
 void incr_untitled_files (gpointer user_data);

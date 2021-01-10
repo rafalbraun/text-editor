@@ -345,6 +345,8 @@ print_list (gpointer data,
 
 }
 
+#define EXPANDED_ROWS_FILE "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/opened_tabs.txt"
+
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
 void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
         GtkSourceBuffer  *buffer;
@@ -360,20 +362,38 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
               if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
                     g_print("[TEST] create_tab: %s \n", path);
 
-                    // @TODO make separate function from this
                     expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
+                    g_list_foreach (*expanded_rows_list, (GFunc) print_list, user_data);
+
+                    /*
+                    // DZIALA !!!!!!!
+
                     tree_view = GET_TREE_VIEW (user_data);
                     g_list_free (g_steal_pointer (expanded_rows_list));
                     gtk_tree_view_map_expanded_rows (tree_view, (GtkTreeViewMappingFunc) aaa, user_data);
-                    // here save to file
 
-                    g_list_foreach (*expanded_rows_list, (GFunc) print_list, user_data);
-
-                    GList *tmp = g_list_first (*expanded_rows_list);
-                    do {
-                        g_print ("%s\n", (gchar*) tmp->data);
-                    } while ( (tmp = g_list_next (tmp))!=NULL);
+                    GList * tmp = g_list_first (*expanded_rows_list);
+                    gchar * expanded_rows_list_as_string = (gchar*) tmp->data;
+                    while ( (tmp = g_list_next (tmp))!=NULL) {
+                        //g_print ("%s\n", (gchar*) tmp->data);
+                        expanded_rows_list_as_string = g_strconcat(expanded_rows_list_as_string, "\n", (gchar*) tmp->data, NULL);
+                    } 
+                    g_print ("%s\n", expanded_rows_list_as_string);
                     
+                    gssize length = strlen(expanded_rows_list_as_string);
+                    GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_CONSISTENT;
+                    int mode = 0666;
+                    GError *error = NULL;
+
+                    g_file_set_contents_full(
+                        EXPANDED_ROWS_FILE,
+                        expanded_rows_list_as_string,
+                        length, // or -1
+                        flags,
+                        mode,
+                        &error
+                        );
+                    */
 
 
                     buffer = create_tab (user_data, path);
@@ -401,6 +421,35 @@ void expand_rows_list (gpointer user_data) {
 
 }
 */
+void load_expanded_rows_from_file (gpointer user_data) {
+    //SET_EXPANDED_ROWS_LIST (user_data, EXPANDED_ROWS_FILE);
+
+    //user_data->expanded_rows_list = ;
+    gchar* contents;
+    gsize len;
+    GError* err;
+
+    g_file_get_contents (
+        EXPANDED_ROWS_FILE,
+        &contents,
+        &len,
+        &err
+    );
+
+    gchar** split = g_strsplit(contents, "\n", -1);
+
+    if (split[0] == NULL) {
+        return;
+    }
+
+    GList* tmp = NULL;
+    for (int i=0; split[i]!=NULL; i++) {
+        //g_print ("%s \n", split[i]);
+        tmp = g_list_append (tmp, split[i]);
+    }
+
+    SET_EXPANDED_ROWS_LIST (user_data, tmp);
+}
 
 void
 fill_treeview(gpointer user_data) 
@@ -418,6 +467,7 @@ fill_treeview(gpointer user_data)
     gtk_tree_store_append(treestore, &toplevel, NULL);
     gtk_tree_store_set(treestore, &toplevel, COLUMN, pathname, -1);
 
+    load_expanded_rows_from_file (user_data);
     fill_treestore(pathname, treestore, toplevel);
 
     // Expand top tree node

@@ -131,6 +131,10 @@ void SET_TEXT_BUFFER(UserData* user_data, GtkTextBuffer* buffer) {
 GList** GET_EXPANDED_ROWS_LIST (UserData* user_data) {
     return &(user_data->expanded_rows_list);
 }
+void SET_EXPANDED_ROWS_LIST (UserData* user_data, GList* list) {
+    user_data->expanded_rows_list = list;
+}
+
 /////////////////////
 /*
 
