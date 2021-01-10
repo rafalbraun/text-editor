@@ -35,7 +35,7 @@ void
 on_changed(GtkWidget * widget, gpointer statusbar);
 
 void
-fill_treestore(const char * pathname, GtkTreeStore * treestore, GtkTreeIter toplevel);
+fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter toplevel, gpointer user_data) ;
 
 void
 fill_treeview(gpointer user_data);

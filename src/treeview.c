@@ -148,8 +148,9 @@ while ((filename = g_dir_read_name(dir)))
 
 https://stackoverflow.com/questions/7704144/how-do-i-use-glib-or-any-other-library-to-list-all-the-files-in-a-directory
 */
+
 void
-fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter toplevel) 
+fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter toplevel, gpointer user_data) 
 {
     DIR             *dir;
     GtkTreeIter      child;
@@ -157,6 +158,11 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
     struct dirent   *entries;
     int              count = 0, i = 0;
     gchar            path[SIZE];
+
+    //GtkTreeView  *tree_view  = GTK_TREE_VIEW(widget);
+    GtkTreeModel *tree_model = gtk_tree_view_get_model(tree_view);
+    GtkTreeStore *tree_store = GTK_TREE_STORE(tree_model);
+
 
     if (!(dir = opendir(filepath))) {
         return;
@@ -184,13 +190,36 @@ fill_treestore(const gchar * filepath, GtkTreeStore * treestore, GtkTreeIter top
         entry = &(entries[i]);
         if (entry->d_type == DT_DIR) {
             snprintf(path, sizeof(path), "%s/%s", filepath, entry->d_name);
-            gtk_tree_store_append(treestore, &child, &toplevel);
-            gtk_tree_store_set(treestore, &child, COLUMN, entry->d_name, -1);
-            fill_treestore(path, treestore, child);
+            gtk_tree_store_append(tree_store, &child, &toplevel);
+            gtk_tree_store_set(tree_store, &child, COLUMN, entry->d_name, -1);
+            fill_treestore(path, tree_view, child, user_data);
+
+            GList * expanded_rows_list = *GET_EXPANDED_ROWS_LIST(user_data);
+
+            //g_list_foreach (*expanded_rows_list, (GFunc) www, path);
+            /*
+            for_each_element_in_list {
+                if (tmp->data == path) {
+                    expand (child);
+                }
+            }*/
+            guint len = g_list_length(expanded_rows_list);
+            if (len == 0) {
+                break;
+            }
+            for (int i=0; i<len; i++) {
+                gchar* element = g_list_nth_data(expanded_rows_list, i);
+                if (strcmp(element, path) == 0) {
+                    g_print("hhhhh %s -- %s\n", path, element);
+
+                    GtkTreePath* tree_path = gtk_tree_model_get_path (tree_model, &child);
+                    gtk_tree_view_expand_to_path (tree_view, tree_path);
+                }
+            }
         }
         if (entry->d_type == DT_REG) {
-            gtk_tree_store_append(treestore, &child, &toplevel);
-            gtk_tree_store_set(treestore, &child, COLUMN, entry->d_name, -1);
+            gtk_tree_store_append(tree_store, &child, &toplevel);
+            gtk_tree_store_set(tree_store, &child, COLUMN, entry->d_name, -1);
         }
     }
 
@@ -468,7 +497,7 @@ fill_treeview(gpointer user_data)
     gtk_tree_store_set(treestore, &toplevel, COLUMN, pathname, -1);
 
     load_expanded_rows_from_file (user_data);
-    fill_treestore(pathname, treestore, toplevel);
+    fill_treestore(pathname, treeview, toplevel, user_data);
 
     // Expand top tree node
     //treepath = gtk_tree_path_new_from_string("0");
