@@ -163,7 +163,6 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
     GtkTreeModel *tree_model = gtk_tree_view_get_model(tree_view);
     GtkTreeStore *tree_store = GTK_TREE_STORE(tree_model);
 
-
     if (!(dir = opendir(filepath))) {
         return;
     }
@@ -196,13 +195,6 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
 
             GList * expanded_rows_list = *GET_EXPANDED_ROWS_LIST(user_data);
 
-            //g_list_foreach (*expanded_rows_list, (GFunc) www, path);
-            /*
-            for_each_element_in_list {
-                if (tmp->data == path) {
-                    expand (child);
-                }
-            }*/
             guint len = g_list_length(expanded_rows_list);
             if (len == 0) {
                 break;
@@ -210,7 +202,7 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
             for (int i=0; i<len; i++) {
                 gchar* element = g_list_nth_data(expanded_rows_list, i);
                 if (strcmp(element, path) == 0) {
-                    g_print("hhhhh %s -- %s\n", path, element);
+                    // g_print("hhhhh %s -- %s\n", path, element);
 
                     GtkTreePath* tree_path = gtk_tree_model_get_path (tree_model, &child);
                     gtk_tree_view_expand_to_path (tree_view, tree_path);
@@ -240,12 +232,12 @@ gchar* translate_gtk_iter_to_string (GtkTreeModel *model, GtkTreeIter* iter) {
     gtk_tree_model_get (model, &child, COLUMN, &name, -1);
 
     while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) {
-      if ( hasParent == TRUE ) {
-        gtk_tree_model_get (model, &parent, COLUMN, &parent_name, -1);
-        path = g_strconcat(parent_name, "/", path, NULL);
-        g_free(parent_name);
-        child = parent;
-      }
+        if ( hasParent == TRUE ) {
+            gtk_tree_model_get (model, &parent, COLUMN, &parent_name, -1);
+            path = g_strconcat(parent_name, "/", path, NULL);
+            g_free(parent_name);
+            child = parent;
+        }
     }
 
     path = g_strconcat(path, name, NULL);
@@ -297,27 +289,27 @@ save_expanded_tree_nodes (gpointer user_data) {
 gboolean
 on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) 
 {
-  GtkTreeSelection *selection;
-  GtkTreeModel     *model;
-  GtkTreeIter       child;
-  gchar            *path;
-  
-  path = "";
+    GtkTreeSelection *selection;
+    GtkTreeModel     *model;
+    GtkTreeIter       child;
+    gchar            *path;
 
-  if (event->type == GDK_2BUTTON_PRESS) 
-  {
-      selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+    path = "";
 
-      if (gtk_tree_selection_count_selected_rows(selection) == 1) {
+    if (event->type == GDK_2BUTTON_PRESS) 
+    {
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
-        model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
+        if (gtk_tree_selection_count_selected_rows(selection) == 1) {
 
-        validate_file (model, selection, userdata);
+            model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
 
-        //g_free(path);
-      }
+            validate_file (model, selection, userdata);
 
-      return TRUE;
+            //g_free(path);
+        }
+
+        return TRUE;
     } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) 
     {
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
@@ -331,11 +323,11 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
                 gtk_tree_selection_select_path(selection, path);
                 gtk_tree_path_free(path);
             }
+        }
+        popup_menu(treeview, event, userdata);
+        return TRUE;
     }
-    popup_menu(treeview, event, userdata);
-    return TRUE;
-  }
-  return FALSE;
+    return FALSE;
 }
 
 static void
@@ -376,67 +368,72 @@ print_list (gpointer data,
 
 #define EXPANDED_ROWS_FILE "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/opened_tabs.txt"
 
+void save_expanded_nodes_to_file (gpointer user_data) {
+
+    // DZIALA !!!!!!!
+    
+    GList** expanded_rows_list;
+    GtkTreeView* tree_view;
+
+    expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
+
+    tree_view = GET_TREE_VIEW (user_data);
+    g_list_free (g_steal_pointer (expanded_rows_list));
+    gtk_tree_view_map_expanded_rows (tree_view, (GtkTreeViewMappingFunc) aaa, user_data);
+
+    GList * tmp = g_list_first (*expanded_rows_list);
+    gchar * expanded_rows_list_as_string = (gchar*) tmp->data;
+    while ( (tmp = g_list_next (tmp))!=NULL) {
+        //g_print ("%s\n", (gchar*) tmp->data);
+        expanded_rows_list_as_string = g_strconcat(expanded_rows_list_as_string, "\n", (gchar*) tmp->data, NULL);
+    } 
+    g_print ("%s\n", expanded_rows_list_as_string);
+    
+    gssize length = strlen(expanded_rows_list_as_string);
+    GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_CONSISTENT;
+    int mode = 0666;
+    GError *error = NULL;
+
+    g_file_set_contents_full(
+        EXPANDED_ROWS_FILE,
+        expanded_rows_list_as_string,
+        length, // or -1
+        flags,
+        mode,
+        &error
+    );
+}
+
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
 void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
-        GtkSourceBuffer  *buffer;
-        GtkTreeIter child;
-        GtkTreeView* tree_view;
+    GtkSourceBuffer  *buffer;
+    GtkTreeIter child;
 
-        GList** expanded_rows_list;
+    gtk_tree_selection_get_selected(selection, &model, &child);
+    gchar* path = translate_gtk_iter_to_string(model, &child);
 
-        gtk_tree_selection_get_selected(selection, &model, &child);
-        gchar* path = translate_gtk_iter_to_string(model, &child);
+    if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
+        if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
+            g_print("[TEST] create_tab: %s \n", path);
 
-        if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
-              if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
-                    g_print("[TEST] create_tab: %s \n", path);
+            //GList** expanded_rows_list;
+            //expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
+            //g_list_foreach (*expanded_rows_list, (GFunc) print_list, user_data);
 
-                    expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
-                    g_list_foreach (*expanded_rows_list, (GFunc) print_list, user_data);
+            //save_expanded_nodes_to_file (user_data);
 
-                    /*
-                    // DZIALA !!!!!!!
+            buffer = create_tab (user_data, path);
+            load_file(buffer, path, user_data);
 
-                    tree_view = GET_TREE_VIEW (user_data);
-                    g_list_free (g_steal_pointer (expanded_rows_list));
-                    gtk_tree_view_map_expanded_rows (tree_view, (GtkTreeViewMappingFunc) aaa, user_data);
-
-                    GList * tmp = g_list_first (*expanded_rows_list);
-                    gchar * expanded_rows_list_as_string = (gchar*) tmp->data;
-                    while ( (tmp = g_list_next (tmp))!=NULL) {
-                        //g_print ("%s\n", (gchar*) tmp->data);
-                        expanded_rows_list_as_string = g_strconcat(expanded_rows_list_as_string, "\n", (gchar*) tmp->data, NULL);
-                    } 
-                    g_print ("%s\n", expanded_rows_list_as_string);
-                    
-                    gssize length = strlen(expanded_rows_list_as_string);
-                    GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_CONSISTENT;
-                    int mode = 0666;
-                    GError *error = NULL;
-
-                    g_file_set_contents_full(
-                        EXPANDED_ROWS_FILE,
-                        expanded_rows_list_as_string,
-                        length, // or -1
-                        flags,
-                        mode,
-                        &error
-                        );
-                    */
-
-
-                    buffer = create_tab (user_data, path);
-                    load_file(buffer, path, user_data);
-
-              } else {
-                    //show_error(get_window(userdata), "no file under filepath");
-                    g_print("show_error: %s \n", path);
-              }
         } else {
-            //show_error(get_window(userdata), "filepath is directory");
+            //show_error(get_window(userdata), "no file under filepath");
+            g_print("show_error: %s \n", path);
         }
+    } else {
+        //show_error(get_window(userdata), "filepath is directory");
+    }
 
-        g_free(path);
+    g_free(path);
 }
 
 /*

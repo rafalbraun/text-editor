@@ -65,4 +65,6 @@ aaa (GtkTreeView *tree_view,
                            GtkTreePath *path,
                            gpointer user_data);
 
+void save_expanded_nodes_to_file (gpointer user_data);
+
 #endif

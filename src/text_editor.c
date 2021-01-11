@@ -12,7 +12,7 @@
 // on quit save clipboard to xclip: https://wiki.ubuntu.com/ClipboardPersistence
 
 void
-on_main_quit (GtkWidget * widget, gpointer userdata)
+on_main_quit (GtkWidget * widget, gpointer user_data)
 {
     //GError *err = NULL;
     //gchar *contents = open_files ();
@@ -20,7 +20,7 @@ on_main_quit (GtkWidget * widget, gpointer userdata)
     //g_file_set_contents (cast_to_ud(userdata)->session_info, contents, strlen (contents), &err);
     //g_free (contents);
 
-    
+    save_expanded_nodes_to_file (user_data);
 
     gtk_main_quit ();
 }
