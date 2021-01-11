@@ -55,16 +55,12 @@ save_expanded_tree_nodes (gpointer user_data);
 gchar* tree_path_to_string (GtkTreeModel* tree_model, GtkTreePath* path);
 
 static gboolean
-for_each_func_expand (GtkTreeModel *tree_model,
-                    GtkTreePath *path,
-                    GtkTreeIter *iter,
-                    gpointer user_data);
+for_each_func_expand (GtkTreeModel *tree_model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data);
 
 void
-aaa (GtkTreeView *tree_view,
-                           GtkTreePath *path,
-                           gpointer user_data);
+map_expanded_rows (GtkTreeView *tree_view, GtkTreePath *path, gpointer user_data);
 
-void save_expanded_nodes_to_file (gpointer user_data);
+void 
+save_expanded_nodes_to_file (gpointer user_data);
 
 #endif

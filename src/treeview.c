@@ -49,14 +49,21 @@ static GtkActionEntry buffer_action_entries[] = {
 };
 
 GtkWidget*
-build_menu (PopupMenu menuType, gpointer user_data) {
+build_menu (PopupMenu menuType, gpointer user_data) 
+{
     GtkWidget *menu;
     GtkWidget *menuItem;
     GtkActionEntry *actionEntry;
 
     menu = gtk_menu_new();
 
-    // name, callback, accelerator, stock_id, callback, label, tooltip
+    // name, 
+    // callback, 
+    // accelerator, 
+    // stock_id, 
+    // callback, 
+    // label, 
+    // tooltip
     for (int i=0; i<G_N_ELEMENTS (buffer_action_entries); i++) {
         actionEntry = &(buffer_action_entries[i]);
         menuItem = gtk_menu_item_new_with_label(actionEntry->name);
@@ -70,7 +77,8 @@ build_menu (PopupMenu menuType, gpointer user_data) {
 }
 
 void
-popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer user_data) {
+popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer user_data) 
+{
     GtkTreeModel     *tree_model;
     GtkTreeSelection *selection;
     GtkTreePath      *treepath;
@@ -80,8 +88,8 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer user_data) {
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
-    if (gtk_tree_selection_count_selected_rows (selection) == 1) {
-
+    if (gtk_tree_selection_count_selected_rows (selection) == 1) 
+    {
         tree_model = gtk_tree_view_get_model (GTK_TREE_VIEW(treeview));
         gtk_tree_selection_get_selected (selection, &tree_model, &parent);
 
@@ -91,14 +99,17 @@ popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer user_data) {
             rows = gtk_tree_selection_get_selected_rows (selection, &tree_model);
             treepath = (GtkTreePath*) g_list_first (rows)->data;
 
-            if (gtk_tree_view_row_expanded (GTK_TREE_VIEW(treeview), treepath)) {
+            if (gtk_tree_view_row_expanded (GTK_TREE_VIEW(treeview), treepath)) 
+            {
                 //menu = get_treeview_menu_collapse(userdata); OD ODKOMENTOWANIA
                 menu = build_menu(COLLAPSE, user_data);
-            } else {
+            } else 
+            {
                 //menu = get_treeview_menu_expand(userdata); OD ODKOMENTOWANIA
                 menu = build_menu(COLLAPSE, user_data);
             }
-        } else {
+        } else 
+        {
             //menu = get_treeview_menu(userdata); OD ODKOMENTOWANIA
             menu = build_menu(COLLAPSE, user_data);
         }
@@ -125,10 +136,6 @@ on_changed(GtkWidget * widget, gpointer statusbar) {
     }
 }
 */
-
-//int cmpfunc (const void * a, const void * b) {
-    //return ( *(int*)a - *(int*)b );
-//}
 
 int cmpfunc (const void *a, const void *b) 
 {
@@ -159,15 +166,16 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
     int              count = 0, i = 0;
     gchar            path[SIZE];
 
-    //GtkTreeView  *tree_view  = GTK_TREE_VIEW(widget);
     GtkTreeModel *tree_model = gtk_tree_view_get_model(tree_view);
     GtkTreeStore *tree_store = GTK_TREE_STORE(tree_model);
 
-    if (!(dir = opendir(filepath))) {
+    if (!(dir = opendir(filepath))) 
+    {
         return;
     }
 
-    while ((entry = readdir(dir)) != NULL) {
+    while ((entry = readdir(dir)) != NULL) 
+    {
         //if (entry->d_type == DT_REG) { /* If the entry is a regular file */
             count++;
         //}
@@ -177,17 +185,21 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
     dir = opendir(filepath); /* There should be error handling after this */
     entries = g_new0 (struct dirent, count);
 
-    while ((entry = readdir(dir)) != NULL) {
+    while ((entry = readdir(dir)) != NULL) 
+    {
         // HERE ADD FILTER FUNCTION
-        if ( (strcmp(entry->d_name, ".") != 0) && (strcmp(entry->d_name, "..") != 0) && (entry->d_name[0] != '.') ) {
+        if ( (strcmp(entry->d_name, ".") != 0) && (strcmp(entry->d_name, "..") != 0) && (entry->d_name[0] != '.') ) 
+        {
             entries[i++] = *entry;
         }
     }
     qsort (entries, count, sizeof(struct dirent), cmpfunc);
 
-    for (int i=0; i<count; i++) {
+    for (int i=0; i<count; i++) 
+    {
         entry = &(entries[i]);
-        if (entry->d_type == DT_DIR) {
+        if (entry->d_type == DT_DIR) 
+        {
             snprintf(path, sizeof(path), "%s/%s", filepath, entry->d_name);
             gtk_tree_store_append(tree_store, &child, &toplevel);
             gtk_tree_store_set(tree_store, &child, COLUMN, entry->d_name, -1);
@@ -196,20 +208,22 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
             GList * expanded_rows_list = *GET_EXPANDED_ROWS_LIST(user_data);
 
             guint len = g_list_length(expanded_rows_list);
-            if (len == 0) {
+            if (len == 0) 
+            {
                 break;
             }
-            for (int i=0; i<len; i++) {
+            for (int i=0; i<len; i++) 
+            {
                 gchar* element = g_list_nth_data(expanded_rows_list, i);
-                if (strcmp(element, path) == 0) {
-                    // g_print("hhhhh %s -- %s\n", path, element);
-
+                if (strcmp(element, path) == 0) 
+                {
                     GtkTreePath* tree_path = gtk_tree_model_get_path (tree_model, &child);
                     gtk_tree_view_expand_to_path (tree_view, tree_path);
                 }
             }
         }
-        if (entry->d_type == DT_REG) {
+        if (entry->d_type == DT_REG) 
+        {
             gtk_tree_store_append(tree_store, &child, &toplevel);
             gtk_tree_store_set(tree_store, &child, COLUMN, entry->d_name, -1);
         }
@@ -220,7 +234,8 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
 }
 
 
-gchar* translate_gtk_iter_to_string (GtkTreeModel *model, GtkTreeIter* iter) {
+gchar* translate_gtk_iter_to_string (GtkTreeModel *model, GtkTreeIter* iter) 
+{
     GtkTreeIter       child, parent;
     gboolean          hasParent;
     gchar            *name, *parent_name, *path;
@@ -231,8 +246,10 @@ gchar* translate_gtk_iter_to_string (GtkTreeModel *model, GtkTreeIter* iter) {
 
     gtk_tree_model_get (model, &child, COLUMN, &name, -1);
 
-    while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) {
-        if ( hasParent == TRUE ) {
+    while ( (hasParent = gtk_tree_model_iter_parent(model, &parent, &child)) == TRUE ) 
+    {
+        if ( hasParent == TRUE ) 
+        {
             gtk_tree_model_get (model, &parent, COLUMN, &parent_name, -1);
             path = g_strconcat(parent_name, "/", path, NULL);
             g_free(parent_name);
@@ -246,45 +263,6 @@ gchar* translate_gtk_iter_to_string (GtkTreeModel *model, GtkTreeIter* iter) {
 
     return path;    
 }
-/*
-static gboolean
-for_each_func_walk (GtkTreeModel *tree_model,
-                    GtkTreePath *path,
-                    GtkTreeIter *iter,
-                    gpointer user_data) {
-
-    GtkTreeView* tree_view = GET_TREE_VIEW(user_data);
-    GList* expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
-
-    if (gtk_tree_model_iter_has_child(tree_model, iter)) {
-        if (gtk_tree_view_row_expanded (tree_view, path)) {
-            gchar* path_as_string = gtk_tree_path_to_string(path);
-            expanded_rows_list = g_list_append (expanded_rows_list, path_as_string);
-            g_print("path:%s->%s\n", path_as_string, translate_gtk_iter_to_string(tree_model, iter));
-        }
-    }
-
-    return FALSE;
-}
-
-void 
-save_expanded_tree_nodes (gpointer user_data) {
-    GtkTreeModel* tree_model;
-    GtkTreeView* tree_view;
-    GtkTreeIter iter;
-
-    tree_view = GET_TREE_VIEW (user_data);
-    tree_model = gtk_tree_view_get_model(tree_view);
-
-    GList* expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
-    g_list_free_full (g_steal_pointer (&expanded_rows_list), g_object_unref);
-
-    if( gtk_tree_model_get_iter_first(tree_model, &iter) ) {
-        gtk_tree_model_foreach (tree_model, (GtkTreeModelForeachFunc) for_each_func_walk, user_data);
-    }
-
-}
-*/
 
 gboolean
 on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) 
@@ -300,7 +278,8 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
     {
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
-        if (gtk_tree_selection_count_selected_rows(selection) == 1) {
+        if (gtk_tree_selection_count_selected_rows(selection) == 1) 
+        {
 
             model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
 
@@ -317,8 +296,8 @@ on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
         {
             GtkTreePath * path;
 
-            if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
-                event->x, event->y, &path, NULL, NULL, NULL)) {
+            if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview), event->x, event->y, &path, NULL, NULL, NULL)) 
+            {
                 gtk_tree_selection_unselect_all(selection);
                 gtk_tree_selection_select_path(selection, path);
                 gtk_tree_path_free(path);
@@ -340,55 +319,49 @@ result_func (
 
     success = gtk_source_file_loader_load_finish (loader, res, NULL);
 
-    // do usuniecia !!!!!!!
-    //underline_varnames (GTK_TEXT_BUFFER(user_data));
-
     g_return_if_fail (success);
 }
 
 void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data) 
 {
-    GtkSourceFile * src_file = gtk_source_file_new ();
-    GFile * file = g_file_new_for_path (path);
+    GtkSourceFileLoader * file_loader;
+    GtkSourceFile * src_file;
+    GFile * file;
+
+    src_file = gtk_source_file_new ();
+    file = g_file_new_for_path (path);
+
     gtk_source_file_set_location (src_file, file);
     g_object_unref (file);
 
-    GtkSourceFileLoader * file_loader = gtk_source_file_loader_new (buffer, src_file);
+    file_loader = gtk_source_file_loader_new (buffer, src_file);
     gtk_source_file_loader_load_async (file_loader, G_PRIORITY_DEFAULT, NULL, NULL, NULL, NULL, (GAsyncReadyCallback) result_func, buffer);
-
-}
-
-void
-print_list (gpointer data,
-          gpointer user_data) {
-
-    g_print("[ %s ] \n", data);
 
 }
 
 #define EXPANDED_ROWS_FILE "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/opened_tabs.txt"
 
-void save_expanded_nodes_to_file (gpointer user_data) {
-
-    // DZIALA !!!!!!!
-    
+void save_expanded_nodes_to_file (gpointer user_data) 
+{    
     GList** expanded_rows_list;
     GtkTreeView* tree_view;
+    GList * tmp;
+    gchar * expanded_rows_list_as_string;
 
     expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
 
     tree_view = GET_TREE_VIEW (user_data);
     g_list_free (g_steal_pointer (expanded_rows_list));
-    gtk_tree_view_map_expanded_rows (tree_view, (GtkTreeViewMappingFunc) aaa, user_data);
+    gtk_tree_view_map_expanded_rows (tree_view, (GtkTreeViewMappingFunc) map_expanded_rows, user_data);
 
-    GList * tmp = g_list_first (*expanded_rows_list);
-    gchar * expanded_rows_list_as_string = (gchar*) tmp->data;
-    while ( (tmp = g_list_next (tmp))!=NULL) {
-        //g_print ("%s\n", (gchar*) tmp->data);
+    tmp = g_list_first (*expanded_rows_list);
+    expanded_rows_list_as_string = (gchar*) tmp->data;
+
+    while ( (tmp = g_list_next (tmp))!=NULL) 
+    {
         expanded_rows_list_as_string = g_strconcat(expanded_rows_list_as_string, "\n", (gchar*) tmp->data, NULL);
-    } 
-    g_print ("%s\n", expanded_rows_list_as_string);
-    
+    }
+
     gssize length = strlen(expanded_rows_list_as_string);
     GFileSetContentsFlags flags = G_FILE_SET_CONTENTS_CONSISTENT;
     int mode = 0666;
@@ -405,22 +378,18 @@ void save_expanded_nodes_to_file (gpointer user_data) {
 }
 
 // https://developer.gnome.org/gtksourceview/stable/GtkSourceFileLoader.html
-void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) {
+void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer user_data) 
+{
     GtkSourceBuffer  *buffer;
     GtkTreeIter child;
+    gchar* path;
 
     gtk_tree_selection_get_selected(selection, &model, &child);
-    gchar* path = translate_gtk_iter_to_string(model, &child);
+    path = translate_gtk_iter_to_string(model, &child);
 
     if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
         if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
             g_print("[TEST] create_tab: %s \n", path);
-
-            //GList** expanded_rows_list;
-            //expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
-            //g_list_foreach (*expanded_rows_list, (GFunc) print_list, user_data);
-
-            //save_expanded_nodes_to_file (user_data);
 
             buffer = create_tab (user_data, path);
             load_file(buffer, path, user_data);
@@ -436,24 +405,13 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
     g_free(path);
 }
 
-/*
-void expand_rows_list (gpointer user_data) {
-    // 1. for each element in list: 
-    // 2. for each node in tree if (has_child && gtk_translate_iter == input_path) -> expand
-
-
-    //GList* expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
-    //g_list_foreach (expanded_rows_list, (*GFunc) func, user_data);
-
-}
-*/
-void load_expanded_rows_from_file (gpointer user_data) {
-    //SET_EXPANDED_ROWS_LIST (user_data, EXPANDED_ROWS_FILE);
-
-    //user_data->expanded_rows_list = ;
+void load_expanded_rows_from_file (gpointer user_data) 
+{
     gchar* contents;
     gsize len;
     GError* err;
+    gchar** split;
+    GList* tmp;
 
     g_file_get_contents (
         EXPANDED_ROWS_FILE,
@@ -462,15 +420,16 @@ void load_expanded_rows_from_file (gpointer user_data) {
         &err
     );
 
-    gchar** split = g_strsplit(contents, "\n", -1);
+    split = g_strsplit(contents, "\n", -1);
 
-    if (split[0] == NULL) {
+    if (split[0] == NULL) 
+    {
         return;
     }
 
-    GList* tmp = NULL;
-    for (int i=0; split[i]!=NULL; i++) {
-        //g_print ("%s \n", split[i]);
+    tmp = NULL;
+    for (int i=0; split[i]!=NULL; i++) 
+    {
         tmp = g_list_append (tmp, split[i]);
     }
 
@@ -496,21 +455,14 @@ fill_treeview(gpointer user_data)
     load_expanded_rows_from_file (user_data);
     fill_treestore(pathname, treeview, toplevel, user_data);
 
-    // Expand top tree node
-    //treepath = gtk_tree_path_new_from_string("0");
-    //gtk_tree_view_expand_row(GTK_TREE_VIEW(treeview), treepath, FALSE);
-    //expand_rows_list (user_data);
-
-    // FOR EACH NODE IN TREE
-    
-
     g_signal_connect (G_OBJECT (treeview), "key-press-event", G_CALLBACK (key_pressed_treeview), user_data);
     g_signal_connect (G_OBJECT (treeview), "button-press-event", G_CALLBACK (on_button_pressed), user_data);
 
 }
 
 gboolean
-key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata) {
+key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata) 
+{
     GtkTreeModel     *tree_model;
     GtkTreeSelection *selection;
     GtkTreePath      *treepath;
@@ -532,9 +484,11 @@ key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata)
                 rows = gtk_tree_selection_get_selected_rows (selection, &tree_model);
                 treepath = (GtkTreePath*) g_list_first (rows)->data;
 
-                if (gtk_tree_view_row_expanded (GTK_TREE_VIEW(treeview), treepath)) {
+                if (gtk_tree_view_row_expanded (GTK_TREE_VIEW(treeview), treepath)) 
+                {
                     gtk_tree_view_collapse_row (GTK_TREE_VIEW(treeview), treepath);
-                } else {
+                } else 
+                {
                     gtk_tree_view_expand_row (GTK_TREE_VIEW(treeview), treepath, FALSE);
                 }
             }
@@ -545,18 +499,17 @@ key_pressed_treeview(GtkWidget *treeview, GdkEventKey *event, gpointer userdata)
 }
 
 void
-aaa (GtkTreeView *tree_view, GtkTreePath *path, gpointer user_data) {
+map_expanded_rows (GtkTreeView *tree_view, GtkTreePath *path, gpointer user_data) 
+{
     GtkTreeIter iter;
 
     GList** expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
 
     GtkTreeModel* tree_model = gtk_tree_view_get_model(tree_view);
     gtk_tree_model_get_iter (tree_model, &iter, path);
-    gchar* qqq = translate_gtk_iter_to_string(tree_model, &iter);
+    gchar* gtk_iter_as_string = translate_gtk_iter_to_string(tree_model, &iter);
 
-    *expanded_rows_list = g_list_append (*expanded_rows_list, qqq);
-
-    //g_print("%s \n", qqq);
+    *expanded_rows_list = g_list_append (*expanded_rows_list, gtk_iter_as_string);
 
 }
 
