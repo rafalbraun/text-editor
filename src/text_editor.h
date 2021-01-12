@@ -50,4 +50,6 @@ list_langs ();
 void
 list_schemes ();
 
+void load_opened_files_from_file (gpointer user_data);
+
 #endif

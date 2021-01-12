@@ -7,6 +7,13 @@
 #include "notebook.h"
 #include "sourceview.h"
 
+#define EXPANDED_ROWS_FILE "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/opened_tabs.txt"
+
+int cmpfunc (const void *a, const void *b) 
+{
+    return g_strcmp0(((struct dirent *)a)->d_name, ((struct dirent *)b)->d_name);
+}
+
 /*
 gchar* 
 get_selection(GtkWidget * treeview) {
@@ -137,10 +144,6 @@ on_changed(GtkWidget * widget, gpointer statusbar) {
 }
 */
 
-int cmpfunc (const void *a, const void *b) 
-{
-    return g_strcmp0(((struct dirent *)a)->d_name, ((struct dirent *)b)->d_name);
-}
 
 /*
 @TODO zmienić na glib!!!
@@ -174,7 +177,7 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
         return;
     }
 
-    while ((entry = readdir(dir)) != NULL) 
+    while ((entry = readdir(dir)) != NULL)
     {
         //if (entry->d_type == DT_REG) { /* If the entry is a regular file */
             count++;
@@ -232,7 +235,6 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
     g_free (entries);
     closedir(dir);
 }
-
 
 gchar* translate_gtk_iter_to_string (GtkTreeModel *model, GtkTreeIter* iter) 
 {
@@ -339,7 +341,6 @@ void load_file (GtkSourceBuffer* buffer, gchar* path, gpointer user_data)
 
 }
 
-#define EXPANDED_ROWS_FILE "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/opened_tabs.txt"
 
 void save_expanded_nodes_to_file (gpointer user_data) 
 {    
@@ -502,12 +503,15 @@ void
 map_expanded_rows (GtkTreeView *tree_view, GtkTreePath *path, gpointer user_data) 
 {
     GtkTreeIter iter;
+    GtkTreeModel* tree_model;
+    GList** expanded_rows_list;
+    gchar* gtk_iter_as_string;
 
-    GList** expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
+    expanded_rows_list = GET_EXPANDED_ROWS_LIST(user_data);
 
-    GtkTreeModel* tree_model = gtk_tree_view_get_model(tree_view);
+    tree_model = gtk_tree_view_get_model(tree_view);
     gtk_tree_model_get_iter (tree_model, &iter, path);
-    gchar* gtk_iter_as_string = translate_gtk_iter_to_string(tree_model, &iter);
+    gtk_iter_as_string = translate_gtk_iter_to_string(tree_model, &iter);
 
     *expanded_rows_list = g_list_append (*expanded_rows_list, gtk_iter_as_string);
 

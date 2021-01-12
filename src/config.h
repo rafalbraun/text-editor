@@ -40,7 +40,7 @@ typedef struct _UserData
 
     gchar*		font;
     gchar*		homedir;
-    gchar*		session_info;
+    //gchar*		session_info;
     gchar* 		filepath;
   
     GList*    expanded_rows_list;

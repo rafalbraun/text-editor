@@ -202,6 +202,47 @@ list_langs()
 
 
 
+#define OPENED_FILES_FILE "/home/rafal/IdeaProjects/gtksourceview-my-ide/application/opened_files.txt"
+
+void load_opened_files_from_file (gpointer user_data) {
+    gchar* contents;
+    gsize len;
+    GError* err;
+    gchar** split;
+    GList* tmp;
+    guint size;
+    GtkSourceBuffer  *buffer;
+    gchar* path;
+
+    g_file_get_contents (
+        OPENED_FILES_FILE,
+        &contents,
+        &len,
+        &err
+    );
+
+    split = g_strsplit (contents, "\n", -1);
+    size = g_strv_length (split);
+
+    if (size == 0) 
+    {
+        return;
+    }
+
+    for (int i=0; i<size-1; i++) { // size-1 because array is null terminated
+        path = split[i];
+        g_print ("%s\n", path);
+
+        if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
+            if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
+                buffer = create_tab (user_data, path);
+                load_file(buffer, path, user_data);
+            }
+        }
+    }
+
+    g_strfreev (split);
+}
 
 
 

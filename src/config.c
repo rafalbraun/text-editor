@@ -26,7 +26,7 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 
 	//cast_to_ud(*userdata)->head = NULL;
 	userdata->head = NULL;
-	userdata->session_info = "~session-info";
+	//userdata->session_info = "~session-info";
 
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/IdeaProjects/gtksourceview-my-ide/application";
@@ -134,6 +134,10 @@ GList** GET_EXPANDED_ROWS_LIST (UserData* user_data) {
 void SET_EXPANDED_ROWS_LIST (UserData* user_data, GList* list) {
     user_data->expanded_rows_list = list;
 }
+
+
+
+
 
 /////////////////////
 /*

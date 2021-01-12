@@ -90,6 +90,9 @@ main (int argc, char *argv[])
     list_schemes();
     list_langs();
 
+    load_opened_files_from_file (user_data);
+
+
     //timer = g_timer_new ();
     //g_timer_start (timer);
 
