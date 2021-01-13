@@ -1,0 +1,10 @@
+5 src/callback.c
+16	10	i is_valid_char
+62	10	i check_if_method_or_member
+74	8	i extract_word
+208	10	i print_word_under_mark
+237	1	i key_pressed_window
+2 src/callback.h
+10	10	d print_word_under_mark
+13	1	d key_pressed_window
+0 .

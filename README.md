@@ -47,8 +47,8 @@ To close tab use middle mouse button
 
 
 
-
-
+https://developer.gnome.org/glib/stable/glib-utilities.html
+https://developer.gnome.org/glib/stable/glib-Simple-XML-Subset-Parser.html
 
 
 
