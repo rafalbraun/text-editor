@@ -20,7 +20,9 @@ notebook_tab_clicked(GtkWidget *widget, GdkEventButton *event, gpointer userdata
         return FALSE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 2) {
-        close_tab (userdata, title);
+        gint index = index_tab (head, title);
+        t_tab* data = get_nth (head, index);
+        close_tab (userdata, data, index);
         return TRUE;
     }
     if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3) {
@@ -63,13 +65,11 @@ get_text_from_eventbox(GtkWidget* widget)
 }
 
 void
-close_tab (gpointer user_data, gchar* title) {
-    int index;
-
-    g_print("closing %s \n", title);
-    t_tab* tab = new_tab(title);
-    index = delete_tab(&head, tab); // check if delete correct - namely if page exists
-    g_print("closing index %d \n", index);
+close_tab (gpointer user_data, t_tab* data, int index) {
+    //g_print("closing %s \n", index);
+    delete_tab(&head, data); // check if delete correct - namely if page exists
+    //g_print("closing index %d \n", index);
+    
     gtk_notebook_remove_page (GET_NOTEBOOK(user_data), index);
 
     tab_max--;
@@ -94,12 +94,24 @@ create_tab (gpointer user_data, gchar* title) {
     GtkWidget       *notebook;
     GError          *err = NULL;
 
-    t_tab* tab = new_tab(title);
-    int index = append_tab(&head, tab);
+    // TODO - sprawdzać zarówno relative_path jak i absolute_path
+    t_tab* tab;
+
+    gint index = index_tab (head, title);
+    if (index != -1) {
+        gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
+        tab = get_nth (head, index);
+        return GTK_SOURCE_BUFFER(tab->buffer);
+    }
+
+    //t_tab* tab = new_tab(title);
+    //append_tab(&head, tab);
+    tab = append_tab (&head, title);
+    /*
     if (index != -1) {
         gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
         return NULL;
-    }
+    }*/
     tab_max++;
 
     label = gtk_label_new(title);

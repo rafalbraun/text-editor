@@ -34,7 +34,7 @@ GtkSourceBuffer*
 create_tab (gpointer user_data, gchar* filepath);
 
 void
-close_tab (gpointer userdata, gchar* title);
+close_tab (gpointer user_data, t_tab* data, int index);
 
 //void
 //load_file (gpointer userdata, guint pagenum);

@@ -48,20 +48,6 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	g_print("%s \n", userdata->filepath);
 }
 
-gint tab_compare (gconstpointer a, gconstpointer b) {
-    t_tab *t1 = (t_tab *) a;
-    t_tab *t2 = (t_tab *) b;
-
-    if ((t1 == NULL) || (t2==NULL)) {
-        return -1;
-    }
-    if (g_strcmp0 (t1->title, t2->title) == 0) 
-    {
-        return 0;
-    }
-    return -1;
-}
-
 /* PUBLIC */
 t_tab* new_tab(gchar* title) 
 {
@@ -77,38 +63,54 @@ t_tab* new_tab(gchar* title)
     return new_tab;
 }
 
+
+gint tab_compare (gconstpointer a, gconstpointer b) {
+    t_tab *t1 = (t_tab *) a;
+    t_tab *t2 = (t_tab *) b;
+
+    if ((t1 == NULL) || (t2 == NULL)) {
+        return -1;
+    }
+    if (g_strcmp0 (t1->title, t2->title) == 0) 
+    {
+        return 0;
+    }
+    return -1;
+}
+
 /**
     UWAGA - segfault jeśli zakładka title nie jest wewnątrz listy !!!!
 */
 gint index_tab (GList *head, gchar* title) {
     t_tab* data = new_tab (title);
-    t_tab* elem = (t_tab*) g_list_find_custom (head, data, tab_compare)->data;
+    //t_tab* elem = (t_tab*) g_list_find_custom (head, data, tab_compare)->data;
+    GList* elem = g_list_find_custom (head, data, tab_compare);
+
     if (elem == NULL) {
         return -1;
     }
-    gint index = g_list_index (head, elem);
+
+    gint index = g_list_index (head, (t_tab*) elem->data);
     return index; // can be -1 if not found
 }
 
-gint append_tab (GList **head, t_tab* data) {
-    GList* elem = g_list_find_custom (*head, data, tab_compare);
-    if (elem == NULL) {
-        *head = g_list_append (*head, data);
-        return -1;
-    } else {
-        return g_list_index (*head, data);
-    }
-    // tutaj przechwycić wyjątek jeśli jednak g_list_index nie znajdzie nic
+t_tab* append_tab (GList **head, gchar* title) {
+    t_tab* tab = new_tab(title);
+    *head = g_list_append (*head, tab);
+    return tab;
 }
 
 gint delete_tab (GList **head, t_tab* data) {
+    *head = g_list_remove (*head, data);
+    
+    /*
     GList* elem = g_list_find_custom (*head, data, tab_compare);
     if (elem == NULL) {
         return -1;
     } else {
         *head = g_list_remove (*head, data); // TODO delete all elements inside
         return 0;
-    }
+    }*/
 }
 
 t_tab* get_nth (GList* head, gint index) {

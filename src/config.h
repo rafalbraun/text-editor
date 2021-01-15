@@ -37,7 +37,7 @@ typedef struct t {
 
 t_tab* new_tab(gchar* title);
 gint index_tab (GList *head, gchar* title);
-gint append_tab (GList **head, t_tab* data);
+t_tab* append_tab (GList **head, gchar* title);
 gint delete_tab (GList **head, t_tab* data);
 t_tab* get_nth (GList* head, gint index) ;
 

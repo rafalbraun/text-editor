@@ -1,6 +1,6 @@
 #include "../src/config.h"
 
-t_tab *_30, *_55, *_210, *_1000000; 
+//t_tab *_30, *_55, *_210, *_1000000; 
 
 void
 print_list (gpointer data, gpointer user_data) 
@@ -10,37 +10,42 @@ print_list (gpointer data, gpointer user_data)
 
 int main() {
 	GList *list = NULL;
+	gint index;
 
+	/*
 	_30 = new_tab ("30");
 	_55 = new_tab ("55");
 	_210 = new_tab ("210");
 	_1000000 = new_tab ("1000000");
+	*/
 
 
-	append_tab(&list, _30);
-	append_tab(&list, _30);
-	append_tab(&list, _55);
-	append_tab(&list, _210);
-	append_tab(&list, _210);
-	append_tab(&list, _210);
-	append_tab(&list, _1000000);
-
-	puts("\nPrint the linked list:");
-    g_list_foreach (list, (GFunc) print_list, NULL);
-
-	puts("\nDelete _30:");
-	delete_tab (&list, _30);
+	append_tab(&list, "_30");
+	append_tab(&list, "_30");
+	append_tab(&list, "_55");
+	append_tab(&list, "_210");
+	append_tab(&list, "_210");
+	append_tab(&list, "_210");
+	append_tab(&list, "_1000000");
 
 	puts("\nPrint the linked list:");
     g_list_foreach (list, (GFunc) print_list, NULL);
-
 
 	puts("\nPrint 2nd element:");
 	t_tab* data = get_nth (list, 2);
 	g_print("%s\n", data->title);
 
+	puts("\nDelete 2nd element:");
+	delete_tab (&list, data);
+	puts("\nPrint the linked list:");
+    g_list_foreach (list, (GFunc) print_list, NULL);
+
 	puts("\nPrint index of tab _210:");
-	gint index = index_tab (list, "210");
+	index = index_tab (list, "_210");
+	g_print("Index: %d\n", index);
+
+	puts("\nPrint index of tab aaa:");
+	index = index_tab (list, "aaa");
 	g_print("Index: %d\n", index);
 
 /*
