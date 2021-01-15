@@ -22,7 +22,7 @@ gchar           *absolute_path[128];
 gchar           *file_contents[128]; // buffer for all files contents
 gint            *is_file_saved[128];
 
-GList*          head;
+GList*          head ;
 //t_node          *head;
 
 typedef struct t {

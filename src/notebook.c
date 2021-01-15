@@ -40,7 +40,7 @@ get_filename_from_page_number (gpointer userdata, int pagenum) {
     title = get_text_from_eventbox(eventbox);
 
     // TODO - check if exists in list!!!
-    index = l_index_of(&head, title);
+    index = index_tab(head, title);
 
     //filepath = absolute_path[index];
     //return filepath;
@@ -67,7 +67,8 @@ close_tab (gpointer user_data, gchar* title) {
     int index;
 
     g_print("closing %s \n", title);
-    index = l_delete_value(&head, title); // check if delete correct - namely if page exists
+    t_tab* tab = new_tab(title);
+    index = delete_tab(&head, tab); // check if delete correct - namely if page exists
     g_print("closing index %d \n", index);
     gtk_notebook_remove_page (GET_NOTEBOOK(user_data), index);
 
@@ -94,7 +95,7 @@ create_tab (gpointer user_data, gchar* title) {
     GError          *err = NULL;
 
     t_tab* tab = new_tab(title);
-    int index = l_append(&head, tab);
+    int index = append_tab(&head, tab);
     if (index != -1) {
         gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
         return NULL;

@@ -23,6 +23,8 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 
 	UserData* userdata = *userdata_ptr;
 
+    head = NULL;
+
 	//cast_to_ud(*userdata)->head = NULL;
 	//userdata->head = NULL;
 	//userdata->session_info = "~session-info";
