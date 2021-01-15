@@ -96,40 +96,36 @@ create_tab (gpointer user_data, gchar* title) {
 
     // TODO - sprawdzać zarówno relative_path jak i absolute_path
     t_tab* tab;
+    int index;
 
-    gint index = index_tab (head, title);
+    index = index_tab (head, title);
     if (index != -1) {
+
         gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
         tab = get_nth (head, index);
-        return GTK_SOURCE_BUFFER(tab->buffer);
-    }
+    
+    } else {
+        
+        tab = append_tab (&head, title);
+        tab_max++;
 
-    //t_tab* tab = new_tab(title);
-    //append_tab(&head, tab);
-    tab = append_tab (&head, title);
-    /*
-    if (index != -1) {
+        label = gtk_label_new(title);
+        eventbox = gtk_event_box_new();
+        gtk_container_add(GTK_CONTAINER(eventbox), label);
+
+        textview = sourceview_new(GTK_SOURCE_BUFFER(tab->buffer));
+
+        index = gtk_notebook_append_page (GET_NOTEBOOK(user_data), textview, eventbox);
+        //gtk_text_buffer_set_text(GTK_TEXT_BUFFER(tab->buffer), text, len);
+        //g_free(text);
+
+        gtk_widget_show_all (GTK_WIDGET(GET_NOTEBOOK(user_data)));
+        gtk_widget_show (label);
+
+        g_signal_connect (eventbox, "button-press-event", G_CALLBACK (notebook_tab_clicked), user_data);
+
         gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
-        return NULL;
-    }*/
-    tab_max++;
-
-    label = gtk_label_new(title);
-    eventbox = gtk_event_box_new();
-    gtk_container_add(GTK_CONTAINER(eventbox), label);
-
-    textview = sourceview_new(GTK_SOURCE_BUFFER(tab->buffer));
-
-    int pagenum = gtk_notebook_append_page (GET_NOTEBOOK(user_data), textview, eventbox);
-    //gtk_text_buffer_set_text(GTK_TEXT_BUFFER(tab->buffer), text, len);
-    //g_free(text);
-
-    gtk_widget_show_all (GTK_WIDGET(GET_NOTEBOOK(user_data)));
-    gtk_widget_show (label);
-
-    g_signal_connect (eventbox, "button-press-event", G_CALLBACK (notebook_tab_clicked), user_data);
-
-    gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), pagenum);
+    }
 
     return GTK_SOURCE_BUFFER(tab->buffer);
 }
