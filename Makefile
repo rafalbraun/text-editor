@@ -7,9 +7,9 @@ GLIB=`pkg-config --cflags --libs glib-2.0`
 SRC=./src
 
 ##all: test_notebook
-all: text_editor 
+#all: text_editor 
 #all: test_treeview 
-
+all: test_config
 
 #test_sourceview
 ##all: $(PROGRAMS)
@@ -19,14 +19,14 @@ all: text_editor
 ##test: test_sourceview
 ##test: stack.o
 
-text_editor: text_editor.o treeview.o notebook.o callback.o sourceview.o list.o config.o
-	$(CC) $(GLIB) src/main.c obj/text_editor.o obj/treeview.o obj/notebook.o obj/callback.o obj/sourceview.o obj/list.o obj/config.o $(GTK) -o bin/text_editor
+text_editor: text_editor.o treeview.o notebook.o callback.o sourceview.o config.o
+	$(CC) $(GLIB) src/main.c obj/text_editor.o obj/treeview.o obj/notebook.o obj/callback.o obj/sourceview.o obj/config.o $(GTK) -o bin/text_editor
 
 config.o: src/config.h src/config.c
 	$(CC) -c $(GLIB) src/config.c $(GTK) -o obj/config.o
 
-list.o: src/list.h src/list.c
-	$(CC) -c $(GLIB) src/list.c $(GTK) -o obj/list.o
+#list.o: src/list.h src/list.c
+#	$(CC) -c $(GLIB) src/list.c $(GTK) -o obj/list.o
 
 treeview.o: src/treeview.h src/treeview.c src/config.h
 	$(CC) -c $(GLIB) src/treeview.c $(GTK) -o obj/treeview.o
@@ -43,17 +43,18 @@ callback.o: src/callback.h src/callback.c
 text_editor.o: src/text_editor.h src/text_editor.c 
 	$(CC) -c $(GLIB) src/text_editor.c $(GTK) -o obj/text_editor.o
 
-stack.o: src/stack.h src/stack.c 
-	$(CC) -c $(GLIB) src/stack.c $(GTK) -o obj/stack.o
 
 ### TEST
 
 ###################################################################
-test_list.o: test/test_list.c src/list.h
-	$(CC) -c $(GLIB) test/test_list.c $(GTK) -o obj/test_list.o
+#test_list.o: test/test_list.c src/list.h
+#	$(CC) -c $(GLIB) test/test_list.c $(GTK) -o obj/test_list.o
 
-test_list: test_list.o list.o
-	$(CC) $(GLIB) test/test_list.c obj/list.o $(GTK) -o bin/test_list
+test_config.o: test/test_config.c src/config.h
+	$(CC) -c $(GLIB) test/test_config.c $(GTK) -o obj/test_config.o
+
+test_config: test_config.o config.o
+	$(CC) $(GLIB) test/test_config.c obj/config.o $(GTK) -o bin/test_config
 
 ###################################################################
 test_stack.o: test/test_stack.c src/stack.h

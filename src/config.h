@@ -16,18 +16,40 @@
 //gboolean is_saved = FALSE;
 
 int              tab_max;
-t_node   		    *head;
 const gchar     *separator;
 gchar           *relative_path[128];
 gchar           *absolute_path[128];
 gchar           *file_contents[128]; // buffer for all files contents
 gint            *is_file_saved[128];
 
+GList*          head;
+//t_node          *head;
+
+typedef struct t {
+  gchar* title;
+  gchar* relative_path;
+  gchar* absolute_path;
+  gint   is_file_saved;
+  //gchar* tab_buffer;
+  GtkWidget* buffer;
+
+} t_tab;
+
+t_tab* new_tab(gchar* title);
+gint index_tab (GList *head, gchar* title);
+gint append_tab (GList **head, t_tab* data);
+gint delete_tab (GList **head, t_tab* data);
+t_tab* get_nth (GList* head, gint index) ;
+
+
+
+
+
 typedef struct _UserData
 {
     /* main window data */
 
-    t_node		*head;
+    //t_node		*head;
 
     GObject* 	window;
     GObject*	treeview;

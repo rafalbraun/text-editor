@@ -1,7 +1,7 @@
 #define GLIB_VERSION_2_28               (G_ENCODE_VERSION (2, 28))
 #define GLIB_VERSION_MIN_REQUIRED       GLIB_VERSION_2_28
 
-#include "list.h"
+//#include "list.h"
 #include "config.h"
 #include "sourceview.h"
 #include "treeview.h"

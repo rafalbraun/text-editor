@@ -4,7 +4,7 @@
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
 
-#include "list.h"
+//#include "list.h"
 #include "config.h"
 
 UserData *
@@ -12,7 +12,6 @@ cast_to_ud (gpointer userdata)
 {
 	return (UserData *) userdata;
 }
-
 void ud_init_empty (UserData** userdata_ptr, gchar* filepath) {
     *userdata_ptr = g_new0 (UserData, 1);    
     UserData* userdata = *userdata_ptr;
@@ -25,7 +24,7 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 	UserData* userdata = *userdata_ptr;
 
 	//cast_to_ud(*userdata)->head = NULL;
-	userdata->head = NULL;
+	//userdata->head = NULL;
 	//userdata->session_info = "~session-info";
 
 	//cast_to_ud(*userdata)->filepath = "/home/rafal/Desktop/gtksourceview-4.0.3";
@@ -45,6 +44,74 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
     userdata->expanded_rows_list = NULL;
 
 	g_print("%s \n", userdata->filepath);
+}
+
+gint tab_compare (gconstpointer a, gconstpointer b) {
+    t_tab *t1 = (t_tab *) a;
+    t_tab *t2 = (t_tab *) b;
+
+    if ((t1 == NULL) || (t2==NULL)) {
+        return -1;
+    }
+    if (g_strcmp0 (t1->title, t2->title) == 0) 
+    {
+        return 0;
+    }
+    return -1;
+}
+
+/* PUBLIC */
+t_tab* new_tab(gchar* title) 
+{
+    t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
+    new_tab->title = g_strdup(title);
+    //new_tab->tab_buffer = (gchar*)malloc(1024*1024);
+    new_tab->buffer = (GtkWidget*)gtk_source_buffer_new(NULL);
+    //strcpy(new_tab->tab_buffer, text);
+
+    //gchar* basename = g_path_get_basename(filepath);
+    //title = (get_index(basename) == -1) ? basename : filepath;
+
+    return new_tab;
+}
+
+/**
+    UWAGA - segfault jeśli zakładka title nie jest wewnątrz listy !!!!
+*/
+gint index_tab (GList *head, gchar* title) {
+    t_tab* data = new_tab (title);
+    t_tab* elem = (t_tab*) g_list_find_custom (head, data, tab_compare)->data;
+    if (elem == NULL) {
+        return -1;
+    }
+    gint index = g_list_index (head, elem);
+    return index; // can be -1 if not found
+}
+
+gint append_tab (GList **head, t_tab* data) {
+    GList* elem = g_list_find_custom (*head, data, tab_compare);
+    if (elem == NULL) {
+        *head = g_list_append (*head, data);
+        return -1;
+    } else {
+        return g_list_index (*head, data);
+    }
+    // tutaj przechwycić wyjątek jeśli jednak g_list_index nie znajdzie nic
+}
+
+gint delete_tab (GList **head, t_tab* data) {
+    GList* elem = g_list_find_custom (*head, data, tab_compare);
+    if (elem == NULL) {
+        return -1;
+    } else {
+        *head = g_list_remove (*head, data); // TODO delete all elements inside
+        return 0;
+    }
+}
+
+t_tab* get_nth (GList* head, gint index) {
+    t_tab* data = (t_tab*) g_list_nth_data (head, index);
+    return data;
 }
 
 void incr_untitled_files (gpointer user_data) {
