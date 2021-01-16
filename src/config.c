@@ -40,6 +40,8 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
     userdata->treestore = gtk_builder_get_object (builder, "treestore");
     userdata->notebook 	= gtk_builder_get_object (builder, "notebook");
 
+    gtk_window_maximize (GTK_WINDOW(userdata->window));
+
 	separator = "\n";
 
     userdata->untitled_files = 0;
@@ -49,20 +51,34 @@ void ud_init (UserData** userdata_ptr, GtkBuilder* builder) {
 }
 
 /* PUBLIC */
-t_tab* new_tab(gchar* title) 
+t_tab* new_tab(GList *head, gchar* filepath) 
 {
     t_tab* new_tab = (t_tab*)malloc(sizeof(t_tab));
-    new_tab->title = g_strdup(title);
-    //new_tab->tab_buffer = (gchar*)malloc(1024*1024);
-    new_tab->buffer = (GtkWidget*)gtk_source_buffer_new(NULL);
-    //strcpy(new_tab->tab_buffer, text);
 
-    //gchar* basename = g_path_get_basename(filepath);
+    gchar* basename = g_path_get_basename(filepath);
     //title = (get_index(basename) == -1) ? basename : filepath;
+
+    /*
+        TODO check in for loop if there is maybe tab of the same name in head list
+    */
+    GList* iter = g_list_first (head);
+
+    new_tab->absolute_path = g_strdup(filepath);
+    new_tab->buffer = (GtkWidget*)gtk_source_buffer_new(NULL);
+
+    while (iter != NULL) {
+        t_tab* data = (t_tab*) iter->data;
+        if (g_strcmp0(data->title, basename)==0) {
+            new_tab->title = g_strdup(filepath);
+            return new_tab;
+        }
+        iter = g_list_next(iter);
+    }
+
+    new_tab->title = g_strdup(basename);
 
     return new_tab;
 }
-
 
 gint tab_compare (gconstpointer a, gconstpointer b) {
     t_tab *t1 = (t_tab *) a;
@@ -75,14 +91,18 @@ gint tab_compare (gconstpointer a, gconstpointer b) {
     {
         return 0;
     }
+    if (g_strcmp0 (t1->absolute_path, t2->absolute_path) == 0) 
+    {
+        return 0;
+    }    
     return -1;
 }
 
 /**
     UWAGA - segfault jeśli zakładka title nie jest wewnątrz listy !!!!
 */
-gint index_tab (GList *head, gchar* title) {
-    t_tab* data = new_tab (title);
+gint index_tab (GList *head, gchar* filepath) {
+    t_tab* data = new_tab (head, filepath);
     //t_tab* elem = (t_tab*) g_list_find_custom (head, data, tab_compare)->data;
     GList* elem = g_list_find_custom (head, data, tab_compare);
 
@@ -95,7 +115,7 @@ gint index_tab (GList *head, gchar* title) {
 }
 
 t_tab* append_tab (GList **head, gchar* title) {
-    t_tab* tab = new_tab(title);
+    t_tab* tab = new_tab(*head, title);
     *head = g_list_append (*head, tab);
     return tab;
 }
