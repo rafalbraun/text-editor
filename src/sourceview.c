@@ -170,6 +170,9 @@ gchar* extract_word(gchar* line, gint offset, GtkTextIter* iter, GtkTextBuffer* 
 }
 
 
+
+*/
+
 // http://www.bravegnu.org/gtktext/x498.html
 gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll) 
 {
@@ -180,50 +183,37 @@ gboolean mouse_moved(GtkWidget *widget, GdkEvent *event, gpointer scroll)
     gint row, col;
 
     if (event->type==GDK_MOTION_NOTIFY) {
-        GdkEventMotion* e=(GdkEventMotion*)event;
 
+        GdkEventMotion* e=(GdkEventMotion*)event;
         window_x = (guint)e->x;
         window_y = (guint)e->y;
 
-        //printf("Coordinates: (%u,%u)\n", window_x, window_y);
-        
+        //printf("Coordinates: (%u,%u)\n", window_x, window_y);        
         gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW(widget), GTK_TEXT_WINDOW_TEXT, window_x, window_y, &buffer_x, &buffer_y);
 
         //printf("Coordinates: (%u,%u) -> (%u,%u)  ", window_x, window_y, buffer_x, buffer_y);
-
         gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW(widget), &iter, buffer_x, buffer_y);
 
         row = gtk_text_iter_get_line(&iter);
         col = gtk_text_iter_get_line_offset(&iter);
 
-        msg = g_strdup_printf("Col: %d Ln: %d \n", col+1, row+1);
-        g_print(msg);
-        //g_print("\n");
-
+        g_print("Col: %d Ln: %d \n", col+1, row+1);
 
         GtkTextBuffer* buffer = GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget)));
-        
-        //gtk_text_buffer_get_iter_at_line (buffer, &start, row);
-        //gtk_text_buffer_get_iter_at_line (buffer, &end, row+1);
-        
         gtk_text_buffer_get_iter_at_line (buffer, &start, row);
-        gtk_text_buffer_get_iter_at_line_index (buffer, &end, row, 9999);
-
+        gtk_text_buffer_get_iter_at_line (buffer, &end, row+1);
         msg = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 
         if (msg) {
             g_print("OK: %d : %s \n", strlen(msg), msg);
-            extract_word(msg, col, &iter, buffer, scroll);
+            //extract_word(msg, col, &iter, buffer, scroll);
         } else {
             g_print("BAD\n");
         }
 
-        //g_print(g_strescape(msg, NULL));
-
         g_free(msg);
     }
 }
-*/
 
 void show_langs() 
 {
@@ -292,10 +282,10 @@ sourceview_new(GtkSourceBuffer* buffer)
     gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(buffer), "italic", "style", PANGO_STYLE_ITALIC, NULL);
     gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(buffer), "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL);
 
-    gtk_source_view_set_show_right_margin(GTK_SOURCE_VIEW(sourceview), TRUE);
-    gtk_source_view_set_show_line_numbers(GTK_SOURCE_VIEW(sourceview), TRUE);
-    gtk_source_view_set_show_line_marks(GTK_SOURCE_VIEW(sourceview), TRUE);
-    gtk_source_view_set_highlight_current_line(GTK_SOURCE_VIEW(sourceview), TRUE);
+    gtk_source_view_set_show_line_marks (GTK_SOURCE_VIEW (sourceview), TRUE);
+    gtk_source_view_set_show_right_margin (GTK_SOURCE_VIEW (sourceview), TRUE);
+    gtk_source_view_set_show_line_numbers (GTK_SOURCE_VIEW (sourceview), TRUE);
+    gtk_source_view_set_highlight_current_line (GTK_SOURCE_VIEW (sourceview), TRUE);
 
     gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (sourceview));
 
@@ -317,7 +307,7 @@ sourceview_new(GtkSourceBuffer* buffer)
     gtk_source_view_set_tab_width (GTK_SOURCE_VIEW(sourceview), 4);
 
     // DO ODBLOKOWANIA
-    //g_signal_connect (G_OBJECT (sourceview), "motion-notify-event",G_CALLBACK (mouse_moved), scroll);
+    g_signal_connect (G_OBJECT (sourceview), "motion-notify-event", G_CALLBACK (mouse_moved), scroll);
 
     return scroll;
 }

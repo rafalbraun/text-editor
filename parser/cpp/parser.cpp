@@ -31,7 +31,7 @@ int _isnotdigit(int ch) {
 	return !(_isdigit(ch));
 }
 int _isopchar(int ch) {
-	return (strchr("+-*/%=&|!", ch) != NULL);
+	return (strchr("+-*/%=&|!<>", ch) != NULL);
     //return "+-*/%=&|<>!".indexOf(ch) >= 0;
 }
 int _isnotopchar(int ch) {

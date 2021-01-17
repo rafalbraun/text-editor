@@ -33,6 +33,17 @@ bool _is_function(std::vector<Token>::iterator iter) {
     return false;
 }
 
+std::vector<Token> types;
+std::vector<Token> functions;
+std::vector<Token> variables;
+
+void parse () {
+start:
+    return;
+end:
+    return;
+}
+
 int main() {
     std::ifstream inFile;
     //inFile.open("count.c"); 			                //open the input file
@@ -50,9 +61,10 @@ int main() {
     std::vector<Token> tokens;
     parseStream.parse(&tokens);
 
+    // just print tokens
     std::copy_if(tokens.begin(), tokens.end(), std::ostream_iterator<Token>(std::cout, "\n"), _isnotmacro);
     
-    std::cout << "[function calls]" << std::endl;
+
 
     int block = 0, bracket = 0;;
     std::set<std::string> functionCalls, functionDefs;
@@ -62,93 +74,50 @@ int main() {
             block++;
         }
         
+        if ( iter->get_content() == "struct" ) {
+            iter++;
+            std::cout << "\t\t\t struct" << iter->get_content() << std::endl;
+            continue;
+        }
+
         if (block > 0) {
-            std::cout << "INSIDE["<< block<<"]:" << *iter << std::endl;
+            //std::cout << "INSIDE["<< block<<"]:" << *iter << std::endl;
             if (_is_function(iter) ) {
                 std::string str = iter->get_content() + " line:" + std::to_string(iter->get_line()) + " col:" + std::to_string(iter->get_col());
                 functionCalls.insert(str);
+            } else {
+                if (iter->get_type() == IDENTIFICATOR) {
+                    std::cout << "\t\t\tvariable????" << iter->get_type() << "\t\t" << iter->get_content() << std::endl;
+                }
             }
         } else {
-            std::cout << "OUTSIDE["<< block<<"]: " << *iter << std::endl;         
+            //std::cout << "OUTSIDE["<< block<<"]: " << *iter << std::endl;         
             if (_is_function(iter) ) {
                 std::string str = iter->get_content() + " line:" + std::to_string(iter->get_line()) + " col:" + std::to_string(iter->get_col());
                 functionDefs.insert(str);
+            } else {
+                if (iter->get_type() == IDENTIFICATOR) {
+                    std::cout << "\t\t\tvariable????" << iter->get_type() << "\t\t" << iter->get_content() << std::endl;
+                }
             }
         }
+
+        // !!!!!!!!!!!!!!!!!!!
+        // jeśli następny token to ; albo = to mamy variable, jeśli następny token to ; albo { albo variable to deklaracja struct
+        // jeśli poprzedni token to struct albo union to mamy nazwę structa
+
+
 
         if ( (*iter).get_content() == "}" ) {
             block--;
         }
 
-        /*
-        if (_is_function(iter) ) {
-            //std::cout << *iter << " ";
-            functionCalls.insert(iter->get_content());
-            //std::cout << std::endl;
-        }*/
-
-        /*
-        std::cout << *iter << " ";
-        std::cout << _is_function(iter);
-        std::cout << std::endl;
-        */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        if ( (*iter).get_type() == IDENTIFICATOR ) {
-            std::cout << " \t\t---> maybe call or fdef or fdec or typename or varname " << block;
-        }*/
     }
 
-    std::cout << "============ functionDefs" << std::endl;
+    std::cout << "[function defs]" << std::endl;
     std::copy(functionDefs.begin(), functionDefs.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
-    std::cout << "============ functionCalls" << std::endl;
+    std::cout << "[function calls]" << std::endl;
     std::copy(functionCalls.begin(), functionCalls.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
-
-    /*
-    int block = 0, bracket = 0;;
-    for (auto iter = tokens.rbegin(); iter != tokens.rend(); iter++) {
-        std::cout << *iter;
-
-        if ( (*iter).get_content() == "}" ) {
-            block = 1;
-        }
-        if ( (*iter).get_content() == "{" ) {
-            block = 0;
-        }
-        if ( (*iter).get_content() == ")" ) {
-            bracket = 0;
-        }
-        if ( (*iter).get_content() == "(" ) {
-            bracket = 1;
-        }
-
-        if ( (*iter).get_type() == IDENTIFICATOR ) {
-            std::cout << " \t\t---> maybe call or fdef or fdec or typename or varname " << block << " " << bracket;
-            bracket = 0;
-        }
-        if ( (*iter).get_type() == KEYWORD ) {
-            bracket = 0;
-        }
-        std::cout << std::endl;
-
-    }*/
 
 
     /*

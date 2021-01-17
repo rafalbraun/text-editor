@@ -158,6 +158,11 @@ while ((filename = g_dir_read_name(dir)))
 
 https://stackoverflow.com/questions/7704144/how-do-i-use-glib-or-any-other-library-to-list-all-the-files-in-a-directory
 */
+const char *get_filename_ext(const char *filename) {
+    const char *dot = strrchr(filename, '.');
+    if(!dot || dot == filename) return "";
+    return dot + 1;
+}
 
 void
 fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter toplevel, gpointer user_data) 
@@ -227,6 +232,18 @@ fill_treestore(const gchar * filepath, GtkTreeView * tree_view, GtkTreeIter topl
         }
         if (entry->d_type == DT_REG) 
         {
+            // if file extension is '.lo' then omit file
+            const char * extension = get_filename_ext (entry->d_name);
+            if (g_strcmp0(extension, "lo") == 0) {
+                continue;
+            }
+            if (g_strcmp0(extension, "o") == 0) {
+                continue;
+            }
+            if (g_strcmp0(extension, "") == 0) {
+                continue;
+            }
+
             gtk_tree_store_append(tree_store, &child, &toplevel);
             gtk_tree_store_set(tree_store, &child, COLUMN, entry->d_name, -1);
         }
@@ -264,51 +281,6 @@ gchar* translate_gtk_iter_to_string (GtkTreeModel *model, GtkTreeIter* iter)
     g_free(name);
 
     return path;    
-}
-
-gboolean
-on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) 
-{
-    GtkTreeSelection *selection;
-    GtkTreeModel     *model;
-    GtkTreeIter       child;
-    gchar            *path;
-
-    path = "";
-
-    if (event->type == GDK_2BUTTON_PRESS) 
-    {
-        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-
-        if (gtk_tree_selection_count_selected_rows(selection) == 1) 
-        {
-
-            model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
-
-            validate_file (model, selection, userdata);
-
-            //g_free(path);
-        }
-
-        return TRUE;
-    } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) 
-    {
-        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-        if (gtk_tree_selection_count_selected_rows(selection) <= 1) 
-        {
-            GtkTreePath * path;
-
-            if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview), event->x, event->y, &path, NULL, NULL, NULL)) 
-            {
-                gtk_tree_selection_unselect_all(selection);
-                gtk_tree_selection_select_path(selection, path);
-                gtk_tree_path_free(path);
-            }
-        }
-        popup_menu(treeview, event, userdata);
-        return TRUE;
-    }
-    return FALSE;
 }
 
 static void
@@ -392,6 +364,7 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
         if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
             g_print("[TEST] create_tab: %s \n", path);
 
+            // jeśli już mamy załadowany plik to powinniśmy po prostu zmienić taba a nie ładować od nowa plik!
             buffer = create_tab (user_data, path);
             load_file(buffer, path, user_data);
 
@@ -404,6 +377,51 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
     }
 
     g_free(path);
+}
+
+gboolean
+on_button_pressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata) 
+{
+    GtkTreeSelection *selection;
+    GtkTreeModel     *model;
+    GtkTreeIter       child;
+    gchar            *path;
+
+    path = "";
+
+    if (event->type == GDK_2BUTTON_PRESS) 
+    {
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+
+        if (gtk_tree_selection_count_selected_rows(selection) == 1) 
+        {
+
+            model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
+
+            validate_file (model, selection, userdata);
+
+            //g_free(path);
+        }
+
+        return TRUE;
+    } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) 
+    {
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+        if (gtk_tree_selection_count_selected_rows(selection) <= 1) 
+        {
+            GtkTreePath * path;
+
+            if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview), event->x, event->y, &path, NULL, NULL, NULL)) 
+            {
+                gtk_tree_selection_unselect_all(selection);
+                gtk_tree_selection_select_path(selection, path);
+                gtk_tree_path_free(path);
+            }
+        }
+        popup_menu(treeview, event, userdata);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 void load_expanded_rows_from_file (gpointer user_data) 
