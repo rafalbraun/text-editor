@@ -31,7 +31,7 @@ create_empty_tab (GtkMenuItem *menuitem, gpointer user_data);
 //save_file_default ();
 
 GtkSourceBuffer*
-create_tab (gpointer user_data, gchar* filepath);
+create_tab (gpointer user_data, gchar* filepath, gint* status);
 
 void
 close_tab (gpointer user_data, t_tab* data, int index);

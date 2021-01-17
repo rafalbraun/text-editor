@@ -356,6 +356,7 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
     GtkSourceBuffer  *buffer;
     GtkTreeIter child;
     gchar* path;
+    int status;
 
     gtk_tree_selection_get_selected(selection, &model, &child);
     path = translate_gtk_iter_to_string(model, &child);
@@ -365,8 +366,10 @@ void validate_file(GtkTreeModel *model, GtkTreeSelection *selection, gpointer us
             g_print("[TEST] create_tab: %s \n", path);
 
             // jeśli już mamy załadowany plik to powinniśmy po prostu zmienić taba a nie ładować od nowa plik!
-            buffer = create_tab (user_data, path);
-            load_file(buffer, path, user_data);
+            buffer = create_tab (user_data, path, &status);
+            if (status == 0) {
+                load_file(buffer, path, user_data);
+            }
 
         } else {
             //show_error(get_window(userdata), "no file under filepath");

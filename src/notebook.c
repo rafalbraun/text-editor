@@ -87,7 +87,7 @@ void create_empty_tab (GtkMenuItem *menuitem, gpointer user_data) {
 // https://stackoverflow.com/questions/5802191/use-gnu-versions-of-basename-and-dirname-in-c-source
 // https://people.gnome.org/~ryanl/glib-docs/glib-Miscellaneous-Utility-Functions.html
 GtkSourceBuffer*
-create_tab (gpointer user_data, gchar* filepath) {
+create_tab (gpointer user_data, gchar* filepath, gint* status) {
     GtkWidget       *eventbox;
     GtkWidget       *textview;
     GtkWidget       *label;
@@ -108,7 +108,8 @@ create_tab (gpointer user_data, gchar* filepath) {
 
         gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
         tab = get_nth (head, index);
-    
+
+        *status = 1;    
     } else {
         
         tab = append_tab (&head, filepath);
@@ -130,6 +131,8 @@ create_tab (gpointer user_data, gchar* filepath) {
         g_signal_connect (eventbox, "button-press-event", G_CALLBACK (notebook_tab_clicked), user_data);
 
         gtk_notebook_set_current_page (GET_NOTEBOOK(user_data), index);
+
+        *status = 0;
     }
 
     return GTK_SOURCE_BUFFER(tab->buffer);

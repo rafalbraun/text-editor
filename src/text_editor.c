@@ -91,6 +91,7 @@ open_files_from_last_session (gpointer userdata)
   gsize len;
   GError *err = NULL;
   guint i = 0;
+  int status;
 
   if (g_file_get_contents (filepath, &text, &len, &err) == FALSE) {
     g_error ("error reading %s: %s", filepath, err->message);
@@ -100,7 +101,7 @@ open_files_from_last_session (gpointer userdata)
 
   while (filepaths[i]) {
     if (strcmp (filepaths[i], "") != 0) {
-      create_tab (userdata, filepaths[i]);
+      create_tab (userdata, filepaths[i], &status);
     }
     i++;
   }
@@ -213,6 +214,7 @@ void load_opened_files_from_file (gpointer user_data) {
     guint size;
     GtkSourceBuffer  *buffer;
     gchar* path;
+    int status;
 
     g_file_get_contents (
         OPENED_FILES_FILE,
@@ -235,7 +237,7 @@ void load_opened_files_from_file (gpointer user_data) {
 
         if ( g_file_test(path, G_FILE_TEST_IS_DIR) == FALSE ) {
             if ( g_file_test(path, G_FILE_TEST_EXISTS) == TRUE ) {
-                buffer = create_tab (user_data, path);
+                buffer = create_tab (user_data, path, &status);
                 load_file(buffer, path, user_data);
             }
         }
